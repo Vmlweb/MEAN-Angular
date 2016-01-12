@@ -1,0 +1,16 @@
+@@NAME_app:
+  image: @@NAME_app
+  ports:
+@@COMPOSE_CONFIG
+  volumes:
+    - "@@CERTS_PATH:/home/certs"
+    - "@@LOGS_PATH:/home/logs"
+    - "@@CONFIG:/home/config.js"
+@@NAME_db:
+  image: mongo
+  ports:
+    - @@DATABASE_REPL_NODES_PORT:@@DATABASE_REPL_NODES_PORT
+  volumes:
+    - "@@CERTS_PATH:/home/certs"
+    - "@@DATABASE_PATH:/data/db"
+  command: "--auth --keyFile /home/certs/@@DATABASE_REPL_KEY --replSet @@DATABASE_REPL_NAME @@MONGO_CONFIG"
