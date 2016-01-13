@@ -8,6 +8,10 @@ System.config({
 		home: {
 			format: "register",
 			defaultExtension: "js"
+		},
+		services: {
+			format: "register",
+			defaultExtension: "js"
 		}
 	}
 });
