@@ -1,30 +1,28 @@
-import {Observable} from "rxjs/Observable";
+//Modules
 import {Injectable} from "angular2/core";
-import {Http, Headers, RequestOptions, Request, RequestMethod} from "angular2/http";
+import {Http, Headers, Request, RequestOptions, RequestMethod} from "angular2/http";
 
+//Service
 @Injectable()
-export class Time{
+export class TimeService{
 	
 	//Constructor
 	constructor(private http: Http){
 		this.http = http;
 	}
 	
-	//Make request to backend to get time
-	currentTime(){
-		
-		//Prepare headers
-		let header = new Headers();
-		header.append("Content-Type", "application/x-www-form-urlencoded");
+	//Returns current time
+	current(){
 		
 		//Make http get request
 		var request = this.http.request(new Request(new RequestOptions({
 			method: RequestMethod.Get,
-			url: "/api/v1/time",
-			headers: header
+			url: "/api/v1/time"
 		})));
 		
 		//Parse json response
-		return request.map(res => res.json());
+		return request
+			.map(res => res.json())
+			.map(res => res.time);
 	}
 }
