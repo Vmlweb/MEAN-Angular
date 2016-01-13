@@ -1,4 +1,4 @@
-//Dependancies
+//Modules
 import {Component} from 'angular2/core';
 import {RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
 import {Http, Headers, RequestMethod} from 'angular2/http';
