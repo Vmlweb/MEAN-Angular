@@ -31,12 +31,26 @@ div
 			.ui.middle.aligned.stackable.grid.container
 				.row
 					.eight.wide.column
-						h3.ui.header We Help Companies and Companions
-						p
-							| We can give your company superpowers to do things that they never thought possible. Let us delight your customers and empower your needs...through pure data analytics.
-						h3.ui.header We Make Bananas That Can Dance
-						p
-							| Yes that's right, you thought it was the stuff of dreams, but even bananas can be bioengineered.
+						h2.ui.header Users
+						button.ui.button((click)="insertUser()") Add New User
+						.ui.labeled.input
+							.ui.label Limit
+							input(type="text", #limit="", (keyup)="limitChanged(limit.value)")
+						table.ui.celled.table
+							thead
+								tr
+									th User Id
+									th Username
+									th E-mail
+									th Actions
+							tbody
+								tr(*ngFor="#user of users")
+									td {{ user.userId }}
+									td {{ user.username }}
+									td {{ user.email }}
+									td
+										button.ui.icon.button.red((click)="removeUser(user.userId)")
+											i.remove.icon
 					.six.wide.right.floated.column
 						img.ui.large.bordered.rounded.image(src="/images/red-image.png")
 				.row
