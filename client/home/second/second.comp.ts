@@ -3,26 +3,26 @@ import {Component, View, OnInit} from "angular2/core";
 import {RouteConfig, ROUTER_DIRECTIVES} from "angular2/router";
 
 //Includes
-import {Time} from "../../services/time.service";
+import {TimeService} from "../../services/time.service";
 
 //Configuration
 @Component({
 	templateUrl: "home/second/second.html",
 	directives: [ROUTER_DIRECTIVES],
-	providers: [Time]
+	providers: [TimeService]
 })
 
 //Export
 export class SecondComponent {
 	
 	//Properties
-	timeOut: string;
-	timeIn: Time;
+	time: string;
+	timeService: TimeService;
 	
 	//Constructor
-	constructor(time: Time){
-		this.timeOut = "Loading...";
-		this.timeIn = time;
+	constructor(timeService: TimeService){
+		this.time = "Loading...";
+		this.timeService = timeService;
 	}
 
 	//On Loaded
@@ -30,18 +30,18 @@ export class SecondComponent {
 		setInterval(() => {
 			
 			//Subscribe to time observer
-			this.timeIn.currentTime().subscribe(
+			this.timeService.current().subscribe(
 				data => {
 					
 					//Check for response error
 					if (data.hasOwnProperty("error")){
-						this.timeOut = data.error;
+						this.time = data.error;
 					}				
 					
-					this.timeOut = data.time;
+					this.time = data.time;
 				},
 				err => {
-					this.timeOut = err;
+					this.time = err;
 				}
 			);
 			

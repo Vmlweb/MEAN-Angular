@@ -11,7 +11,7 @@ import {HTTP_PROVIDERS} from 'angular2/http';
 import {provide} from 'angular2/core';
 import {LocationStrategy, HashLocationStrategy} from 'angular2/router';
 
-//Boot application
+//Bootstrap application
 bootstrap(AppComponent,[
 	ROUTER_PROVIDERS,
 	HTTP_PROVIDERS,
