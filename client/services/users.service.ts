@@ -1,39 +1,19 @@
 //Modules
 import {Observable} from "rxjs/Observable";
 import {Injectable} from "angular2/core";
-import {Http, Headers, RequestOptions, Request, RequestMethod} from "angular2/http";
+import {Http, Headers, Request, RequestOptions, RequestMethod} from "angular2/http";
 
 //Includes
 import {User} from './user.model';
 
 @Injectable()
-export class Users{
+export class UserService{
 	
-	//Constructor
 	constructor(private http: Http){
 		this.http = http;
 	}
 	
-	//Create new user
-	insertUser(username: string, email: string){
-		
-		//Prepare headers
-		let headers = new Headers();
-		headers.append('Content-Type', 'application/json');
-		
-		//Make http post request
-		var request = this.http.request(new Request(new RequestOptions({
-			headers: headers,
-			method: RequestMethod.Post,
-			url: "/api/v1/users/insert?username=Test",
-			body: JSON.stringify({ username: username, email: email })
-		})));
-		
-		//Parse json response
-		return request.map(res => res.json());
-	}
-	
-	//Get existing users
+	//Get list of existing users
 	getUsers(limit: Number): Observable<User[]>{
 		
 		//Make http get request
@@ -42,13 +22,52 @@ export class Users{
 			url: "/api/v1/users?limit=" + limit.toString()
 		})));
 		
+		//Parse json response and map to object
+		return request
+			.map(res => res.json())
+			.map(res => {
+				
+				//Check response for errors
+				if (res.hasOwnProperty('error')){
+					throw new Error(res.error);
+				}else{
+					return res.users;
+				}
+			})
+			.map(res => res.map(u => new User(u.userId, u.username, u.email)));
+	}
+	
+	//Create new user in backend
+	insertUser(username: string, email: string){
+		
+		//Make http post request
+		var request = this.http.request(new Request(new RequestOptions({
+			headers: new Headers({
+				"Content-Type": "application/json"
+			}),
+			method: RequestMethod.Post,
+			url: "/api/v1/users/insert",
+			body: JSON.stringify({
+				username: username,
+				email: email
+			})
+		})));
+		
 		//Parse json response
 		return request
 			.map(res => res.json())
-			.map(res => res.users.map(u => new User(u.userId, u.username, u.email)));
+			.map(res => {
+				
+				//Check response for errors
+				if (res.hasOwnProperty('error')){
+					throw new Error(res.error);
+				}else{
+					return res;
+				}
+			});
 	}
 	
-	//Delete user with id
+	//Delete user from backend with identifier
 	deleteUser(userId: string){
 		
 		//Make http delete request
@@ -58,6 +77,16 @@ export class Users{
 		})));
 		
 		//Parse json response
-		return request.map(res => res.json());
+		return request
+			.map(res => res.json())
+			.map(res => {
+				
+				//Check response for errors
+				if (res.hasOwnProperty('error')){
+					throw new Error(res.error);
+				}else{
+					return res;
+				}
+			});
 	}
 }

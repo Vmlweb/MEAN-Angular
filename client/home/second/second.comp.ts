@@ -1,47 +1,38 @@
-//Dependancies
-import {Component, View, OnInit} from "angular2/core";
-import {RouteConfig, ROUTER_DIRECTIVES} from "angular2/router";
+//Modules
+import {Component, OnInit} from "angular2/core";
+import {ROUTER_DIRECTIVES} from "angular2/router";
 
 //Includes
 import {TimeService} from "../../services/time.service";
 
-//Configuration
 @Component({
 	templateUrl: "home/second/second.html",
 	directives: [ROUTER_DIRECTIVES],
 	providers: [TimeService]
 })
 
-//Export
 export class SecondComponent {
 	
-	//Properties
 	time: string;
 	timeService: TimeService;
 	
-	//Constructor
 	constructor(timeService: TimeService){
 		this.time = "Loading...";
 		this.timeService = timeService;
 	}
 
-	//On Loaded
 	ngOnInit(){
+		
+		//Check for new time ever 0.2 seconds
 		setInterval(() => {
 			
-			//Subscribe to time observer
+			//Get current time from service
 			this.timeService.current().subscribe(
-				data => {
-					
-					//Check for response error
-					if (data.hasOwnProperty("error")){
-						this.time = data.error;
-					}				
-					
-					this.time = data.time;
+				time => {
+					this.time = time;
 				},
-				err => {
-					this.time = err;
+				error => {
+					this.time = error;
 				}
 			);
 			

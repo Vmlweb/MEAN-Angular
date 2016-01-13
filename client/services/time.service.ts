@@ -2,16 +2,14 @@
 import {Injectable} from "angular2/core";
 import {Http, Headers, Request, RequestOptions, RequestMethod} from "angular2/http";
 
-//Service
 @Injectable()
 export class TimeService{
 	
-	//Constructor
 	constructor(private http: Http){
 		this.http = http;
 	}
 	
-	//Returns current time
+	//Gets the current time
 	current(){
 		
 		//Make http get request
@@ -23,6 +21,14 @@ export class TimeService{
 		//Parse json response
 		return request
 			.map(res => res.json())
-			.map(res => res.time);
+			.map(res => {
+				
+				//Check response for errors
+				if (res.hasOwnProperty('error')){
+					throw new Error(res.error);
+				}else{
+					return res.time;
+				}
+			});
 	}
 }

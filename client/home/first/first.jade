@@ -35,7 +35,7 @@ div
 						button.ui.button((click)="insertUser()") Add New User
 						.ui.labeled.input
 							.ui.label Limit
-							input(type="text", #limit="", (keyup)="limitChanged(limit.value)")
+							input(type="text", #limit="", (keyup)="onLimitChanged(limit.value)")
 						table.ui.celled.table
 							thead
 								tr

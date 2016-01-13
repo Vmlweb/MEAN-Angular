@@ -1,114 +1,89 @@
-//Dependancies
-import {Component, View, ElementRef, AfterViewInit, OnInit} from 'angular2/core';
-import {RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
+//Declarations
 declare var jQuery:any;
 
-//Include
-import {Users} from '../../services/users.service';
+//Modules
+import {Component, ElementRef, AfterViewInit, OnInit} from 'angular2/core';
+import {ROUTER_DIRECTIVES} from 'angular2/router';
+
+//Includes
+import {UserService} from '../../services/users.service';
 import {User} from '../../services/user.model';
 
-//Configuration
 @Component({
 	templateUrl: 'home/first/first.html',
 	directives: [ROUTER_DIRECTIVES],
-	providers: [Users]
+	providers: [UserService]
 })
 
-//Export
 export class FirstComponent {
 	
-	//Properties
 	elementRef: ElementRef;
 	modalRef: any;
 	
-	//Data
-	userService: Users;
 	users: User[];
-	limit = 500;
+	userService: UserService;
+	userLimit = 500;
 	
-	//Constructor
-	constructor(elementRef: ElementRef, userService: Users){
+	constructor(elementRef: ElementRef, userService: UserService){
 		this.elementRef = elementRef;
 		this.userService = userService;
 	}
 	
-	//Find jquery references
 	ngAfterViewInit(){
 		this.modalRef = jQuery(this.elementRef.nativeElement).find('#modal_window');
-		this.reloadUsers();
+		this.loadUsers();
 	}
 	
-	//Insert new user
-	insertUser(){
-		
-		//Get user details
-		let username = prompt("Please enter username");
-		let email = prompt("Please enter email");
-		
-		//Insert user
-		this.userService.insertUser(username, email).subscribe(
-			data => {
-				
-				//Check for errors
-				if (data.hasOwnProperty('error')){
-					alert(data.error);
-				}else{
-					this.reloadUsers();
-				}
-				
-			},
-			err => {
-				alert(JSON.stringify(err));
-			}
-		);
-	}
-	
-	//Remove user with id
-	removeUser(userId: string){
-		
-		this.userService.deleteUser(userId).subscribe(
-			data => {
-				
-				//Check for errors
-				if (data.hasOwnProperty('error')){
-					alert(data.error);
-				}else{
-					this.reloadUsers();
-				}
-				
-			},
-			err => {
-				alert(JSON.stringify(err));
-			}
-		);
-	}
-	
-	//Reload all users
-	reloadUsers(){
-		this.userService.getUsers(this.limit).subscribe(
+	//Load users from service
+	loadUsers(){
+		this.userService.getUsers(this.userLimit).subscribe(
 			users => {
 				this.users = users;
 			},
-			err => {
-				alert(JSON.stringify(err));
+			error => {
+				alert(JSON.stringify(error));
 			}
 		);
 	}
 	
-	//Reload list on limit change
-	limitChanged(limit: string){
-		
-		//Check if limit is valid
-		let validLimit = parseInt(limit);
-		if (!validLimit){
-			this.limit = 500;
-		}else{
-			this.limit = validLimit;
-		}
-		this.reloadUsers();
+	//Insert new user to service
+	insertUser(){
+		this.userService.insertUser(prompt("Please enter username"), prompt("Please enter email")).subscribe(
+			() => {
+				this.loadUsers();
+			},
+			error => {
+				alert(JSON.stringify(error));
+			}
+		);
 	}
 	
-	//Modal toggle
+	//Remove user from service with identnfier
+	removeUser(userId: string){
+		this.userService.deleteUser(userId).subscribe(
+			() => {
+				this.loadUsers();
+			},
+			error => {
+				alert(JSON.stringify(error));
+			}
+		);
+	}
+	
+	//Triggered when user limit changed
+	onLimitChanged(limit: string){
+		
+		//Check if new limit is valid
+		let validLimit = parseInt(limit);
+		if (!validLimit){
+			this.userLimit = 500;
+		}else{
+			this.userLimit = validLimit;
+		}
+		this.loadUsers();
+	}
+	
+	//Modal window toggle
 	openModal(){
 		this.modalRef.modal('show');
 	}

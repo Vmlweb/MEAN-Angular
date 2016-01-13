@@ -7,7 +7,6 @@ import {MockBackend, MockConnection} from "angular2/http/testing";
 //Includes
 import {TimeService} from "./time.service";
 
-//Perform tests
 describe("Time", function(){
 
 	//Create mock http backend
