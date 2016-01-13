@@ -11,9 +11,9 @@ var User = require("../../../models/user.js");
 router.get("/v1/users", function (req, res, next){	
 	
 	//Check for all required parameters
-	var limit = Helper.loadParam(req.body, "limit", "");
+	var limit = Helper.loadParam(req.query, "limit", "");
 	
-	//Convert string to int
+	//Convert string to integer
 	limit = validator.toInt(limit);
 	
 	//Validate parameter fields
@@ -25,8 +25,18 @@ router.get("/v1/users", function (req, res, next){
 			return next(err);
 		}else{
 		
+			//Compile list of response users
+			var responseUsers = [];
+			for (var i=0; i<users.length; i++){
+				responseUsers.push({
+					userId: users[i].id.toString(),
+					username: users[i].username,
+					email: users[i].email
+				});
+			}
+		
 			//Send user array response
-			res.json({ users: users });
+			res.json({ users: responseUsers });
 		}
 	});
 });

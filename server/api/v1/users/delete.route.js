@@ -11,7 +11,7 @@ var User = require("../../../models/user.js");
 router.delete("/v1/users/delete", function (req, res, next){	
 	
 	//Check for all required parameters
-	var userId = Helper.loadParam(req.body, "userId", "");
+	var userId = Helper.loadParam(req.query, "userId", "");
 	
 	//Strip whitespace and new lines
 	userId = Helper.trim(userId);

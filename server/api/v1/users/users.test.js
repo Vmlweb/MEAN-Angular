@@ -1,6 +1,7 @@
 //Modules
 var url = require("url");
 var request = require("request");
+var querystring = require("querystring");
 
 //Includes
 var Config = require("../../../../config.js");
@@ -8,10 +9,9 @@ var Config = require("../../../../config.js");
 //Request prototype
 var startRequest = function(params, checks){
 	request({
-		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.external, "/api/v1/users"),
+		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.external, "/api/v1/users?") + querystring.stringify(params),
 		method: "GET",
-		json: true,
-		form: params
+		json: true
 	}, function (err, res, body) {
 		
 		//Check there was no error in the request
@@ -35,9 +35,13 @@ describe("View Users", function(){
 				limit: 1
 			}, function(body){
 				
-				//Check that users were returned with correct limit
+				//Check that users were returned
+				expect(body.users[0].userId).toBe("607f1f77bcf86cd799439011");
 				expect(body.users[0].username).toBe("FirstUser");
 				expect(body.users[0].email).toBe("FirstUser@FirstUser.com");
+				
+				//Check limit is correct
+				expect(body.users.length).toBe(1);
 				
 				done();
 			});
@@ -49,13 +53,19 @@ describe("View Users", function(){
 				limit: 3
 			}, function(body){
 				
-				//Check that users were returned with correct limit
+				//Check that users were returned
+				expect(body.users[0].userId).toBe("607f1f77bcf86cd799439011");
 				expect(body.users[0].username).toBe("FirstUser");
 				expect(body.users[0].email).toBe("FirstUser@FirstUser.com");
+				expect(body.users[1].userId).toBe("607f1f77bcf86cd799439012");
 				expect(body.users[1].username).toBe("SecondUser");
 				expect(body.users[1].email).toBe("SecondUser@SecondUser.com");
+				expect(body.users[2].userId).toBe("607f1f77bcf86cd799439013");
 				expect(body.users[2].username).toBe("ThirdUser");
 				expect(body.users[2].email).toBe("ThirdUser@ThirdUser.com");
+				
+				//Check limit is correct
+				expect(body.users.length).toBe(3);
 				
 				done();
 			});
