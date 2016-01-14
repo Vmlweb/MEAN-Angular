@@ -81,11 +81,6 @@ elif [ "$1" == "install" ]; then
 	sudo dpkg -i libicu52_52.1-8ubuntu0.2_amd64.deb
 	rm libicu52_52.1-8ubuntu0.2_amd64.deb
 	
-	# Install NPM dependancies for project
-	
-	npm install -g gulpjs/gulp.git#4.0 bower karma tsd jasmine
-	npm install
-	
 elif [ "$1" == "clean" ]; then
 	
 	# Clean temporary Docker files and images

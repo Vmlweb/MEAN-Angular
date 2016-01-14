@@ -1,9 +1,10 @@
 # MEAN Stack Template
 
-Quick and simple template to get up and running with a MEAN stack web app inside of docker.
+Quick and simple template to get up and running with a MEAN stack web app inside of Docker.
 
 ## Features
 
+  * NodeJS 5.x
   * Docker & Compose
   * MongoDB & Mongoose
   * AngularJS 2 & Typescript
@@ -16,17 +17,21 @@ Quick and simple template to get up and running with a MEAN stack web app inside
 
 ## Prequisitions
 
-First download the repository, then install NodeJS and Docker onto Ubuntu 15.10.
+First download the repository.
 
 ```bash
 git clone https://github.com/Vmlweb/MEAN-AngularJS-2.git
 cd mean
+```
 
+Server.sh provides a quick command to install NodeJS 5, Docker and Compose onto Ubuntu 15.10.
+
+```bash
 chmod +x server.sh
 ./server.sh install
 ```
 
-Next install the gulp command line tools if you have not already.
+Next install the Gulp 4, Bower, Karma, TSD and Jasmine command line tools if you have not already.
 
 ```bash
 sudo npm install -g gulpjs/gulp.git#4.0 bower karma tsd jasmine
@@ -34,7 +39,7 @@ sudo npm install -g gulpjs/gulp.git#4.0 bower karma tsd jasmine
 
 ## Installation
 
-Then install the project dependancies and setup the development environment.
+Then install the project dependancies and setup the development enviroment.
 
 ```bash
 npm install
@@ -45,30 +50,32 @@ If prompted for input use the default location or setting. (Press Enter)
 
 ## Directory Structure
 
-- `builds` - Temporary built/compiled files.
-- `certs` - Client side website source.
+- `builds` - Temporary built and compiled files.
+- `certs` - Security certificates and key files.
 - `client` - Client side website source.
-- `client/tests` - Unit testing setup for client website.
+- `client/app` - Angular bootstrap and app component.
+- `client/tests` - Unit testing setup.
 - `client/typings` - Typescript library type mappings.
 - `data` - Development database binary files.
 - `dist` - Production ready distribution builds.
 - `logs` - Development JSON log files.
 - `semantic` - User interface framework source.
 - `server` - Server side application source.
-- `server/api` - API endpoints for server app.
+- `server/api` - API endpoints.
 - `server/app` - Core functions for server app.
-- `server/models` - Database models and schemas for server app.
-- `server/test` - Unit testing setup for server app.
+- `server/models` - Database models and schemas.
+- `server/test` - Unit testing setup.
 - `server/typings` - Typescript library type mappings.
 
 ## File Structure
 
 - `bower.json` - Client website package dependancies.
-- `docker-compose.yml` - Layout for running distribution build with docker compose.
-- `Dockerfile` - App docker definition for distribution build.
+- `config.js` - Configurations for development and distribution.
+- `docker-compose.yml` - Layout for running distribution build with Docker Compose.
+- `Dockerfile` - App Docker definition for distribution build.
 - `gulp.js` - Workflow and build tasks.
 - `mongodb.js` - Executed in MongoDB on database setup.
-- `karma.shim.js` - Middleware to help with AngularJS 2 unit tests.
+- `karma.shim.js` - Middleware to help with Angular unit tests.
 - `package.json` - Server application package dependancies.
 - `semantic.json` - User interface framework configuration.
 - `server.sh` - Start or stop the production server.
@@ -81,19 +88,13 @@ For development the primary working directories are.
 - `semantic` - User interface framework source.
 - `server` - Server side application source.
 
-You can start the development server which will rebuild any changes live.
+You can start the development server which will rebuild any source file changes live.
 
 ```bash
 gulp dev
 ```
 
 Press `control + c` to stop and exit the development server.
-
-Make sure the development server is stopped after you've finished working.
-
-```bash
-gulp stop
-```
 
 Use the following to reset the development server database and logs.
 
@@ -103,7 +104,7 @@ gulp reset
 
 The development server stores its `data` and `logs` in the local directory.
 
-## Logger
+## Console Logging
 
 Use the following commands to log messages directly to the console and `logs` directory
 
@@ -114,7 +115,7 @@ log.info('info'); //Info log file
 log.verbose('verbose'); //Access log file
 ```
 
-## Libraries
+## User Interface
 
 You can make changes to the user interface and themes in the `semantic` directory but must rebuild them to take affect.
 
@@ -122,92 +123,67 @@ You can make changes to the user interface and themes in the `semantic` director
 gulp semantic
 ```
 
-To add libraries to the client website first install them with bower.
-
-```bash
-bower install --save --allow-root jquery
-```
-
-Then add them to `gulpfile.js` under the `copy:build` task and they be copied to the `/libs/` directory upon build. 
-
-Also make sure you add them to `karma.conf.js` under `files` if you need them to be included in client website testing.
-
-## Testing
+## Unit Testing
 
 You can execute the automated unit tests either combined or individually for the server and client.
 
 ```bash
 gulp test
-gulp test:client
-gulp test:server
+gulp client.test
+gulp server.test
 ```
 
-Test files should be included in the `server` and `client` directories and use the following filenames.
+Test files should be included in the `server` and `client` directories and use the `.test.ts or .test.js` extensions.
 
-```bash
-*.mock.js
-*.stub.js
-*.test.js
-*.spec.js
-*.db.js
-```
-
-The `data` and `logs` directories are not exposed when testing and will be reset after each test run.
-
-You can also add testing libraries for the client website using bower.
-
-```bash
-bower install --save-dev --allow-root angular-mocks
-```
-
-Then add them to `gulpfile.js` under the `copy:test` task and they be copied to the `/libs/` directory upon testing. 
-
-Also make sure you add them to `karma.conf.js` under `files` so they are included when testing.
+When testing a blank database will be used, see `server/tests/users.test.js` for populating it before each test.
 
 ## Distribution
 
-To compile and archive a production ready distribution build using the following commands.
+To compile a production ready distribution build use the following command.
 
 ```bash
 gulp dist
-gulp archive
 ```
 
-These files will be generated in the `dist` directory.
+These main files will be generated in the `dist` directory.
 
-- `mean_*.tar.gz` - Compressed version of all the files below.
-- `docker-compose.yml` - Layout for running distribution build with docker compose.
-- `mean_app.tar` - Docker image for distribution build.
+- `docker-compose.yml` - Layout for running distribution build with Docker Compose.
+- `mean_app.tar` - App Docker image for distribution build.
 - `mongodb.js` - Executed in MongoDB on database setup.
 - `server.sh` - Start or stop the production server.
 
-## Executing Locally
+## Production
 
-To setup and reset your production database use the following command
+First import the Docker image onto the host machine.
 
 ```bash
-cd dist
+docker load < mean_app.tar
+```
+
+Then setup and wipe your production database using the following command.
+
+```bash
+chmod +x server.sh
 ./server.sh reset
 ```
 
-Use the `server.sh` file to start and stop your production app within docker.
+You must then copy `config.js` and the `certs` directory to their respective locations specified in `config.js`.
+
+Use can then use `server.sh` or `docker-compose.yml` to start and stop your production app using Docker.
 
 ```bash
 ./server.sh start
 ./server.sh stop
+
+docker-compose up
 ```
 
-## Executing Externally
-
-When transferred to another host you will need to either pull or load the docker images again and setup the production database.
+You can start the app or database individually using the following commands.
 
 ```bash
-chmod +x server.sh
+./server.sh app
+./server.sh db
 
-docker load < mean_app.tar
-docker load < mean_db.tar
-
-./server.sh reset
+./server.sh app_stop
+./server.sh db_stop
 ```
-
-You can then use the same commands mentioned above to execute the production app.
