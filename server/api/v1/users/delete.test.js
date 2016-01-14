@@ -1,6 +1,7 @@
 //Modules
 var url = require("url");
 var request = require("request");
+var querystring = require("querystring");
 
 //Includes
 var Config = require("../../../../config.js");
@@ -9,10 +10,9 @@ var User = require("../../../models/user.js");
 //Request prototype
 var startRequest = function(params, checks){
 	request({
-		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.external, "/api/v1/users/delete"),
+		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.external, "/api/v1/users/delete?") + querystring.stringify(params),
 		method: "DELETE",
 		json: true,
-		body: params
 	}, function (err, res, body) {
 		
 		//Check there was no error in the request
@@ -25,7 +25,7 @@ var startRequest = function(params, checks){
 };
 
 //Perform tests
-describe("Update Users", function(){
+describe("Delete User", function(){
 	
 	// !Positive Tests
 	

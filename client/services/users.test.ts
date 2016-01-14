@@ -92,7 +92,7 @@ describe("User Service", function(){
 			
 		}));
 		
-		it("should delete user with identnfier", inject([XHRBackend, UserService], (mockBackend, userService) => {
+		it("should delete user with identifier", inject([XHRBackend, UserService], (mockBackend, userService) => {
 			
 			//Prepare mock http response
 			mockBackend.connections.subscribe((connection: MockConnection) => {
