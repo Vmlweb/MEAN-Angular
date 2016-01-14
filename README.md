@@ -7,7 +7,7 @@ Quick and simple template to get up and running with a MEAN stack web app inside
   * Docker & Compose
   * MongoDB & Mongoose
   * AngularJS 2 & Typescript
-  * Semantic UI
+  * Semantic UI & jQuery
   * Jade & Stylus Templates
   * Jasmin & Karma Unit Tests
   * Winston File & Console Logs

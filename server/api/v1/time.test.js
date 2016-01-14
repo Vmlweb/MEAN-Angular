@@ -8,7 +8,7 @@ var Config = require("../../../config.js");
 //Request prototype
 var startRequest = function(params, checks){
 	request({
-		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.external, "/api/v1/time"),
+		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.internal, "/api/v1/time"),
 		method: "GET",
 		json: true,
 		body: params

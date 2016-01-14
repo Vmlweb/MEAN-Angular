@@ -29,7 +29,7 @@
     "jasmine-core": "^2.4.1",
     "jasmine-spec-reporter": "^2.4.0",
     "jshint": "^2.8.0",
-    "karma": "^0.13.17",
+    "karma": "^0.13.19",
     "karma-jasmine": "^0.3.6",
     "karma-mocha-reporter": "^1.1.5",
     "karma-phantomjs2-launcher": "^0.4.0",

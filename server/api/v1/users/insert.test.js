@@ -9,7 +9,7 @@ var User = require("../../../models/user.js");
 //Request prototype
 var startRequest = function(params, checks){
 	request({
-		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.external, "/api/v1/users/insert"),
+		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.internal, "/api/v1/users/insert"),
 		method: "POST",
 		json: true,
 		body: params

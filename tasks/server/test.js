@@ -14,8 +14,6 @@ gulp.task("server.test", gulp.series(
 	gulp.parallel("server.build", "build.config"),
 	gulp.parallel("database.test"),
 	gulp.parallel("database.reset.config"),
-	gulp.parallel("app.test"),
-	gulp.parallel("app.attach"),
 	gulp.parallel("server.test.jasmine"),
 	gulp.parallel("stop")
 ));

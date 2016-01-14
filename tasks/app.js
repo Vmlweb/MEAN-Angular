@@ -10,7 +10,6 @@ var docker = dockerode();
 /* !Tasks 
 - app.reset
 - app.start
-- app.test
 - app.attach
 - app.stop
 */
@@ -68,40 +67,6 @@ gulp.task("app.start", function(done){
 				path.join(process.cwd(), "builds", "client") + ":/home/client",
 				path.join(process.cwd(), "certs") + ":/home/certs",
 				path.join(process.cwd(), "logs") + ":/home/logs",
-				path.join(process.cwd(), "node_modules") + ":/home/node_modules",
-				path.join(process.cwd(), "config.js") + ":/home/config.js"
-			],
-			PortBindings: externalPorts
-		}, function(err, data){
-			if (err){ throw err; }
-			setTimeout(done, 500);
-		});
-	});
-});
-
-//Start test server
-gulp.task("app.test", function(done){
-	
-	//Prepare container
-	docker.createContainer({
-		Image: "node:slim",
-		WorkingDir: "/home",
-		Cmd: ["node", "/home/server/app.js"],
-		name: config.name + "_app",
-		Tty: false,
-		ExposedPorts: internalPorts,
-		Env: [
-			"NODE_ENV=testing"
-		]
-	}, function(err, container) {
-		if (err){ throw err; }
-		
-		//Start container
-		container.start({
-			Binds: [
-				path.join(process.cwd(), "builds", "server") + ":/home/server",
-				path.join(process.cwd(), "builds", "client") + ":/home/client",
-				path.join(process.cwd(), "certs") + ":/home/certs",
 				path.join(process.cwd(), "node_modules") + ":/home/node_modules",
 				path.join(process.cwd(), "config.js") + ":/home/config.js"
 			],

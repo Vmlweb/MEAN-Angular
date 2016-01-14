@@ -10,7 +10,7 @@ var User = require("../../../models/user.js");
 //Request prototype
 var startRequest = function(params, checks){
 	request({
-		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.external, "/api/v1/users/delete?") + querystring.stringify(params),
+		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.internal, "/api/v1/users/delete?") + querystring.stringify(params),
 		method: "DELETE",
 		json: true,
 	}, function (err, res, body) {

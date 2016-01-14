@@ -42,6 +42,7 @@ gulp.task("client.test.karma", function(done){
 			{ pattern: "karma.shim.js", included: true },
 			//Source
 			{ pattern: "builds/client/**/*.js", included: false },
+			{ pattern: "builds/client/**/*.js.map", included: false },
 		],
 		reporters: ["mocha"]
 	}, function(){

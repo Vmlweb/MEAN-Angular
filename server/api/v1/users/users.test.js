@@ -9,7 +9,7 @@ var Config = require("../../../../config.js");
 //Request prototype
 var startRequest = function(params, checks){
 	request({
-		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.external, "/api/v1/users?") + querystring.stringify(params),
+		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.internal, "/api/v1/users?") + querystring.stringify(params),
 		method: "GET",
 		json: true
 	}, function (err, res, body) {
