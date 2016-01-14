@@ -21,7 +21,7 @@ First download the repository.
 
 ```bash
 git clone https://github.com/Vmlweb/MEAN-AngularJS-2.git
-cd mean
+cd MEAN-AngularJS-2
 ```
 
 Server.sh provides a quick command to install NodeJS 5, Docker and Compose onto Ubuntu 15.10.
@@ -39,7 +39,7 @@ sudo npm install -g gulpjs/gulp.git#4.0 bower karma tsd jasmine
 
 ## Installation
 
-Then install the project dependancies and setup the development enviroment.
+Then install the project dependancies and setup the development environment.
 
 ```bash
 npm install
@@ -163,11 +163,16 @@ docker load < mean_app.tar
 Then setup and wipe your production database using the following command.
 
 ```bash
-chmod +x server.sh
 ./server.sh reset
 ```
 
 You must then copy `config.js` and the `certs` directory to their respective locations specified in `config.js`.
+
+Make sure to set the correct file permissions for these certificates.
+
+```bash
+chown -R 999:999 /opt/mean/certs
+```
 
 Use can then use `server.sh` or `docker-compose.yml` to start and stop your production app using Docker.
 
