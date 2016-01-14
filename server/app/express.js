@@ -113,7 +113,7 @@ recursive(path.join(__dirname, "../", "api"),[ "!**/*.route.js" ], function (err
 	
 	//Error handler for client side requests
 	app.use(function(req, res, next){
-		//res.status(404).redirect("/errors/404.html");
+		res.status(404).redirect("/errors/404.html");
 	});
 	app.use(function(err, req, res, next){
 		log.error(err.stack);

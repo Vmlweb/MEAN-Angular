@@ -23,7 +23,6 @@ var startRequest = function(params, checks){
 	});
 };
 
-//Perform tests
 describe("View Users", function(){
 	
 	// !Positive Tests

@@ -7,7 +7,6 @@ var router = require("express").Router();
 var Helper = require("../../../app/helper.js");
 var User = require("../../../models/user.js");
 
-//Request
 router.delete("/v1/users/delete", function (req, res, next){	
 	
 	//Check for all required parameters

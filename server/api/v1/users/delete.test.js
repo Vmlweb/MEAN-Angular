@@ -24,7 +24,6 @@ var startRequest = function(params, checks){
 	});
 };
 
-//Perform tests
 describe("Delete User", function(){
 	
 	// !Positive Tests

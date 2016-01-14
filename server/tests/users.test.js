@@ -5,7 +5,7 @@ var Helper = require("../app/helper.js");
 //Setup
 beforeEach(function(callback){
 	
-	//Reset the databases
+	//Reset the database
 	User.remove(function(){
 		var objects = [];
 		

@@ -7,7 +7,6 @@ var router = require("express").Router();
 var Helper = require("../../../app/helper.js");
 var User = require("../../../models/user.js");
 
-//Request
 router.post("/v1/users/insert", function (req, res, next){	
 	
 	//Check for all required parameters

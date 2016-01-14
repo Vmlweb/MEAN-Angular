@@ -23,7 +23,6 @@ var startRequest = function(params, checks){
 	});
 };
 
-//Perform tests
 describe("Time", function(){
 	
 	// !Positive Tests

@@ -10,7 +10,7 @@ var express = require("./app/express.js");
 //Setup mocks
 if (process.env.NODE_ENV === "testing"){
 	require("./app/time.test.js");
-	log.info("Setup mock and stub objects");
+	log.info("Setup test mocks and stubs");
 }
 
 //Graceful shutdown

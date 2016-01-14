@@ -24,7 +24,6 @@ var startRequest = function(params, checks){
 	});
 };
 
-//Perform tests
 describe("Insert Users", function(){
 	
 	// !Positive Tests
