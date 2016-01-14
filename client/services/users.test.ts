@@ -1,7 +1,7 @@
 //Modules
 import {provide} from "angular2/core";
-import {it, describe, expect, inject, beforeEachProviders} from "angular2/testing";
-import {HTTP_PROVIDERS, XHRBackend, Headers, ResponseOptions, Response} from "angular2/http";
+import {it, describe, expect, inject, beforeEachProviders, afterEach} from "angular2/testing";
+import {HTTP_PROVIDERS, XHRBackend, Headers, RequestMethod, ResponseOptions, Response} from "angular2/http";
 import {MockBackend, MockConnection} from "angular2/http/testing";
 
 //Includes
@@ -26,11 +26,17 @@ describe("User Service", function(){
 			
 			//Prepare mock http response
 			mockBackend.connections.subscribe((connection: MockConnection) => {
+				
+				//Check url and request was correct
+				expect(connection.request.method).toBe(RequestMethod.Get);
+				expect(connection.request.url).toBe("/api/v1/users?limit=4");
+				
+				//Send mock response
 				connection.mockRespond(new Response(new ResponseOptions({
 					headers: new Headers({
 						"Content-Type": "application/json"
 					}),
-					body: { 
+					body: {
 						users: [
 							{ userId: "5696d1ab1300d90100721891", username: "FirstUser", email: "FirstUser@FirstUser.com" },
 							{ userId: "5696d1ab1300d90100721892", username: "SecondUser", email: "SecondUser@SecondUser.com" },
@@ -74,6 +80,17 @@ describe("User Service", function(){
 			
 			//Prepare mock http response
 			mockBackend.connections.subscribe((connection: MockConnection) => {
+				
+				//Parse JSON request
+				let request = JSON.parse(connection.request.text().toString());
+				
+				//Check url and request was correct
+				expect(connection.request.method).toBe(RequestMethod.Post);
+				expect(connection.request.url).toBe("/api/v1/users/insert");
+				expect(request.username).toBe("MyUsername");
+				expect(request.email).toBe("MyEmail@MyEmail.com");
+				
+				//Send mock response
 				connection.mockRespond(new Response(new ResponseOptions({
 					headers: new Headers({
 						"Content-Type": "application/json"
@@ -83,19 +100,24 @@ describe("User Service", function(){
 			});
 			
 			//Check that returned users match stub
-			userService.insertUser("MyUsername", "myPassword").subscribe(
+			userService.insertUser("MyUsername", "MyEmail@MyEmail.com").subscribe(
 				() => {},
 				error => {
 					expect(error).not.toBeDefined();
 				}
 			);
-			
 		}));
 		
 		it("should delete user with identifier", inject([XHRBackend, UserService], (mockBackend, userService) => {
 			
 			//Prepare mock http response
 			mockBackend.connections.subscribe((connection: MockConnection) => {
+				
+				//Check url and request was correct
+				expect(connection.request.method).toBe(RequestMethod.Delete);
+				expect(connection.request.url).toBe("/api/v1/users/delete?userId=5696d1ab1300d90100721891");
+				
+				//Send mock response
 				connection.mockRespond(new Response(new ResponseOptions({
 					headers: new Headers({
 						"Content-Type": "application/json"

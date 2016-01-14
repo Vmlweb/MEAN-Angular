@@ -1,7 +1,7 @@
 //Modules
 import {provide} from "angular2/core";
 import {it, describe, expect, inject, beforeEachProviders} from "angular2/testing";
-import {HTTP_PROVIDERS, XHRBackend, Headers, ResponseOptions, Response} from "angular2/http";
+import {HTTP_PROVIDERS, XHRBackend, Headers, RequestMethod, ResponseOptions, Response} from "angular2/http";
 import {MockBackend, MockConnection} from "angular2/http/testing";
 
 //Includes
@@ -26,6 +26,12 @@ describe("Time", function(){
 			
 			//Prepare mock http response
 			mockBackend.connections.subscribe((connection: MockConnection) => {
+				
+				//Check url and request was correct
+				expect(connection.request.method).toBe(RequestMethod.Get);
+				expect(connection.request.url).toBe("/api/v1/time");
+				
+				//Send mock response
 				connection.mockRespond(new Response(new ResponseOptions({
 					headers: new Headers({
 						'Content-Type': 'application/json'
