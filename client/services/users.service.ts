@@ -1,7 +1,7 @@
 //Modules
 import {Observable} from "rxjs/Observable";
 import {Injectable} from "angular2/core";
-import {Http, Headers, Request, RequestOptions, RequestMethod} from "angular2/http";
+import {Http, Headers, Request, RequestOptions, RequestMethod, URLSearchParams} from "angular2/http";
 
 //Includes
 import {User} from './user.model';
@@ -16,10 +16,15 @@ export class UserService{
 	//Get list of existing users
 	getUsers(limit: Number): Observable<User[]>{
 		
+		//Setup url parameters
+		let params = new URLSearchParams();
+		params.set("limit", limit.toString());
+		
 		//Make http get request
 		var request = this.http.request(new Request(new RequestOptions({
 			method: RequestMethod.Get,
-			url: "/api/v1/users?limit=" + limit.toString()
+			url: "/api/v1/users",
+			search: params
 		})));
 		
 		//Parse json response and map to object
@@ -29,6 +34,7 @@ export class UserService{
 				
 				//Check response for errors
 				if (res.hasOwnProperty('error')){
+					alert(res.error);
 					throw new Error(res.error);
 				}else{
 					return res.users;
@@ -70,10 +76,15 @@ export class UserService{
 	//Delete user from backend with identifier
 	deleteUser(userId: string){
 		
+		//Setup url parameters
+		let params = new URLSearchParams();
+		params.set("userId", userId);
+		
 		//Make http delete request
 		var request = this.http.request(new Request(new RequestOptions({
 			method: RequestMethod.Delete,
-			url: "/api/v1/users/delete?userId=" + userId
+			url: "/api/v1/users/delete",
+			search: params
 		})));
 		
 		//Parse json response

@@ -12,7 +12,7 @@ var startRequest = function(params, checks){
 	request({
 		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.internal, "/api/v1/users/delete?") + querystring.stringify(params),
 		method: "DELETE",
-		json: true,
+		json: true
 	}, function (err, res, body) {
 		
 		//Check there was no error in the request
