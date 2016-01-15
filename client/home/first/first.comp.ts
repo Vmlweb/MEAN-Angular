@@ -41,7 +41,7 @@ export class FirstComponent {
 				this.users = users;
 			},
 			error => {
-				alert(JSON.stringify(error));
+				alert(error.message);
 			}
 		);
 	}
@@ -53,7 +53,7 @@ export class FirstComponent {
 				this.loadUsers();
 			},
 			error => {
-				alert(JSON.stringify(error));
+				alert(error.message);
 			}
 		);
 	}
@@ -65,7 +65,7 @@ export class FirstComponent {
 				this.loadUsers();
 			},
 			error => {
-				alert(JSON.stringify(error));
+				alert(error.message);
 			}
 		);
 	}
