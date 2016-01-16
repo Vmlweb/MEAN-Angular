@@ -16,6 +16,7 @@
     "gulp-jade": "^1.1.0",
     "gulp-jasmine": "^2.2.1",
     "gulp-jshint": "^2.0.0",
+    "gulp-prompt": "^0.1.2",
     "gulp-replace": "^0.5.4",
     "gulp-sequence": "^0.4.4",
     "gulp-shell": "^0.5.1",

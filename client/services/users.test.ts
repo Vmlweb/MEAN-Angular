@@ -86,7 +86,7 @@ describe("User Service", function(){
 				
 				//Check url and request was correct
 				expect(connection.request.method).toBe(RequestMethod.Post);
-				expect(connection.request.url).toBe("/api/v1/users/insert");
+				expect(connection.request.url).toBe("/api/v1/users");
 				expect(request.username).toBe("MyUsername");
 				expect(request.email).toBe("MyEmail@MyEmail.com");
 				
@@ -115,7 +115,7 @@ describe("User Service", function(){
 				
 				//Check url and request was correct
 				expect(connection.request.method).toBe(RequestMethod.Delete);
-				expect(connection.request.url).toBe("/api/v1/users/delete?userId=5696d1ab1300d90100721891");
+				expect(connection.request.url).toBe("/api/v1/users?userId=5696d1ab1300d90100721891");
 				
 				//Send mock response
 				connection.mockRespond(new Response(new ResponseOptions({

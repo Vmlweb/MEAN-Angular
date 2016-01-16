@@ -3,7 +3,7 @@ var router = require("express").Router();
 var moment = require("moment");
 
 //Includes
-var Time = require("../../app/time.js");
+var Time = require(__time);
 
 router.get("/v1/time", function (req, res, next){	
 	

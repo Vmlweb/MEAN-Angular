@@ -52,7 +52,7 @@ export class UserService{
 				"Content-Type": "application/json"
 			}),
 			method: RequestMethod.Post,
-			url: "/api/v1/users/insert",
+			url: "/api/v1/users",
 			body: JSON.stringify({
 				username: username,
 				email: email
@@ -83,7 +83,7 @@ export class UserService{
 		//Make http delete request
 		var request = this.http.request(new Request(new RequestOptions({
 			method: RequestMethod.Delete,
-			url: "/api/v1/users/delete",
+			url: "/api/v1/users",
 			search: params
 		})));
 		

@@ -4,8 +4,10 @@ var async = require("async");
 var router = require("express").Router();
 
 //Includes
-var Helper = require("../../../app/helper.js");
-var User = require("../../../models/user.js");
+var Helper = require(__helper);
+
+//Models
+var User = require(__models + "/user.js");
 
 router.get("/v1/users", function (req, res, next){	
 	

@@ -3,13 +3,15 @@ var url = require("url");
 var request = require("request");
 
 //Includes
-var Config = require("../../../../config.js");
-var User = require("../../../models/user.js");
+var Config = require(__config);
+
+//Models
+var User = require(__models + "/user.js");
 
 //Request prototype
 var startRequest = function(params, checks){
 	request({
-		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.internal, "/api/v1/users/insert"),
+		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.internal, "/api/v1/users"),
 		method: "POST",
 		json: true,
 		body: params

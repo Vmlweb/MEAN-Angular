@@ -1,18 +1,20 @@
 //Modules
 var url = require("url");
 var request = require("request");
+var querystring = require("querystring");
 
 //Includes
-var Config = require("../../../../config.js");
-var User = require("../../../models/user.js");
+var Config = require(__config);
+
+//Models
+var User = require(__models + "/user.js");
 
 //Request prototype
 var startRequest = function(params, checks){
 	request({
-		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.internal, "/api/v1/users/update"),
-		method: "PUT",
-		json: true,
-		body: params
+		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.internal, "/api/v1/users?") + querystring.stringify(params),
+		method: "DELETE",
+		json: true
 	}, function (err, res, body) {
 		
 		//Check there was no error in the request
@@ -24,25 +26,22 @@ var startRequest = function(params, checks){
 	});
 };
 
-describe("Update Users", function(){
+describe("Delete User", function(){
 	
 	// !Positive Tests
 	
 	describe("Positive Tests", function(){
 		
-		it("should update details for user", function(done){
+		it("should delete user", function(done){
 			startRequest({
 				userId: "607f1f77bcf86cd799439013",
-				username: "NewUsername",
-				email: "NewEmail@NewEmail.com"
 			}, function(body){
 				
-				//Check that user was changed in database
+				//Check that user was removed from database
 				User.findById("607f1f77bcf86cd799439013", function(err, user){
 					
-					//Check user details
-					expect(user.username).toBe("NewUsername");
-					expect(user.email).toBe("NewEmail@NewEmail.com");
+					//Check user doesnt exist
+					expect(user).toBe(null);
 					
 					done();
 				});
@@ -57,12 +56,9 @@ describe("Update Users", function(){
 	describe("Negative Tests", function(){
 		
 		it("should return error if no user id is given", function(done){
-			startRequest({
-				username: "NewUsername",
-				email: "NewEmail@NewEmail.com"
-			}, function(body){
+			startRequest({}, function(body){
 				
-				//Username must be given
+				//Check error was correct
 				expect(body.error).toBe("User identifier must be given");
 				
 				done();

@@ -3,7 +3,7 @@ var url = require("url");
 var request = require("request");
 
 //Includes
-var Config = require("../../../config.js");
+var Config = require(__config);
 
 //Request prototype
 var startRequest = function(params, checks){

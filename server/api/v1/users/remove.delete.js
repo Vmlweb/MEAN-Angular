@@ -4,10 +4,12 @@ var async = require("async");
 var router = require("express").Router();
 
 //Includes
-var Helper = require("../../../app/helper.js");
-var User = require("../../../models/user.js");
+var Helper = require(__helper);
 
-router.delete("/v1/users/delete", function (req, res, next){	
+//Models
+var User = require(__models + "/user.js");
+
+router.delete("/v1/users", function (req, res, next){	
 	
 	//Check for all required parameters
 	var userId = Helper.loadParam(req.query, "userId", "");

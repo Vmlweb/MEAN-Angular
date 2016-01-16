@@ -4,7 +4,7 @@ var request = require("request");
 var querystring = require("querystring");
 
 //Includes
-var Config = require("../../../../config.js");
+var Config = require(__config);
 
 //Request prototype
 var startRequest = function(params, checks){

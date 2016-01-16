@@ -4,10 +4,12 @@ var async = require("async");
 var router = require("express").Router();
 
 //Includes
-var Helper = require("../../../app/helper.js");
-var User = require("../../../models/user.js");
+var Helper = require(__helper);
 
-router.post("/v1/users/insert", function (req, res, next){	
+//Models
+var User = require(__models + "/user.js");
+
+router.post("/v1/users", function (req, res, next){	
 	
 	//Check for all required parameters
 	var username = Helper.loadParam(req.body, "username", "");
