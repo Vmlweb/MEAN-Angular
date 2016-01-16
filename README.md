@@ -137,6 +137,16 @@ Test files should be included in the `server` and `client` directories and use t
 
 When testing a blank database will be used, see `server/tests/users.test.js` for populating it before each test.
 
+## Documentation
+
+You can generate a concatenated markdown file from all files with the `.md` extension in your api directory.
+
+```bash
+gulp docs
+```
+
+Then enter the directory you would like to recursively search and the file will be generated in the `builds/docs` directory.
+
 ## Distribution
 
 To compile a production ready distribution build use the following command.
