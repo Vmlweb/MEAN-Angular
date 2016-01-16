@@ -5,8 +5,8 @@ var path = require("path");
 var helper = {};
 
 helper.loadCertificate = function(str){
-	if (str !== "" && fs.existsSync(path.join("./certs", str))){
-		return fs.readFileSync(path.join("./certs", str));
+	if (str !== "" && fs.existsSync(path.join(__certs, str))){
+		return fs.readFileSync(path.join(__certs, str));
 	}else{
 		return this;
 	}

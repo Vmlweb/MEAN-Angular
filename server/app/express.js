@@ -16,8 +16,8 @@ var app = express();
 module.exports = { app: app };
 
 //Includes
-var Config = require("../../config.js");
-var Helper = require("./helper.js");
+var Config = require(__config);
+var Helper = require(__helper);
 
 log.info("Express initialized");
 
@@ -54,8 +54,8 @@ if (Config.https.hostname !== "" && Config.https.ssl.key !== "" && Config.https.
 	
 	//Create server and listen
 	module.exports.https = https.createServer({
-		key: Helper.loadCertificate(Config.https.ssl.key) || "",
-		cert: Helper.loadCertificate(Config.https.ssl.cert) || ""
+		key: Helper.loadCertificate(Config.https.ssl.key),
+		cert: Helper.loadCertificate(Config.https.ssl.cert)
 	}, app).listen(Config.https.port.internal, Config.https.hostname);
 	
 	//Logging for events
@@ -66,12 +66,23 @@ if (Config.https.hostname !== "" && Config.https.ssl.key !== "" && Config.https.
 }
 
 //Static routes for public folder
-app.use(express.static(path.join(__dirname, "../../", "client")));
+app.use(express.static(__client));
 
 log.info("Setup client static routes");
 
 //Load api calls from file
-recursive(path.join(__dirname, "../", "api"),[ "!**/*.route.js" ], function (err, files) {
+recursive(__api,[ "**/*.test.js", "**/*.md" ], function (err, files) {
+	
+	//Remove all non router files
+	var includeFiles = [];
+	for (var i=0; i<files.length; i++){
+		if (files[i].indexOf(".get.js") >= 0 ||
+			files[i].indexOf(".post.js") >= 0 ||
+			files[i].indexOf(".put.js") >= 0 ||
+			files[i].indexOf(".delete.js") >= 0){
+			includeFiles.push(files[i]);
+		}
+	}
 	
 	//Routing handler for api calls
 	if (err){
@@ -79,11 +90,11 @@ recursive(path.join(__dirname, "../", "api"),[ "!**/*.route.js" ], function (err
 	}else{
 		
 		//Log endpoint count
-		log.info("Loaded " + files.length + " api endpoints");
+		log.info("Loaded " + includeFiles.length + " api endpoints");
 		
 		//Import individual api routers
-		for (var i=0; i<files.length; i++){
-			var route = require(files[i]);
+		for (var a=0; a<includeFiles.length; a++){
+			var route = require(includeFiles[a]);
 			app.use("/api", route);
 		}
 	}
@@ -102,10 +113,10 @@ recursive(path.join(__dirname, "../", "api"),[ "!**/*.route.js" ], function (err
 		}else{
 			
 			//Interal server error
-			if (err.hasOwnProperty("message") && err.hasOwnProperty("error")){
-				log.error(err.message, err.error);
+			if (err.hasOwnProperty("message")){
+				log.error(err.message, err.stack);
 			}else{
-				log.error("Internal server error", err);	
+				log.error("Internal server error", err.stack);	
 			}
 			res.status(500).json({ error: "Server Error" });
 		}

@@ -2,14 +2,28 @@
 var path = require("path");
 var async = require("async");
 
+//Directories
+global.__api = path.join(__dirname, "api");
+global.__api_v1 = path.join(__dirname, "api/v1");
+global.__client = path.join(__dirname, "../client");
+global.__models = path.join(__dirname, "models");
+global.__app = path.join(__dirname, "app");
+global.__certs = path.join(__dirname, "../certs");
+global.__logs = path.join(__dirname, "../logs");
+
+//App Files
+global.__config = path.join(__dirname, "../config.js");
+global.__time = path.join(__dirname, "app/time.js");
+global.__helper = path.join(__dirname, "app/helper.js");
+
 //Setup
-var logger = require("./app/logger.js");
-var mongo = require("./app/mongo.js");
-var express = require("./app/express.js");
+var logger = require(__app + "/logger.js");
+var mongo = require(__app + "/mongo.js");
+var express = require(__app + "/express.js");
 
 //Setup mocks
 if (process.env.NODE_ENV === "testing"){
-	require("./app/time.test.js");
+	require(__app + "/time.test.js");
 	log.info("Setup test mocks and stubs");
 }
 
@@ -19,14 +33,6 @@ var shutdown = function() {
 	
 	//Run all shutdown tasks in series
 	async.series([
-		function(done){
-		    
-		    //Database
-		    mongo.connection.close(function(){
-		    	done(null);
-		    });
-		    
-	    },
 		function(done){
 		    
 			//HTTP

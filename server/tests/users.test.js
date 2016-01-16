@@ -1,6 +1,6 @@
 //Includes
-var User = require("../models/user.js");
-var Helper = require("../app/helper.js");
+var Helper = require(__helper);
+var User = require(__models + "/user.js");
 
 //Setup
 beforeEach(function(callback){

@@ -8,15 +8,15 @@ var winstonRotate = require("winston-daily-rotate-file");
 var app = require("express")();
 
 //Check and create log directories
-var errorPath = path.join(__dirname, "../../", "logs", "errors");
+var errorPath = path.join(__logs, "errors");
 if (!fs.ensureDirSync(errorPath)){
 	fs.mkdirsSync(errorPath);
 }
-var infoPath = path.join(__dirname, "../../", "logs", "info");
+var infoPath = path.join(__logs, "info");
 if (!fs.ensureDirSync(infoPath)){
 	fs.mkdirsSync(infoPath);
 }
-var accessPath = path.join(__dirname, "../../", "logs", "access");
+var accessPath = path.join(__logs, "access");
 if (!fs.ensureDirSync(accessPath)){
 	fs.mkdirsSync(accessPath);
 }

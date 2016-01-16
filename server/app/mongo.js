@@ -4,8 +4,8 @@ var mongoose = require("mongoose");
 var fs = require("fs");
 
 //Includes
-var Config = require("../../config.js");
-var Helper = require("./helper.js");
+var Config = require(__config);
+var Helper = require(__helper);
 
 //Prepare connection string
 var auth = Config.database.auth.username + ":" + Config.database.auth.password;
@@ -20,9 +20,9 @@ var repl = "replicaSet=" + Config.database.repl.name + "&ssl=" + Config.database
 var options = { 
 	replset: {
 		sslValidate: Config.database.ssl.validate || false,
-		sslKey: Helper.loadCertificate(Config.database.ssl.key) || "",
-		sslCert: Helper.loadCertificate(Config.database.ssl.cert) || "",
-		sslCA: Helper.loadCertificate(Config.database.ssl.ca) || "",
+		sslKey: Helper.loadCertificate(Config.database.ssl.key),
+		sslCert: Helper.loadCertificate(Config.database.ssl.cert),
+		sslCA: Helper.loadCertificate(Config.database.ssl.ca),
 		readPreference: Config.database.repl.read || "nearest"
 	}
 };
