@@ -1,9 +1,18 @@
 {
   "name": "MEAN",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "MEAN Stack",
   "main": "app.js",
   "author": "Victor Leach <admin@vmlweb.co.uk>",
+  "license": "MIT",
+  "homepage": "https://github.com/Vmlweb/MEAN-AngularJS-2#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vmlweb/MEAN-AngularJS-2"
+  },
+  "bugs": {
+    "url": "https://github.com/Vmlweb/MEAN-AngularJS-2/issues"
+  },
   "devDependencies": {
     "angular2": "^2.0.0-beta.1",
     "del": "^2.2.0",
