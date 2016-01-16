@@ -33,6 +33,7 @@ gulp.task("server.build.copy", gulp.parallel("server.build.copy.source"));
 gulp.task("server.build.copy.source", function(){
 	return gulp.src([
 		"server/**/*",
+		"!server/**/*.md",
 		"!server/**/*.ts",
 		"!server/tsd.json",
 		"!server/typings",
@@ -68,8 +69,7 @@ gulp.task("server.build.typescript.lint", function(){
 	        rules: {
 				"no-duplicate-key": true,
 				"no-duplicate-variable": true,
-				"semicolon": true,
-				"triple-equals": true
+				"semicolon": true
 	        }
         }
     }))

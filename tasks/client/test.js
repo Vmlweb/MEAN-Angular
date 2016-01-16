@@ -10,6 +10,7 @@ var Karma = require("karma").Server;
 // !Test
 gulp.task("client.test", gulp.series(
 	gulp.parallel("stop"),
+	gulp.parallel("clean"),
 	gulp.parallel("client.build", "build.config"),
 	gulp.parallel("client.test.karma")
 ));

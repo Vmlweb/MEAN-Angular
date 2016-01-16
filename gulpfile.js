@@ -12,6 +12,7 @@ require("./tasks/build.js");
 require("./tasks/database.js");
 require("./tasks/setup.js");
 require("./tasks/dist.js");
+require("./tasks/docs.js");
 //Client
 require("./tasks/client/build.js");
 require("./tasks/client/test.js");
@@ -43,11 +44,8 @@ gulp.task("dev", gulp.series(
 
 // !Testing
 gulp.task("test", gulp.series(
-	gulp.parallel("clean"),
-	gulp.parallel("build"),
 	gulp.parallel("server.test"),
-	gulp.parallel("client.test"),
-	gulp.parallel("stop")
+	gulp.parallel("client.test")
 ));
  
 // !Distribution
@@ -59,6 +57,11 @@ gulp.task("dist", gulp.series(
 	gulp.parallel("dist.copy"),
 	gulp.parallel("dist.minify"),
 	gulp.parallel("dist.build")
+));
+
+// !Documentation
+gulp.task("docs", gulp.series(
+	"docs.recursive"
 ));
  
 // !Database & App

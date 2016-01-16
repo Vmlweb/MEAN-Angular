@@ -42,6 +42,7 @@ gulp.task("client.build.copy", gulp.parallel("client.build.copy.source", "client
 gulp.task("client.build.copy.source", function(){
 	return gulp.src([
 		"client/**/*",
+		"!client/**/*.md",
 		"!client/**/*.ts",
 		"!client/**/*.jade",
 		"!client/**/*.styl",
@@ -104,8 +105,7 @@ gulp.task("client.build.typescript.lint", function(){
 	        rules: {
 				"no-duplicate-key": true,
 				"no-duplicate-variable": true,
-				"semicolon": true,
-				"triple-equals": true
+				"semicolon": true
 	        }
         }
     }))
