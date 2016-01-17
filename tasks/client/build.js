@@ -144,15 +144,21 @@ gulp.task("client.build.markup", gulp.parallel("client.build.markup.jade", "clie
 
 //Compile jade into html
 gulp.task("client.build.markup.jade", function(){
-	return gulp.src("client/**/*.jade")
-		.pipe(jade())
-		.pipe(gulp.dest("builds/client"));
+	return gulp.src([
+		"client/**/*.jade",
+		"!client/**/*.inc.jade",
+	])
+	.pipe(jade())
+	.pipe(gulp.dest("builds/client"));
 });
 
 //Compile stylus to css
 gulp.task("client.build.markup.stylus", function(){
-	return gulp.src("client/**/*.styl")
-		.pipe(stylus())
-		.pipe(concat("app.css"))
-		.pipe(gulp.dest("builds/client/"));
+	return gulp.src([
+		"client/**/*.styl",
+		"!client/**/*.inc.styl"
+	])
+	.pipe(stylus())
+	.pipe(concat("app.css"))
+	.pipe(gulp.dest("builds/client/"));
 });
