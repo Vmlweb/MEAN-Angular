@@ -10,6 +10,7 @@ var docker = dockerode();
 /* !Tasks 
 - app.reset
 - app.start
+- app.test
 - app.attach
 - app.stop
 */
