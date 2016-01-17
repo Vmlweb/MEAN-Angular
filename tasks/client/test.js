@@ -2,12 +2,12 @@
 var gulp = require("gulp");
 var Karma = require("karma").Server;
 
-/* !Tasks 
+/*! Tasks 
 - client.test
 - client.test.karma
 */
 
-// !Test
+//! Test
 gulp.task("client.test", gulp.series(
 	gulp.parallel("stop"),
 	gulp.parallel("clean"),

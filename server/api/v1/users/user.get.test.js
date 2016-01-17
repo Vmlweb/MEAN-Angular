@@ -25,7 +25,7 @@ var startRequest = function(params, checks){
 
 describe("View Users", function(){
 	
-	// !Positive Tests
+	//! Positive Tests
 	
 	describe("Positive Tests", function(){
 		
@@ -73,7 +73,7 @@ describe("View Users", function(){
 		
 	});
 	
-	// !Negative Tests
+	//! Negative Tests
 	
 	describe("Negative Tests", function(){
 		

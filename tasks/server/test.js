@@ -3,12 +3,12 @@ var gulp = require("gulp");
 var jasmine = require("gulp-jasmine");
 var reporter = require("jasmine-spec-reporter");
 
-/* !Tasks 
+/*! Tasks 
 - server.test
 - server.test.jasmine
 */
 
-// !Test
+//! Test
 gulp.task("server.test", gulp.series(
 	gulp.parallel("stop"),
 	gulp.parallel("clean"),

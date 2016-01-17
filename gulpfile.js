@@ -22,10 +22,10 @@ require("./tasks/server/build.js");
 require("./tasks/server/test.js");
 require("./tasks/server/watch.js");
 
-// !Main Tasks
+//! Main Tasks
 gulp.task("default", gulp.series("dev"));
  
-// !Setup
+//! Setup
 gulp.task("setup", gulp.series(
 	gulp.parallel("stop"),
 	gulp.parallel("setup.dependant", "setup.tsd", "setup.docker", "setup.certs"),
@@ -33,7 +33,7 @@ gulp.task("setup", gulp.series(
 	gulp.parallel("database.reset")
 ));
  
-// !Development
+//! Development
 gulp.task("dev", gulp.series(
 	gulp.parallel("stop"),
 	gulp.parallel("clean"),
@@ -42,13 +42,13 @@ gulp.task("dev", gulp.series(
 	gulp.parallel("server.watch", "client.watch", "app.attach")
 ));
 
-// !Testing
+//! Testing
 gulp.task("test", gulp.series(
 	gulp.parallel("server.test"),
 	gulp.parallel("client.test")
 ));
  
-// !Distribution
+//! Distribution
 gulp.task("dist", gulp.series(
 	gulp.parallel("stop"),
 	gulp.parallel("clean"),
@@ -59,19 +59,19 @@ gulp.task("dist", gulp.series(
 	gulp.parallel("dist.build")
 ));
 
-// !Documentation
+//! Documentation
 gulp.task("docs", gulp.series(
 	"docs.recursive"
 ));
  
-// !Database & App
+//! Database & App
 gulp.task("start", gulp.series("database.start", "app.start"));
 gulp.task("stop", gulp.series("app.stop", "database.stop"));
 gulp.task("restart", gulp.series("stop", "start"));
 gulp.task("reload", gulp.series("app.stop", "app.start"));
 gulp.task("reset", gulp.parallel("database.reset"));
  
-// !Convenience
+//! Convenience
 gulp.task("clean", gulp.parallel("dist.reset", "build.reset"));
 gulp.task("certs", gulp.parallel("setup.certs"));
 gulp.task("semantic", gulp.parallel("build.semantic"));

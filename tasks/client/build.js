@@ -10,7 +10,7 @@ var concat = require("gulp-concat");
 var jade = require("gulp-jade");
 var stylus = require("gulp-stylus");
 
-/* !Tasks 
+/*! Tasks 
 - client.build
 	
 - client.build.copy
@@ -29,13 +29,13 @@ var stylus = require("gulp-stylus");
 - client.build.markup.stylus
 */
 
-// !Build
+//! Build
 gulp.task("client.build", gulp.series(
 	gulp.parallel("client.build.javascript", "client.build.typescript"),
 	gulp.parallel("client.build.copy", "client.build.markup")
 ));
 
-// !Copy
+//! Copy
 gulp.task("client.build.copy", gulp.parallel("client.build.copy.source", "client.build.copy.libs"));
 
 //Copy over client source files
@@ -78,7 +78,7 @@ gulp.task("client.build.copy.libs", function(){
 	.pipe(gulp.dest("builds/client/libs"));
 });
 
-// !Javascript
+//! Javascript
 gulp.task("client.build.javascript", gulp.series("client.build.javascript.lint"));
 
 //Check javascript for lint
@@ -91,7 +91,7 @@ gulp.task("client.build.javascript.lint", function(){
     .pipe(jshint.reporter("default"));
 });
 
-// !Typescript
+//! Typescript
 gulp.task("client.build.typescript", gulp.series("client.build.typescript.lint", "client.build.typescript.compile"));
 
 //Check typescript lint
@@ -139,7 +139,7 @@ gulp.task("client.build.typescript.compile", function() {
 		.pipe(gulp.dest("builds/client"));
 });
 
-// !Markup
+//! Markup
 gulp.task("client.build.markup", gulp.parallel("client.build.markup.jade", "client.build.markup.stylus"));
 
 //Compile jade into html

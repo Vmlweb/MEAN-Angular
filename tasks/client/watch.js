@@ -1,7 +1,7 @@
 //Modules
 var gulp = require("gulp");
 
-/* !Tasks 
+/*! Tasks 
 - client.watch
 - client.watch.source
 - client.watch.typescript
@@ -9,7 +9,7 @@ var gulp = require("gulp");
 - client.watch.stylus
 */
 
-// !Development
+//! Development
 gulp.task("client.watch", gulp.parallel("client.watch.source", "client.watch.typescript", "client.watch.jade", "client.watch.stylus"));
 
 //Watch for source files changes

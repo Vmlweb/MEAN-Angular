@@ -11,7 +11,7 @@ var config = require("../config.js");
 var dockerode = require("dockerode");
 var docker = dockerode();
 
-/* !Tasks 
+/*! Tasks 
 - dist.reset
 - dist.build
 	
@@ -44,7 +44,7 @@ gulp.task("dist.build", shell.task([
 	cwd: "dist"
 }));
 
-// !Copy
+//! Copy
 gulp.task("dist.copy", gulp.parallel("dist.copy.config", "dist.copy.server", "dist.copy.client"));
 
 //Copy over config files
@@ -79,7 +79,7 @@ gulp.task("dist.copy.client", function(){
 	.pipe(gulp.dest("dist/client"));
 });
 
-// !Minify
+//! Minify
 gulp.task("dist.minify", gulp.parallel("dist.minify.server", "dist.minify.client", "dist.minify.css"));
 
 //Minify server and client css files

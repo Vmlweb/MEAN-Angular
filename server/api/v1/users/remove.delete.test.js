@@ -28,7 +28,7 @@ var startRequest = function(params, checks){
 
 describe("Delete User", function(){
 	
-	// !Positive Tests
+	//! Positive Tests
 	
 	describe("Positive Tests", function(){
 		
@@ -51,7 +51,7 @@ describe("Delete User", function(){
 		
 	});
 	
-	// !Negative Tests
+	//! Negative Tests
 	
 	describe("Negative Tests", function(){
 		

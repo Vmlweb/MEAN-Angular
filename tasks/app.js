@@ -7,7 +7,7 @@ var config = require("../config.js");
 var dockerode = require("dockerode");
 var docker = dockerode();
 
-/* !Tasks 
+/*! Tasks 
 - app.reset
 - app.start
 - app.test
@@ -15,7 +15,7 @@ var docker = dockerode();
 - app.stop
 */
 
-// !App Server
+//! App Server
 
 //Reset all app log files
 gulp.task("app.reset", function(done){

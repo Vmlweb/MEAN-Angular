@@ -28,7 +28,7 @@ var startRequest = function(params, checks){
 
 describe("Update Users", function(){
 	
-	// !Positive Tests
+	//! Positive Tests
 	
 	describe("Positive Tests", function(){
 		
@@ -54,7 +54,7 @@ describe("Update Users", function(){
 		
 	});
 	
-	// !Negative Tests
+	//! Negative Tests
 	
 	describe("Negative Tests", function(){
 		

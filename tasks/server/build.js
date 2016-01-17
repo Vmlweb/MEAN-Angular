@@ -6,7 +6,7 @@ var tslint = require("gulp-tslint");
 var ts = require("gulp-typescript");
 var jshint = require("gulp-jshint");
 
-/* !Tasks 
+/*! Tasks 
 - server.build
 	
 - server.build.copy
@@ -20,13 +20,13 @@ var jshint = require("gulp-jshint");
 - server.build.typescript.compile
 */
 
-// !Build
+//! Build
 gulp.task("server.build", gulp.series(
 	gulp.parallel("server.build.javascript", "server.build.typescript"),
 	gulp.parallel("server.build.copy")
 ));
 
-// !Copy
+//! Copy
 gulp.task("server.build.copy", gulp.parallel("server.build.copy.source"));
 
 //Copy over server source files
@@ -42,7 +42,7 @@ gulp.task("server.build.copy.source", function(){
 	.pipe(gulp.dest("builds/server"));
 });
 
-// !Javascript
+//! Javascript
 gulp.task("server.build.javascript", gulp.series("server.build.javascript.lint"));
 
 //Check javascript for lint
@@ -55,7 +55,7 @@ gulp.task("server.build.javascript.lint", function(){
     .pipe(jshint.reporter("default"));
 });
 
-// !Typescript
+//! Typescript
 gulp.task("server.build.typescript", gulp.series("server.build.typescript.lint", "server.build.typescript.compile"));
 
 //Check typescript for lint

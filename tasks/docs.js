@@ -5,7 +5,7 @@ var gulp = require("gulp");
 var prompt = require("gulp-prompt");
 var concat = require("gulp-concat");
 
-/* !Tasks 
+/*! Tasks 
 - docs.single
 - docs.recursive
 */

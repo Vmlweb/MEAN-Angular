@@ -8,7 +8,7 @@ var config = require("../config.js");
 var dockerode = require("dockerode");
 var docker = dockerode();
 
-/* !Tasks 
+/*! Tasks 
 - database.start
 - database.test
 - database.stop
@@ -18,7 +18,7 @@ var docker = dockerode();
 - database.reset.config
 */
 
-// !Database Server
+//! Database Server
 
 //Prepare command
 var cmd = ["mongod", "--auth", "--keyFile", path.join("/home/certs/", config.database.repl.key), "--replSet", config.database.repl.name];
@@ -104,7 +104,7 @@ gulp.task("database.stop", function(done){
 	});
 });
 
-// !Reset Data
+//! Reset Data
 gulp.task("database.reset", gulp.series(
 	gulp.parallel("database.stop", "build.config.mongodb"),
 	gulp.series("database.reset.clean", "database.start", "database.reset.config", "database.stop")

@@ -6,7 +6,7 @@ var path = require("path");
 var replace = require("gulp-replace");
 var config = require("../config.js");
 
-/* !Tasks 
+/*! Tasks 
 - build.reset
 - build.semantic
 
@@ -31,7 +31,7 @@ gulp.task("build.semantic", shell.task([
 	cwd: "node_modules/semantic-ui"
 }));
 
-// !Config
+//! Config
 gulp.task("build.config", gulp.parallel("build.config.nodejs", "build.config.mongodb", "build.config.docker"));
 
 //Build node config file

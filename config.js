@@ -1,10 +1,10 @@
 module.exports = {
 	
-	// !Process
+	//! Process
 	name: "mean",
 	config: "/opt/mean/config.js",
 	
-	// !HTTP
+	//! HTTP
 	http: {
 		hostname: "0.0.0.0",
 		url: "test.vmlweb.co.uk",
@@ -14,7 +14,7 @@ module.exports = {
 		}
 	},
 	
-	// !HTTPS
+	//! HTTPS
 	https: {
 		hostname: "0.0.0.0",
 		url: "test.vmlweb.co.uk",
@@ -28,7 +28,7 @@ module.exports = {
 		}
 	},
 	
-	// !Database
+	//! Database
 	database: {
 		path: "/opt/mean/data",
 		auth: {
@@ -55,7 +55,7 @@ module.exports = {
 		}
 	},
 	
-	// !Certificates
+	//! Certificates
 	certs: {
 		path: "/opt/mean/certs",
 		details: {
@@ -67,7 +67,7 @@ module.exports = {
 		}
 	},
 	
-	// !Logs
+	//! Logs
 	logs: {
 		path: "/opt/mean/logs",
 		format: ":remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] :referrer :user-agent"

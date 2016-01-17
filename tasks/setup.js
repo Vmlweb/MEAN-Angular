@@ -5,7 +5,7 @@ var dockerode = require("dockerode");
 var docker = dockerode();
 var config = require("../config.js");
 
-/* !Tasks 
+/*! Tasks 
 - setup.dependant
 - setup.dependant.npm
 - setup.dependant.semantic
@@ -22,7 +22,7 @@ var config = require("../config.js");
 - setup.certs
 */
 
-// !Dependancies
+//! Dependancies
 gulp.task("setup.dependant", gulp.series(
 	gulp.series("setup.dependant.npm"),
 	gulp.parallel("setup.dependant.semantic", "setup.dependant.bower")
@@ -51,7 +51,7 @@ gulp.task("setup.dependant.bower", shell.task([
 	"bower install --config.analytics=false --allow-root"
 ]));
 
-// !Tsd Typings
+//! Tsd Typings
 gulp.task("setup.tsd", gulp.parallel("setup.tsd.server", "setup.tsd.client"));
 
 //Install tsd server typings
@@ -68,7 +68,7 @@ gulp.task("setup.tsd.client", shell.task([
 	cwd: "client"
 }));
 
-// !Docker Dependancies
+//! Docker Dependancies
 gulp.task("setup.docker", gulp.series("setup.docker.mongodb", "setup.docker.nodejs"));
 
 //Pull required mongodb docker images
@@ -99,7 +99,7 @@ gulp.task("setup.docker.nodejs", function(done){
 	});
 });
 
-// !Certificates
+//! Certificates
 
 //Certificate subject string
 var subj = "'/C=" + config.certs.details.country + "/ST=" + config.certs.details.state + "/L=" + config.certs.details.city + "/O=" + config.certs.details.organisation + "/CN=" + config.certs.details.hostname + "'";

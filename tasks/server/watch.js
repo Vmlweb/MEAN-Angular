@@ -1,13 +1,13 @@
 //Modules
 var gulp = require("gulp");
 
-/* !Tasks 
+/*! Tasks 
 - server.watch
 - server.watch.source
 - server.watch.typescript
 */
 
-// !Development
+//! Development
 gulp.task("server.watch", gulp.parallel("server.watch.source", "server.watch.typescript"));
 
 //Watch for source file changes
