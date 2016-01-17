@@ -15,8 +15,8 @@ var startRequest = function(params, checks){
 	}, function (err, res, body) {
 		
 		//Check there was no error in the request
+		expect(err).toBeNull();
 		expect(res.statusCode).toBe(200);
-		expect(err).toBe(null);
 		
 		//Perform coresponding test checks
 		checks(body);
