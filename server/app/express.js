@@ -71,8 +71,8 @@ app.use(express.static(__client));
 log.info("Setup client static routes");
 
 //Load api calls from file
-recursive(__api,[ "**/*.test.js", "**/*.md" ], function (err, files) {
-	
+recursive(__api, function (err, files) {
+
 	//Remove all non router files
 	var includeFiles = [];
 	for (var i=0; i<files.length; i++){
@@ -83,12 +83,12 @@ recursive(__api,[ "**/*.test.js", "**/*.md" ], function (err, files) {
 			includeFiles.push(files[i]);
 		}
 	}
-	
+
 	//Routing handler for api calls
 	if (err){
 		log.error(err.message);	
 	}else{
-		
+
 		//Log endpoint count
 		log.info("Loaded " + includeFiles.length + " api endpoints");
 		
@@ -98,7 +98,7 @@ recursive(__api,[ "**/*.test.js", "**/*.md" ], function (err, files) {
 			app.use("/api", route);
 		}
 	}
-	
+
 	log.info("Setup routes for api endpoints");
 	
 	//Error handler for server side api requests

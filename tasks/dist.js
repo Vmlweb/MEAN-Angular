@@ -63,6 +63,7 @@ gulp.task("dist.copy.config", function(){
 gulp.task("dist.copy.server", function(){
 	return gulp.src([
 		"builds/server/**/*",
+		"!builds/server/tests/*",
 		"!builds/server/**/*.js.map",
 		"!builds/server/**/*.test.js",
 	])
@@ -73,6 +74,7 @@ gulp.task("dist.copy.server", function(){
 gulp.task("dist.copy.client", function(){
 	return gulp.src([
 		"builds/client/**/*",
+		"!builds/client/tests/*",
 		"!builds/client/**/*.js.map",
 		"!builds/client/**/*.test.js",
 	])

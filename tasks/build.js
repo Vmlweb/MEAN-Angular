@@ -112,7 +112,7 @@ gulp.task("build.config.docker", function(){
 		mongoConfig = "--sslMode requireSSL --sslPEMKeyFile " + path.join("/home/certs/", config.database.ssl.pem);
 	}
 	
-	//Build fies
+	//Build files
 	return gulp.src([
 		"Dockerfile",
 		"docker-compose.yml",
