@@ -5,6 +5,7 @@ var del = require("del");
 var fs = require("fs");
 var path = require("path");
 var uglify = require("gulp-uglify");
+var obfuscator = require('gulp-js-obfuscator');
 var cssnano = require("gulp-cssnano");
 var sourcemaps = require("gulp-sourcemaps");
 var config = require("../config.js");
@@ -82,12 +83,16 @@ gulp.task("dist.copy.client", function(){
 });
 
 //! Minify
-gulp.task("dist.minify", gulp.parallel("dist.minify.server", "dist.minify.client", "dist.minify.css"));
+gulp.task("dist.minify", gulp.series(
+	gulp.parallel("dist.minify.server", "dist.minify.css"),
+	gulp.parallel("dist.minify.client")
+));
 
 //Minify server and client css files
 gulp.task("dist.minify.css", function(){
 	return gulp.src([
-		"dist/client/**/*.css"
+		"dist/client/**/*.css",
+		"!dist/client/libs/**/*"
 	])
 	.pipe(cssnano())
 	.pipe(gulp.dest("dist/client"));
@@ -100,6 +105,7 @@ gulp.task("dist.minify.server", function(){
 		"!dist/server/libs/**/*"
 	])
 	.pipe(uglify())
+	.pipe(obfuscator())
 	.pipe(gulp.dest("dist/server"));
 });
 
@@ -110,5 +116,6 @@ gulp.task("dist.minify.client", function(){
 		"!dist/client/libs/**/*"
 	])
 	.pipe(uglify())
+	.pipe(obfuscator())
 	.pipe(gulp.dest("dist/client"));
 });
