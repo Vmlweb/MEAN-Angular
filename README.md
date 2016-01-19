@@ -10,7 +10,7 @@ Quick and simple template to get up and running with a MEAN stack web app inside
   * AngularJS 2 & Typescript
   * Semantic UI & jQuery
   * Jade & Stylus Templates
-  * JS Minification & Obfuscation
+  * JS Minification & Obfuscation
   * Jasmin & Karma Unit Tests
   * Winston File & Console Logs
   * Gulp 4 Workflow (Dev, Test & Dist)
