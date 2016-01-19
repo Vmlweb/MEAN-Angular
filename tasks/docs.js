@@ -26,7 +26,7 @@ gulp.task("docs.single", function(){
 	return gulp.src("package.json").pipe(prompt.prompt({
 		type: "input",
 		name: "dir",
-		message: "Enter the api path or file to generate documentation"
+		message: "Enter the api path to generate documentation"
 	}, function(res){
 		
 		//Generate docs for directory
@@ -43,7 +43,7 @@ gulp.task("docs.recursive", function(){
 	return gulp.src("package.json").pipe(prompt.prompt({
 		type: "input",
 		name: "dir",
-		message: "Enter the api path or file to generate documentation"
+		message: "Enter the api path to generate documentation"
 	}, function(res){
 		
 		//Scan directory recursively
