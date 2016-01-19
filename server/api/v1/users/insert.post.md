@@ -20,3 +20,4 @@ Insert a new user into the database.
 
 ### Example Response
 `200 OK`
+

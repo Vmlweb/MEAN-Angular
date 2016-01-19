@@ -22,3 +22,4 @@ Update a specific users details.
 
 ### Example Response
 `200 OK`
+

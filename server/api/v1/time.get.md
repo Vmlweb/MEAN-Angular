@@ -18,3 +18,4 @@ Get the formatted current time.
 	time: "Sunday, December 12th 2012, 12:12:12 am"
 }
 ```
+

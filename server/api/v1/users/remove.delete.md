@@ -12,3 +12,4 @@ Deletes a specific user from the database.
 
 ### Example Response
 `200 OK`
+
