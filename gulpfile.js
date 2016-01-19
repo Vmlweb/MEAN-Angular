@@ -61,7 +61,8 @@ gulp.task("dist", gulp.series(
 
 //! Documentation
 gulp.task("docs", gulp.series(
-	"docs.recursive"
+	gulp.parallel("docs.reset"),
+	gulp.parallel("docs.recursive")
 ));
  
 //! Database & App
