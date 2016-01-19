@@ -2,22 +2,23 @@ html
 	head
 		title MEAN Stack
 		// Modules
-		script(type="text/javascript", src="libs/system-polyfills.js")
-		script(type="text/javascript", src="libs/system.src.js")
-		script(type="text/javascript", src="libs/es6-shim.js")
-		script(type="text/javascript", src="libs/Rx.js")
-		script(type="text/javascript", src="libs/angular2-polyfills.js")
+		script(type="text/javascript", src="/libs/system-polyfills.js")
+		script(type="text/javascript", src="/libs/system.src.js")
+		script(type="text/javascript", src="/libs/es6-shim.js")
+		script(type="text/javascript", src="/libs/Rx.js")
+		script(type="text/javascript", src="/libs/angular2-polyfills.js")
 		// AngularJS
-		script(type="text/javascript", src="libs/angular2.js")
-		script(type="text/javascript", src="libs/router.dev.js")
-		script(type="text/javascript", src="libs/http.dev.js")
+		script(type="text/javascript", src="/libs/angular2.js")
+		script(type="text/javascript", src="/libs/router.dev.js")
+		script(type="text/javascript", src="/libs/http.dev.js")
 		// Dependancies
-		script(type="text/javascript", src="libs/jquery.min.js")
+		script(type="text/javascript", src="/libs/jquery.min.js")
 		// Semantic UI
-		script(type="text/javascript", src="libs/semantic.min.js")
-		link(rel="stylesheet", type="text/css", href="libs/semantic.min.css")
+		script(type="text/javascript", src="/libs/semantic.min.js")
+		link(rel="stylesheet", type="text/css", href="/libs/semantic.min.css")
 		// App
-		script(type="text/javascript", src="system.js")
-		link(rel="stylesheet", type="text/css", href="app.css")
+		script(type="text/javascript", src="/system.js")
+		link(rel="stylesheet", type="text/css", href="/app.css")
 	body
-		my-app Loading...
+		my-app
+			.ui.large.active.loader
