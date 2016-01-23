@@ -51,6 +51,7 @@ gulp.task("dist.copy", gulp.parallel("dist.copy.config", "dist.copy.server", "di
 //Copy over config files
 gulp.task("dist.copy.config", function(){
 	return gulp.src([
+		"builds/config.js",
 		"builds/package.json",
 		"builds/Dockerfile",
 		"builds/docker-compose.yml",
