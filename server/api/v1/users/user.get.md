@@ -26,18 +26,10 @@ Gets a list of users from the database with a limit.
 
 ```
 {
-	[
-		userId: "607f1f77bcf86cd799439011",
-		username: "FirstUser",
-		email: "FirstUser@FirstUser.com",
-	],[
-		userId: "607f1f77bcf86cd799439012",
-		username: "SecondUser",
-		email: "SecondUser@SecondUser.com",
-	],[
-		userId: "607f1f77bcf86cd799439013",
-		username: "ThirdUser",
-		email: "ThirdUser@ThirdUser.com",
+	user: [
+		{ userId: "607f1f77bcf86cd799439011", username: "FirstUser", email: "FirstUser@FirstUser.com" },
+		{ userId: "607f1f77bcf86cd799439012", username: "SecondUser", email: "SecondUser@SecondUser.com" },
+		{ userId: "607f1f77bcf86cd799439013", username: "ThirdUser", email: "ThirdUser@ThirdUser.com" }
 	]
 }
 ```
