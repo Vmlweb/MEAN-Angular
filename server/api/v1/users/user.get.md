@@ -4,7 +4,7 @@ Gets a list of users from the database with a limit.
 
 `GET /users`
 
-### Body
+### Parameters
 - **limit** - Limit the number of results
 
 ### Response
