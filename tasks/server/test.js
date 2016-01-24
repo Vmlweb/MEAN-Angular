@@ -21,10 +21,13 @@ gulp.task("server.test", gulp.series(
 
 //Test server with jasmine
 gulp.task("server.test.jasmine", function(){
-	return gulp.src("builds/server/**/*.test.js")
-		.pipe(jasmine({
-			reporter: new reporter({
-				displayStacktrace: "all"
-			})
-		}));
+	return gulp.src([
+		"builds/server/**/setup.test.js",
+		"builds/server/**/*.test.js"
+	])
+	.pipe(jasmine({
+		reporter: new reporter({
+			displayStacktrace: "all"
+		})
+	}));
 });
