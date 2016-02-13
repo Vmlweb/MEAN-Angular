@@ -68,6 +68,7 @@ gulp.task("dist.copy.server", function(){
 		"!builds/server/tests/*",
 		"!builds/server/**/*.js.map",
 		"!builds/server/**/*.test.js",
+		"!builds/server/**/*.test.json"
 	])
 	.pipe(gulp.dest("dist/server"));
 });
@@ -79,6 +80,7 @@ gulp.task("dist.copy.client", function(){
 		"!builds/client/tests/*",
 		"!builds/client/**/*.js.map",
 		"!builds/client/**/*.test.js",
+		"!builds/client/**/*.test.json"
 	])
 	.pipe(gulp.dest("dist/client"));
 });

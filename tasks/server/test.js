@@ -22,7 +22,8 @@ gulp.task("server.test", gulp.series(
 //Test server with jasmine
 gulp.task("server.test.jasmine", function(){
 	return gulp.src([
-		"builds/server/**/setup.test.js",
+		"builds/server/tests/setup.test.js",
+		"builds/server/tests/*.test.js",
 		"builds/server/**/*.test.js"
 	])
 	.pipe(jasmine({

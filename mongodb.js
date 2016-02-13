@@ -17,12 +17,12 @@ while (rs.status().startupStatus || (rs.status().hasOwnProperty("myState") && rs
 use admin;
 db.createUser({
     user: "admin",
-    pwd: "admin",
+    pwd: "@@DATABASE_ADMIN_PASSWORD",
     roles: [
 	    { role: "root", db: "admin" }
 	]
 });
-db.auth("admin", "admin");
+db.auth("admin", "@@DATABASE_ADMIN_PASSWORD");
 
 //Create mean user account
 use @@DATABASE_AUTH_DATABASE;
