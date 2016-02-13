@@ -134,9 +134,9 @@ gulp client.test
 gulp server.test
 ```
 
-Test files should be included in the `server` and `client` directories and use the `.test.ts or .test.js` extensions.
+Test files should be included in the `server` and `client` directories and use the `.test.ts, .test.js or .test.json` extensions.
 
-When testing a blank database will be used, see `server/tests/users.test.js` for populating it before each test.
+When testing a blank database will be used, see `server/tests/database.test.js` for populating it before each test.
 
 ## Documentation
 
