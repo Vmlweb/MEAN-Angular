@@ -18,35 +18,19 @@ beforeAll(function(callback){
 	});
 });
 	
-//Populate test data
+//Clear and repopulate database
 beforeEach(function(callback){
-	async.waterfall([
-		function (done){	    
-		    async.parallel([
-				function (cleared){
-					Mongo.connection.db.dropCollection("users", function(err, result){
-						cleared();
-					});
-				}
-			], function(){
-				done();
+	async.parallel([
+	    function (done){
+		    
+		    //Populate users table
+			Mongo.connection.db.dropCollection("users", function(err, result){
+				User.insertMany(users, function(err){
+					done(err);
+				});
 			});
-		},
-	    function (done) {		    
-		    async.parallel([
-			    function (inserted){
-				    
-				    //Populate users table
-					User.insertMany(users, function(err){
-						inserted(err);
-					});
-				    
-			    }
-		    ], function(err){
-			    done(err);
-		    });
-	    }
-	], function(err){
-		callback(err);
-	});
+		}
+    ], function(err){
+	    callback(err);
+    });
 });
