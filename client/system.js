@@ -1,18 +1,5 @@
 System.config({
- 	baseURL: "/",
-	packages: {
-		app: {
-			format: "register",
-			defaultExtension: "js"
-		},
-		home: {
-			format: "register",
-			defaultExtension: "js"
-		},
-		services: {
-			format: "register",
-			defaultExtension: "js"
-		}
-	}
+	bundles: { 'app.js': ['app/bootstrap'] }
 });
-System.import("app/bootstrap").then(null, console.error.bind(console));
+
+System.import('app/bootstrap').catch(console.error.bind(console));

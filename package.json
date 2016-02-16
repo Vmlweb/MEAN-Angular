@@ -14,7 +14,7 @@
     "url": "https://github.com/Vmlweb/MEAN-AngularJS-2/issues"
   },
   "devDependencies": {
-    "angular2": "2.0.0-beta.3",
+    "angular2": "2.0.0-beta.6",
     "del": "^2.2.0",
     "dockerode": "^2.2.7",
     "es6-promise": "^3.0.2",
@@ -50,7 +50,7 @@
     "rxjs": "^5.0.0-beta.1",
     "systemjs": "^0.19.10",
     "tslint": "^3.2.1",
-    "typescript": "^1.7.5",
+    "typescript": "^1.8.0",
     "undertaker-forward-reference": "^1.0.1",
     "zone.js": "^0.5.10"
   },
