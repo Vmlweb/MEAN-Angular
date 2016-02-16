@@ -46,7 +46,7 @@ gulp.task("client.build.copy.source", function(){
 		"!client/**/*.ts",
 		"!client/**/*.jade",
 		"!client/**/*.styl",
-		"!client/tsd.json",
+		"!client/typings.json",
 		"!client/typings",
 		"!client/typings/**/*"
 	])
@@ -119,7 +119,10 @@ gulp.task("client.build.typescript.lint", function(){
 gulp.task("client.build.typescript.compile", function() {
 	var output = gulp.src([
 			"client/**/*.ts",
-			"client/typings/**/*.d.ts"
+			"!client/**/*.d.ts",
+			"client/typings/main.d.ts",
+		    "client/typings/main/*.d.ts",
+		    "node_modules/angular2/typings/browser.d.ts"
 		])
 		.pipe(sourcemaps.init())
 		.pipe(ts(ts.createProject({
@@ -162,5 +165,5 @@ gulp.task("client.build.markup.stylus", function(){
 	])
 	.pipe(stylus())
 	.pipe(concat("app.css"))
-	.pipe(gulp.dest("builds/client/"));
+	.pipe(gulp.dest("builds/client"));
 });

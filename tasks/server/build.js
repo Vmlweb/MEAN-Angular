@@ -35,7 +35,7 @@ gulp.task("server.build.copy.source", function(){
 		"server/**/*",
 		"!server/**/*.md",
 		"!server/**/*.ts",
-		"!server/tsd.json",
+		"!server/typings.json",
 		"!server/typings",
 		"!server/typings/**/*"
 	])
@@ -82,7 +82,9 @@ gulp.task("server.build.typescript.lint", function(){
 gulp.task("server.build.typescript.compile", function() {
 	return gulp.src([
 		"server/**/*.ts",
-		"server/typings/**/*.d.ts"
+		"!server/**/*.d.ts",
+		"server/typings/main.d.ts",
+	    "server/typings/main/*.d.ts"
 	])
 	.pipe(ts(ts.createProject({
 		typescript: require("typescript"),

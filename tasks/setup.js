@@ -11,9 +11,9 @@ var config = require("../config.js");
 - setup.dependant.semantic
 - setup.dependant.bower
 
-- setup.tsd
-- setup.tsd.server
-- setup.tsd.client
+- setup.typings
+- setup.typings.server
+- setup.typings.client
 
 - setup.docker
 - setup.docker.nodejs
@@ -51,19 +51,19 @@ gulp.task("setup.dependant.bower", shell.task([
 	"bower install --config.analytics=false --allow-root"
 ]));
 
-//! Tsd Typings
-gulp.task("setup.tsd", gulp.parallel("setup.tsd.server", "setup.tsd.client"));
+//! Typings Typings
+gulp.task("setup.typings", gulp.parallel("setup.typings.server", "setup.typings.client"));
 
-//Install tsd server typings
-gulp.task("setup.tsd.server", shell.task([
-	"tsd install"
+//Install typings server typings
+gulp.task("setup.typings.server", shell.task([
+	"typings install"
 ],{
 	cwd: "server"
 }));
 
-//Install tsd client typings
-gulp.task("setup.tsd.client", shell.task([
-	"tsd install"
+//Install typings client typings
+gulp.task("setup.typings.client", shell.task([
+	"typings install"
 ],{
 	cwd: "client"
 }));

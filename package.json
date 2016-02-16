@@ -47,7 +47,7 @@
     "reflect-metadata": "0.1.2",
     "remove": "^0.1.5",
     "request": "^2.67.0",
-    "rxjs": "^5.0.0-beta.1",
+    "rxjs": "5.0.0-beta.0",
     "systemjs": "^0.19.10",
     "tslint": "^3.2.1",
     "typescript": "^1.8.0",

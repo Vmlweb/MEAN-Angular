@@ -1,0 +1,7 @@
+{
+  "ambientDependencies": {
+    "jasmine": "github:DefinitelyTyped/DefinitelyTyped/jasmine/jasmine.d.ts#b63c6f2fbeb17b905d95f91647db35e373df475a",
+    "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#c393f8974d44840a6c9cc6d5b5c0188a8f05143d",
+    "jssha": "github:DefinitelyTyped/DefinitelyTyped/jssha/jssha.d.ts#c393f8974d44840a6c9cc6d5b5c0188a8f05143d"
+  }
+}
