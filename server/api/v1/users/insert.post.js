@@ -11,17 +11,13 @@ var User = require(__models + "/user.js");
 
 router.post("/v1/users", function (req, res, next){	
 	
-	//Check for all required parameters
-	var username = Helper.loadParam(req.body, "username", "");
-	var email = Helper.loadParam(req.body, "email", "");
-	
-	//Strip whitespace and new lines
-	username = Helper.trim(username);
-	email = Helper.trim(email);
+	//Parse body
+	var username = req.body.username || null;
+	var email = req.body.email || null;
 	
 	//Validate parameter fields
-	if (username === ""){ return next("Username must be given"); }
-	if (email === ""){ return next("E-mail address must be given"); }
+	if (username === "" || username === null){ return next("Username must be given"); }
+	if (email === "" || email === null){ return next("E-mail address must be given"); }
 	
 	//Start async operations	
 	async.waterfall([

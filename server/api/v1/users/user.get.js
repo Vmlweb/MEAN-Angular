@@ -12,13 +12,10 @@ var User = require(__models + "/user.js");
 router.get("/v1/users", function (req, res, next){	
 	
 	//Check for all required parameters
-	var limit = Helper.loadParam(req.query, "limit", "");
-	
-	//Convert string to integer
-	limit = validator.toInt(limit);
+	var limit = req.query.limit ? parseInt(req.query.limit) : -1;
 	
 	//Validate parameter fields
-	if (!validator.isInt(limit)){ return next("Limit must be an integer"); } 
+	if (limit < 0){ return next("Limit must be an integer"); } 
 	
 	//Find all users in the database
 	User.find().sort({"_id": 1}).limit(limit).exec(function (err, users){

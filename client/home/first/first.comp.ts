@@ -41,7 +41,7 @@ export class FirstComponent {
 				this.users = users;
 			},
 			error => {
-				alert(JSON.stringify(error));
+				alert(error["message"]);
 			}
 		);
 	}

@@ -12,13 +12,10 @@ var User = require(__models + "/user.js");
 router.delete("/v1/users", function (req, res, next){	
 	
 	//Check for all required parameters
-	var userId = Helper.loadParam(req.query, "userId", "");
-	
-	//Strip whitespace and new lines
-	userId = Helper.trim(userId);
+	var userId = req.query.userId || null;
 	
 	//Validate parameter fields
-	if (userId === ""){ return next("User identifier must be given"); } 
+	if (userId === "" || userId === null){ return next("User identifier must be given"); } 
 	
 	//Find user in database
 	User.findById(userId).remove(function (err, user){
