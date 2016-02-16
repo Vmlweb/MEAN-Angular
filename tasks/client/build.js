@@ -70,6 +70,7 @@ gulp.task("client.build.copy.libs", function(){
 		"node_modules/angular2/bundles/testing.dev.js",
 		//Dependancies
 		"bower_components/jquery/dist/jquery.min.js",
+		"bower_components/jquery/dist/jquery.min.map",
 		//Semantic UI
 		"semantic/dist/semantic.min.js",
 		"semantic/dist/semantic.min.css",
@@ -132,7 +133,8 @@ gulp.task("client.build.typescript.compile", function() {
 			removeComments: true,
 			noImplicitAny: false,
 			suppressImplicitAnyIndexErrors: true,
-			sortOutput: true
+			sortOutput: true,
+			outFile: "app.js"
 		})))
 	return output.js
 		.pipe(sourcemaps.write("./"))
