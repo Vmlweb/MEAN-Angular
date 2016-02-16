@@ -171,18 +171,18 @@ First import the Docker image onto the host machine.
 docker load < mean_app.tar
 ```
 
-Then setup and wipe your production database using the following command.
-
-```bash
-./server.sh reset
-```
-
 You must then copy `config.js` and the `certs` directory to their respective locations specified in `config.js`.
 
 Make sure to set the correct file permissions for these certificates.
 
 ```bash
 chown -R 999:999 /opt/mean/certs
+```
+
+Then setup and wipe your production database using the following command.
+
+```bash
+./server.sh reset
 ```
 
 Use can then use `server.sh` or `docker-compose.yml` to start and stop your production app using Docker.

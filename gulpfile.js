@@ -56,6 +56,7 @@ gulp.task("dist", gulp.series(
 	gulp.parallel("build"),
 	gulp.parallel("dist.copy"),
 	gulp.parallel("dist.minify"),
+	gulp.parallel("dist.obfuscate"),
 	gulp.parallel("dist.build")
 ));
 

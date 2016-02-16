@@ -26,6 +26,10 @@ var docker = dockerode();
 - dist.minify.css
 - dist.minify.server
 - dist.minify.client
+
+- dist.obfuscate
+- dist.obfuscate.server
+- dist.obfuscate.client
 */
 
 //Remove all dist files
@@ -94,8 +98,7 @@ gulp.task("dist.minify", gulp.series(
 //Minify server and client css files
 gulp.task("dist.minify.css", function(){
 	return gulp.src([
-		"dist/client/**/*.css",
-		"!dist/client/libs/**/*"
+		"dist/client/**/*.css"
 	])
 	.pipe(cssnano())
 	.pipe(gulp.dest("dist/client"));
@@ -104,21 +107,43 @@ gulp.task("dist.minify.css", function(){
 //Minify server javascript files
 gulp.task("dist.minify.server", function(){
 	return gulp.src([
-		"dist/server/**/*.js",
-		"!dist/server/libs/**/*"
+		"dist/server/**/*.js"
 	])
 	.pipe(uglify())
-	.pipe(obfuscator())
 	.pipe(gulp.dest("dist/server"));
 });
 
 //Minify client javascript files
 gulp.task("dist.minify.client", function(){
 	return gulp.src([
-		"dist/client/**/*.js",
-		"!dist/client/libs/**/*"
+		"dist/client/**/*.js"
 	])
 	.pipe(uglify())
+	.pipe(gulp.dest("dist/client"));
+});
+
+//! Obfuscate
+gulp.task("dist.obfuscate", gulp.series(
+	gulp.parallel("dist.obfuscate.server"),
+	gulp.parallel("dist.obfuscate.client")
+));
+
+//Obfuscate server javascript files
+gulp.task("dist.obfuscate.server", function(){
+	return gulp.src([
+		"dist/server/**/*.js",
+		"!dist/server/libs/**/*.js"
+	])
+	.pipe(obfuscator())
+	.pipe(gulp.dest("dist/server"));
+});
+
+//Obfuscate client javascript files
+gulp.task("dist.obfuscate.client", function(){
+	return gulp.src([
+		"dist/client/**/*.js",
+		"!dist/client/libs/**/*.js"
+	])
 	.pipe(obfuscator())
 	.pipe(gulp.dest("dist/client"));
 });

@@ -124,6 +124,7 @@ recursive(__api, function (err, files) {
 	
 	//Error handler for client side requests
 	app.get("*", function(req, res, next){
+		console.log(req.path);
 		res.status(404).redirect("/errors/404.html");
 	});
 	app.get("*", function(err, req, res, next){
