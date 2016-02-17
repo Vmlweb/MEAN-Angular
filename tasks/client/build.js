@@ -12,7 +12,7 @@ var stylus = require("gulp-stylus");
 
 /*! Tasks 
 - client.build
-	
+
 - client.build.copy
 - client.build.copy.source
 - client.build.copy.libs
@@ -93,7 +93,10 @@ gulp.task("client.build.javascript.lint", function(){
 });
 
 //! Typescript
-gulp.task("client.build.typescript", gulp.series("client.build.typescript.lint", "client.build.typescript.compile"));
+gulp.task("client.build.typescript", gulp.series(
+	"client.build.typescript.lint",
+	"client.build.typescript.compile"
+));
 
 //Check typescript lint
 gulp.task("client.build.typescript.lint", function(){
@@ -137,7 +140,7 @@ gulp.task("client.build.typescript.compile", function() {
 			noImplicitAny: false,
 			suppressImplicitAnyIndexErrors: true,
 			sortOutput: true,
-			outFile: "app.js"
+			outFile: (process.env.NODE_ENV === "test" ? undefined : "app.js")
 		})))
 	return output.js
 		.pipe(sourcemaps.write("./"))

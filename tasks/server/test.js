@@ -10,6 +10,7 @@ var reporter = require("jasmine-spec-reporter");
 
 //! Test
 gulp.task("server.test", gulp.series(
+	gulp.parallel("env.test"),
 	gulp.parallel("stop"),
 	gulp.parallel("clean"),
 	gulp.parallel("server.build", "build.config"),

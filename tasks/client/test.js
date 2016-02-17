@@ -9,6 +9,7 @@ var Karma = require("karma").Server;
 
 //! Test
 gulp.task("client.test", gulp.series(
+	gulp.parallel("env.test"),
 	gulp.parallel("stop"),
 	gulp.parallel("clean"),
 	gulp.parallel("client.build", "build.config"),
@@ -39,6 +40,8 @@ gulp.task("client.test.karma", function(done){
 			{ pattern: "node_modules/angular2/bundles/router.dev.js", included: true },
 			{ pattern: "node_modules/angular2/bundles/http.dev.js", included: true },
 			{ pattern: "node_modules/angular2/bundles/testing.dev.js", included: true },
+			//Dependancies
+			{ pattern: "bower_components/jquery/dist/jquery.min.js", included: true },
 			//Karma
 			{ pattern: "karma.shim.js", included: true },
 			//Source

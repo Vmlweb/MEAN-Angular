@@ -35,6 +35,7 @@ gulp.task("setup", gulp.series(
  
 //! Development
 gulp.task("dev", gulp.series(
+	gulp.parallel("env.dev"),
 	gulp.parallel("stop"),
 	gulp.parallel("clean"),
 	gulp.parallel("build"),
@@ -44,12 +45,14 @@ gulp.task("dev", gulp.series(
 
 //! Testing
 gulp.task("test", gulp.series(
+	gulp.parallel("env.test"),
 	gulp.parallel("server.test"),
 	gulp.parallel("client.test")
 ));
  
 //! Distribution
 gulp.task("dist", gulp.series(
+	gulp.parallel("env.dist"),
 	gulp.parallel("stop"),
 	gulp.parallel("clean"),
 	gulp.parallel("semantic"),
@@ -78,6 +81,11 @@ gulp.task("clean", gulp.parallel("dist.reset", "build.reset"));
 gulp.task("certs", gulp.parallel("setup.certs"));
 gulp.task("semantic", gulp.parallel("build.semantic"));
 gulp.task("build", gulp.parallel("client.build", "server.build", "build.config"));
+
+//Enviroment variables
+gulp.task("env.dev", function(done) { process.env.NODE_ENV = "dev"; done(); });
+gulp.task("env.test", function(done) { process.env.NODE_ENV = "test"; done(); });
+gulp.task("env.dist", function(done) { process.env.NODE_ENV = "dist"; done(); });
 
 //Stop database and app server on exit 
 var exec = require("child_process").exec;
