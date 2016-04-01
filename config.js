@@ -7,7 +7,7 @@ module.exports = {
 	//! HTTP
 	http: {
 		hostname: "0.0.0.0",
-		url: "test.vmlweb.co.uk",
+		url: "192.168.21.143",
 		port: {
 			internal: "8080",
 			external: "80"
@@ -17,7 +17,7 @@ module.exports = {
 	//! HTTPS
 	https: {
 		hostname: "0.0.0.0",
-		url: "test.vmlweb.co.uk",
+		url: "192.168.21.143",
 		port: {
 			internal: "4434",
 			external: "443"
@@ -49,7 +49,7 @@ module.exports = {
 			read: "nearest",
 			key: "repl.key",
 			nodes: [{
-				hostname: "test.vmlweb.co.uk",
+				hostname: "192.168.21.143",
 				port: 27017 
 			}]
 		}
@@ -59,7 +59,7 @@ module.exports = {
 	certs: {
 		path: "/opt/mean/certs",
 		details: {
-			hostname: "test.vmlweb.co.uk",
+			hostname: "192.168.21.143",
 			organisation: "Vmlweb Ltd",
 			country: "GB",
 			state: "Kent",

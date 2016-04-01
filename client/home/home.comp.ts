@@ -1,5 +1,5 @@
 //Modules
-import {Component, View} from 'angular2/core';
+import {Component} from 'angular2/core';
 import {RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
 
 //Includes

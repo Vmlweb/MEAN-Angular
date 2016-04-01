@@ -101,6 +101,11 @@ recursive(__api, function (err, files) {
 
 	log.info("Setup routes for api endpoints");
 	
+	app.use("/victor", function (req, res, next){
+		console.log(req);
+		res.status(200).json({ test: "test" });
+	});
+	
 	//Error handler for server side api requests
 	app.use("/api", function(req, res, next){
 		res.status(404).json({ error: "Not Found" });
