@@ -32,7 +32,7 @@ chmod +x server.sh
 ./server.sh install
 ```
 
-Next install the Gulp 4, Bower, Karma, TSD and Jasmine command line tools if you have not already.
+Next install the Gulp 4, Bower, Karma, Typings and Jasmine command line tools if you have not already.
 
 ```bash
 sudo npm install -g gulpjs/gulp.git#4.0 bower karma typings jasmine
