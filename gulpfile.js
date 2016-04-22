@@ -27,10 +27,10 @@ gulp.task("default", gulp.series("dev"));
  
 //! Setup
 gulp.task("setup", gulp.series(
-	gulp.parallel("stop"),
+	gulp.parallel("stop")/*,
 	gulp.parallel("setup.dependant", "setup.typings", "setup.docker", "setup.certs"),
 	gulp.parallel("build.semantic"),
-	gulp.parallel("database.reset")
+	gulp.parallel("database.reset")*/
 ));
  
 //! Development
@@ -68,7 +68,7 @@ gulp.task("docs", gulp.series(
 	gulp.parallel("docs.reset"),
 	gulp.parallel("docs.recursive")
 ));
- 
+
 //! Database & App
 gulp.task("start", gulp.series("database.start", "app.start"));
 gulp.task("stop", gulp.series("app.stop", "database.stop"));
