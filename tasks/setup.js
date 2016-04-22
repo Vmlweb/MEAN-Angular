@@ -42,8 +42,7 @@ gulp.task("setup.dependant.semantic", shell.task([
 	"gulp install"
 ],{
 	verbose: true,
-	cwd: "node_modules/semantic-ui",
-	interactive: true
+	cwd: "node_modules/semantic-ui"
 }));
 
 //Install bower dependancies
