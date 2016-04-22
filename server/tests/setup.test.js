@@ -7,4 +7,9 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; //Accept self signed ssl certifi
 process.env.NODE_ENV = "testing"; //Disable all logging in app
 
 //Start app
-require(path.join(__dirname, "../app.js"));
+var app = require(path.join(__dirname, "../app.js"));
+
+//Stop app
+afterAll(function(callback){
+	app.shutdown(callback);
+});

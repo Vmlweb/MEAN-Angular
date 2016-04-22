@@ -88,7 +88,9 @@ gulp.task("client.build.javascript.lint", function(){
 		"client/**/*.js",
 		"!client/typings/**/*"
 	])
-	.pipe(jshint())
+	.pipe(jshint({
+		esversion: 6
+	}))
     .pipe(jshint.reporter("default"));
 });
 

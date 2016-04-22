@@ -51,7 +51,9 @@ gulp.task("server.build.javascript.lint", function(){
 		"server/**/*.js",
 		"!server/typings/**/*",
 	])
-	.pipe(jshint())
+	.pipe(jshint({
+		esversion: 6
+	}))
     .pipe(jshint.reporter("default"));
 });
 
