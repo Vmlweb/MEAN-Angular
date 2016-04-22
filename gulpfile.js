@@ -87,8 +87,7 @@ gulp.task("env.dev", function(done) { process.env.NODE_ENV = "dev"; done(); });
 gulp.task("env.test", function(done) { process.env.NODE_ENV = "test"; done(); });
 gulp.task("env.dist", function(done) { process.env.NODE_ENV = "dist"; done(); });
 
-//Stop database and app server on exit 
-var exec = require("child_process").exec;
+//Stop database and app server on exit
 var shutdown = function(){
 	var app = docker.getContainer(config.name + "_app");
 	var db = docker.getContainer(config.name + "_db");
@@ -96,7 +95,7 @@ var shutdown = function(){
 		app.remove(function(err, data){
 			db.stop(function(err, data){
 				db.remove(function(err, data){
-					process.exit(0);
+					process.exit();
 				});
 			});
 		});
