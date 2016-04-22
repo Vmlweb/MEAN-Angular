@@ -53,7 +53,7 @@ gulp.task("database.start", function(done){
 				path.join(process.cwd(), "certs") + ":/home/certs"
 			],
 			PortBindings: {
-				[config.database.repl.nodes[0].port.toString() + "/tcp"]: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
+				["27017/tcp"]: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
 			}
 		}, function(err, data){
 			if (err){ throw err; }
@@ -83,7 +83,7 @@ gulp.task("database.test", function(done){
 				path.join(process.cwd(), "certs") + ":/home/certs"
 			],
 			PortBindings: {
-				[config.database.repl.nodes[0].port.toString() + "/tcp"]: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
+				["27017/tcp"]: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
 			}
 		}, function(err, data){
 			if (err){ throw err; }
