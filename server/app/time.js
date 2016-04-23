@@ -1,5 +1,5 @@
 //Modules
-var moment = require("moment");
+const moment = require("moment");
 
 //Constructor
 function Time(){
@@ -9,7 +9,7 @@ function Time(){
 }
 
 //Methods
-Time.prototype.getTime = function(){
+Time.prototype.getTime = () => {
 	return moment().format(this.format);
 };
 

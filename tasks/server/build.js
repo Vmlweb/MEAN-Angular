@@ -30,7 +30,7 @@ gulp.task("server.build", gulp.series(
 gulp.task("server.build.copy", gulp.parallel("server.build.copy.source"));
 
 //Copy over server source files
-gulp.task("server.build.copy.source", function(){
+gulp.task("server.build.copy.source", () => {
 	return gulp.src([
 		"server/**/*",
 		"!server/**/*.md",
@@ -46,7 +46,7 @@ gulp.task("server.build.copy.source", function(){
 gulp.task("server.build.javascript", gulp.series("server.build.javascript.lint"));
 
 //Check javascript for lint
-gulp.task("server.build.javascript.lint", function(){
+gulp.task("server.build.javascript.lint", () => {
 	return gulp.src([
 		"server/**/*.js",
 		"!server/typings/**/*",
@@ -61,7 +61,7 @@ gulp.task("server.build.javascript.lint", function(){
 gulp.task("server.build.typescript", gulp.series("server.build.typescript.lint", "server.build.typescript.compile"));
 
 //Check typescript for lint
-gulp.task("server.build.typescript.lint", function(){
+gulp.task("server.build.typescript.lint", () => {
 	return gulp.src([
 		"server/**/*.ts",
 		"!server/typings/**/*",
@@ -81,7 +81,7 @@ gulp.task("server.build.typescript.lint", function(){
 });
 
 //Compile typescript into javascript
-gulp.task("server.build.typescript.compile", function() {
+gulp.task("server.build.typescript.compile", () => {
 	return gulp.src([
 		"server/**/*.ts",
 		"!server/**/*.d.ts",

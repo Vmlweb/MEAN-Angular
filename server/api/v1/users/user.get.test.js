@@ -7,7 +7,7 @@ var querystring = require("querystring");
 var Config = require(__config);
 
 //Request prototype
-var startRequest = function(params, checks){
+var startRequest = (params, checks) => {
 	request({
 		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.internal, "/api/v1/users?") + querystring.stringify(params),
 		method: "GET",
@@ -23,16 +23,16 @@ var startRequest = function(params, checks){
 	});
 };
 
-describe("View Users", function(){
+describe("View Users", () => {
 	
 	//! Positive Tests
 	
-	describe("Positive Tests", function(){
+	describe("Positive Tests", () => {
 		
-		it("should return list of users for 1 limit", function(done){
+		it("should return list of users for 1 limit", (done) => {
 			startRequest({
 				limit: 1
-			}, function(body){
+			}, (body) => {
 				
 				//Check that users were returned
 				expect(body.users[0].userId).toBe("607f1f77bcf86cd799439011");
@@ -47,10 +47,10 @@ describe("View Users", function(){
 			
 		});
 		
-		it("should return list of users for 3 limit", function(done){
+		it("should return list of users for 3 limit", (done) => {
 			startRequest({
 				limit: 3
-			}, function(body){
+			}, (body) => {
 				
 				//Check that users were returned
 				expect(body.users[0].userId).toBe("607f1f77bcf86cd799439011");
@@ -75,10 +75,10 @@ describe("View Users", function(){
 	
 	//! Negative Tests
 	
-	describe("Negative Tests", function(){
+	describe("Negative Tests", () => {
 		
-		it("should return error if no limit given", function(done){
-			startRequest({}, function(body){
+		it("should return error if no limit given", (done) => {
+			startRequest({}, (body) => {
 				
 				//Check that users were returned with correct limit
 				expect(body.error).toBe("Limit must be an integer");

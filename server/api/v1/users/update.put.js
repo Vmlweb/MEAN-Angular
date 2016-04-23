@@ -6,7 +6,7 @@ var router = require("express").Router();
 //Models
 var User = require(__models + "/user.js");
 
-router.put("/v1/users", function (req, res, next){	
+router.put("/v1/users", (req, res, next) => {
 	
 	//Check for all required parameters
 	var userId = req.body.userId || null;
@@ -38,7 +38,7 @@ router.put("/v1/users", function (req, res, next){
 			user.email = email;
 			
 			//Save changes to database
-			user.save(function(err){
+			user.save((err) => {
 				if (err){
 					done(err);
 				}else{

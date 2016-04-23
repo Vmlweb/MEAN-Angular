@@ -1,15 +1,15 @@
 //Modules
-var path = require("path");
-var async = require("async");
+const path = require("path");
+const async = require("async");
 
 //Setup
-var dirs = require("./dirs.js");
-var logger = require(__app + "/logger.js");
-var mongo = require(__app + "/mongo.js");
-var express = require(__app + "/express.js");
+const dirs = require("./dirs.js");
+const logger = require(__app + "/logger.js");
+const mongo = require(__app + "/mongo.js");
+const express = require(__app + "/express.js");
 
 //Config
-var Config = require(__config);
+const Config = require(__config);
 
 //Setup mocks
 if (process.env.NODE_ENV === "testing"){
@@ -18,44 +18,44 @@ if (process.env.NODE_ENV === "testing"){
 }
 
 //Shutdown services
-var shutdown = function(callback){
+const shutdown = (callback) => {
 	log.info("Shutting down gracefully...");
 	
 	//Run all shutdown tasks in series
 	async.series([
-		function(done){
+		(done) => {
 		    
 			//HTTP
 		    if (express.hasOwnProperty("http")){
-				express.http.close(function(){
+				express.http.close(() => {
 					done(null);
 				});
 			}else{
 				done(null);
 			}
 
-		}, function(done){
+		}, (done) => {
 
 			//HTTPS
 			if (express.hasOwnProperty("https")){
-				express.https.close(function(){
+				express.https.close(() => {
 					done(null);
 				});
 			}else{
 				done(null);
 			}
-		}, function(done){
+		}, (done) => {
 
 			//MongoDB
 			if (Config.database.repl.nodes.length > 0){
-				mongo.connection.close(function () {
+				mongo.connection.close(() => {
 					done(null);
 				});
 			}else{
 				done(null);
 			}
 		}
-	], function(error){
+	], (error) => {
 		
 		//Execute error callback
 		if (callback !== null){
@@ -66,7 +66,7 @@ var shutdown = function(callback){
 exports.shutdown = shutdown;
 
 //Graceful shutdown
-var force = function(error) {
+const force = (error) => {
 	
 	//Exit with or without error
 	if (error){
@@ -77,12 +77,12 @@ var force = function(error) {
 	}
 	
 	//Shutdown timeout after 4 seconds
-	setTimeout(function() {
+	setTimeout(() => {
 		log.error("Shutdown timed out, force quitting");
 		process.exit();
 	}, 2000);
 };
 
 //Intercept kill and end signals
-process.on("SIGTERM", function(){ shutdown(force); });
-process.on("SIGINT", function(){ shutdown(force); });
+process.on("SIGTERM", () => { shutdown(force); });
+process.on("SIGINT", () => { shutdown(force); });

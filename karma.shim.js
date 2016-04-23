@@ -43,7 +43,7 @@ System.import("angular2/platform/browser").then(function(browser_adapter) {
 	return Promise.all(
 		Object.keys(window.__karma__.files) // All files served by Karma.
 		.filter(onlySpecFiles)
-		.map(function(moduleName) {
+		.map(function(moduleName){
 			/** Loads all spec files via their global module names (e.g. "base/src/app/hero.service.spec") */
 			return System.import(moduleName);
 		}));

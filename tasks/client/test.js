@@ -17,7 +17,7 @@ gulp.task("client.test", gulp.series(
 ));
 
 //Test client with karma
-gulp.task("client.test.karma", function(done){
+gulp.task("client.test.karma", (done) => {
 	
 	//Setup configuration
 	var server = new Karma({
@@ -52,7 +52,7 @@ gulp.task("client.test.karma", function(done){
 		junitReporter: {
 			outputDir: 'logs/tests'
 		}
-	}, function(){
+	}, () => {
 		done();
 	});
 	

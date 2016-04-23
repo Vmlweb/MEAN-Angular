@@ -34,7 +34,7 @@ var docker = dockerode();
 */
 
 //Remove all dist files
-gulp.task("dist.reset", function(){
+gulp.task("dist.reset", () => {
 	return del([
 		"dist/**/*"
 	]);
@@ -54,7 +54,7 @@ gulp.task("dist.build", shell.task([
 gulp.task("dist.copy", gulp.parallel("dist.copy.config", "dist.copy.server", "dist.copy.client"));
 
 //Copy over config files
-gulp.task("dist.copy.config", function(){
+gulp.task("dist.copy.config", () => {
 	return gulp.src([
 		"builds/config.js",
 		"builds/package.json",
@@ -67,7 +67,7 @@ gulp.task("dist.copy.config", function(){
 });
 
 //Copy over server source files
-gulp.task("dist.copy.server", function(){
+gulp.task("dist.copy.server", () => {
 	return gulp.src([
 		"builds/server/**/*",
 		"!builds/server/tests/*",
@@ -80,7 +80,7 @@ gulp.task("dist.copy.server", function(){
 });
 
 //Copy over client source files
-gulp.task("dist.copy.client", function(){
+gulp.task("dist.copy.client", () => {
 	return gulp.src([
 		"builds/client/**/*",
 		"!builds/client/tests/*",
@@ -101,7 +101,7 @@ gulp.task("dist.minify", gulp.parallel(
 ));
 
 //Minify server and client css files
-gulp.task("dist.minify.css", function(){
+gulp.task("dist.minify.css", () => {
 	return gulp.src([
 		"dist/client/**/*.css"
 	])
@@ -110,7 +110,7 @@ gulp.task("dist.minify.css", function(){
 });
 
 //Minify server javascript files
-gulp.task("dist.minify.server", function(){
+gulp.task("dist.minify.server", () => {
 	return gulp.src([
 		"dist/server/**/*.js"
 	])
@@ -119,7 +119,7 @@ gulp.task("dist.minify.server", function(){
 });
 
 //Minify client javascript files
-gulp.task("dist.minify.client", function(){
+gulp.task("dist.minify.client", () => {
 	return gulp.src([
 		"dist/client/**/*.js",
 		"!dist/client/libs/**/*.js"
@@ -129,13 +129,13 @@ gulp.task("dist.minify.client", function(){
 });
 
 //Minify client javascript library files
-gulp.task("dist.minify.libs", function(){
+gulp.task("dist.minify.libs", () => {
 	return gulp.src([
 		"dist/client/libs/**/*.js"
 	])
 	.pipe(uglify({
 		mangle: false,
-		preserveComments: function(node, comment) {
+		preserveComments: (node, comment) => {
 			return !(comment.value.indexOf("sourceMapping") != -1);
 		}
 	}))
@@ -149,7 +149,7 @@ gulp.task("dist.obfuscate", gulp.series(
 ));
 
 //Obfuscate server javascript files
-gulp.task("dist.obfuscate.server", function(){
+gulp.task("dist.obfuscate.server", () => {
 	return gulp.src([
 		"dist/server/**/*.js",
 		"!dist/server/libs/**/*.js"
@@ -159,7 +159,7 @@ gulp.task("dist.obfuscate.server", function(){
 });
 
 //Obfuscate client javascript files
-gulp.task("dist.obfuscate.client", function(){
+gulp.task("dist.obfuscate.client", () => {
 	return gulp.src([
 		"dist/client/**/*.js",
 		"!dist/client/libs/**/*.js"

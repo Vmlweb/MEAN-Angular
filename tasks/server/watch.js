@@ -11,7 +11,7 @@ var gulp = require("gulp");
 gulp.task("server.watch", gulp.parallel("server.watch.source", "server.watch.typescript"));
 
 //Watch for source file changes
-gulp.task("server.watch.source", function(done){
+gulp.task("server.watch.source", (done) => {
 	gulp.watch([
 		"server/**/*",
 		"!server/**/*.ts",
@@ -21,7 +21,7 @@ gulp.task("server.watch.source", function(done){
 });
 
 //Watch for typescript file changes
-gulp.task("server.watch.typescript", function(done){
+gulp.task("server.watch.typescript", (done) => {
 	gulp.watch([
 		"server/**/*.ts",
 		"!server/**/*.d.ts"

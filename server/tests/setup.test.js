@@ -10,6 +10,6 @@ process.env.NODE_ENV = "testing"; //Disable all logging in app
 var app = require(path.join(__dirname, "../app.js"));
 
 //Stop app
-afterAll(function(callback){
+afterAll((callback) => {
 	app.shutdown(callback);
 });

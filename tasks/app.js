@@ -18,7 +18,7 @@ var docker = dockerode();
 //! App Server
 
 //Reset all app log files
-gulp.task("app.reset", function(done){
+gulp.task("app.reset", (done) => {
 	return del([
 		"logs/**/*"
 	]);
@@ -45,7 +45,7 @@ if (config.https.port.internal.length > 0){
 }
 
 //Start app server
-gulp.task("app.start", function(done){
+gulp.task("app.start", (done) => {
 	
 	//Prepare container
 	docker.createContainer({
@@ -58,7 +58,7 @@ gulp.task("app.start", function(done){
 		Env: [
 			"NODE_ENV=development"
 		]
-	}, function(err, container) {
+	}, (err, container) => {
 		if (err){ throw err; }
 		
 		//Start container
@@ -72,7 +72,7 @@ gulp.task("app.start", function(done){
 				path.join(process.cwd(), "config.js") + ":/home/config.js"
 			],
 			PortBindings: externalPorts
-		}, function(err, data){
+		}, (err, data) => {
 			if (err){ throw err; }
 			setTimeout(done, 500);
 		});
@@ -80,13 +80,13 @@ gulp.task("app.start", function(done){
 });
 
 //Attach console to app server output
-gulp.task("app.attach", function(done){
+gulp.task("app.attach", (done) => {
 	var container = docker.getContainer(config.name + "_app");
 	container.attach({
 		stream: true,
 		stdout: true,
 		stderr: true
-	}, function (err, stream) {
+	}, (err, stream) => {
 		if (err){ throw err; }
 		
 		//Stream output to console
@@ -97,11 +97,11 @@ gulp.task("app.attach", function(done){
 });
 
 //Stop app server
-gulp.task("app.stop", function(done){
+gulp.task("app.stop", (done) => {
 	var container = docker.getContainer(config.name + "_app");
-	container.remove(function(err, data){
-		container.stop(function(err, data){
-			container.remove(function(err, data){
+	container.remove((err, data) => {
+		container.stop((err, data) => {
+			container.remove((err, data) => {
 				setTimeout(done, 1000);
 			});
 		});

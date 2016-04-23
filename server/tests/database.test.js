@@ -12,25 +12,25 @@ var User = require(__models + "/user.js");
 var users = require(path.join(__dirname, "users.test.json"));
 
 //Wait for database connection
-beforeAll(function(callback){
-	Mongo.connection.on('open', function(){
+beforeAll((callback) => {
+	Mongo.connection.on('open', () => {
 		callback();
 	});
 });
 	
 //Clear and repopulate database
-beforeEach(function(callback){
+beforeEach((callback) => {
 	async.parallel([
-	    function (done){
+	    (done) => {
 		    
 		    //Populate users table
-			Mongo.connection.db.dropCollection("users", function(err, result){
-				User.insertMany(users, function(err){
+			Mongo.connection.db.dropCollection("users", (err, result) => {
+				User.insertMany(users, (err) => {
 					done(err);
 				});
 			});
 		}
-    ], function(err){
+    ], (err) => {
 	    callback(err);
     });
 });

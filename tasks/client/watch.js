@@ -13,7 +13,7 @@ var gulp = require("gulp");
 gulp.task("client.watch", gulp.parallel("client.watch.source", "client.watch.typescript", "client.watch.jade", "client.watch.stylus"));
 
 //Watch for source files changes
-gulp.task("client.watch.source", function(done){
+gulp.task("client.watch.source", (done) => {
 	gulp.watch([
 		"client/**/*",
 		"!client/**/*.jade",
@@ -25,7 +25,7 @@ gulp.task("client.watch.source", function(done){
 });
 
 //Watch for typescript file changes
-gulp.task("client.watch.typescript", function(done){
+gulp.task("client.watch.typescript", (done) => {
 	gulp.watch([
 		"client/**/*.ts",
 		"!client/**/*.d.ts"
@@ -34,7 +34,7 @@ gulp.task("client.watch.typescript", function(done){
 });
 
 //Watch for jade file changes
-gulp.task("client.watch.jade", function(done){
+gulp.task("client.watch.jade", (done) => {
 	gulp.watch([
 		"client/**/*.jade"
 	], gulp.series("client.build.markup.jade"));
@@ -42,7 +42,7 @@ gulp.task("client.watch.jade", function(done){
 });
 
 //Watch for stylus file changes
-gulp.task("client.watch.stylus", function(done){
+gulp.task("client.watch.stylus", (done) => {
 	gulp.watch([
 		"client/**/*.styl"
 	], gulp.series("client.build.markup.stylus"));

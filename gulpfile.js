@@ -83,18 +83,18 @@ gulp.task("semantic", gulp.parallel("build.semantic"));
 gulp.task("build", gulp.parallel("client.build", "server.build", "build.config"));
 
 //Enviroment variables
-gulp.task("env.dev", function(done) { process.env.NODE_ENV = "dev"; done(); });
-gulp.task("env.test", function(done) { process.env.NODE_ENV = "test"; done(); });
-gulp.task("env.dist", function(done) { process.env.NODE_ENV = "dist"; done(); });
+gulp.task("env.dev", (done) => { process.env.NODE_ENV = "dev"; done(); });
+gulp.task("env.test", (done) => { process.env.NODE_ENV = "test"; done(); });
+gulp.task("env.dist", (done) => { process.env.NODE_ENV = "dist"; done(); });
 
 //Stop database and app server on exit
-var shutdown = function(){
+var shutdown = () => {
 	var app = docker.getContainer(config.name + "_app");
 	var db = docker.getContainer(config.name + "_db");
-	app.stop(function(err, data){
-		app.remove(function(err, data){
-			db.stop(function(err, data){
-				db.remove(function(err, data){
+	app.stop((err, data) => {
+		app.remove((err, data) => {
+			db.stop((err, data) => {
+				db.remove((err, data) => {
 					process.exit();
 				});
 			});

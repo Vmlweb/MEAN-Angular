@@ -71,12 +71,12 @@ gulp.task("setup.typings.client", shell.task([
 gulp.task("setup.docker", gulp.series("setup.docker.mongodb", "setup.docker.nodejs"));
 
 //Pull required mongodb docker images
-gulp.task("setup.docker.mongodb", function(done){
-	docker.pull("mongo:latest", function (err, stream) {
+gulp.task("setup.docker.mongodb", (done) => {
+	docker.pull("mongo:latest", (err, stream) => {
 		if (err){ throw err; }
 		
 		//Track progress
-		docker.modem.followProgress(stream, function (err, output){
+		docker.modem.followProgress(stream, (err, output) => {
 			if (err){ throw err; }
 			console.log(output);
 			done();
@@ -85,12 +85,12 @@ gulp.task("setup.docker.mongodb", function(done){
 });
 
 //Pull required nodejs docker images
-gulp.task("setup.docker.nodejs", function(done){
-	docker.pull("node:slim", function (err, stream) {
+gulp.task("setup.docker.nodejs", (done) => {
+	docker.pull("node:slim", (err, stream) => {
 		if (err){ throw err; }
 		
 		//Track progress
-		docker.modem.followProgress(stream, function (err, output){
+		docker.modem.followProgress(stream, (err, output) => {
 			if (err){ throw err; }
 			console.log(output);
 			done();

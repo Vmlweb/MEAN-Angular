@@ -6,7 +6,7 @@ var request = require("request");
 var Config = require(__config);
 
 //Request prototype
-var startRequest = function(params, checks){
+var startRequest = (params, checks) => {
 	request({
 		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.internal, "/api/v1/time"),
 		method: "GET",
@@ -23,14 +23,14 @@ var startRequest = function(params, checks){
 	});
 };
 
-describe("Time", function(){
+describe("Time", () => {
 	
 	//! Positive Tests
 	
-	describe("Positive Tests", function(){
+	describe("Positive Tests", () => {
 		
-		it("should return stub time", function(done){
-			startRequest({}, function(body){
+		it("should return stub time", (done) => {
+			startRequest({}, (body) => {
 				
 				//Check that time matches mock objects time
 				expect(body.time).toBe("Sunday, December 12th 2012, 12:12:12 am");

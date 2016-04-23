@@ -6,7 +6,7 @@ var router = require("express").Router();
 //Models
 var User = require(__models + "/user.js");
 
-router.delete("/v1/users", function (req, res, next){	
+router.delete("/v1/users", (req, res, next) => {
 	
 	//Check for all required parameters
 	var userId = req.query.userId || null;

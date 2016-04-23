@@ -5,7 +5,7 @@ var moment = require("moment");
 //Includes
 var Time = require(__time);
 
-router.get("/v1/time", function (req, res, next){	
+router.get("/v1/time", (req, res, next) => {
 	
 	//Create new time object, set format and retrieve value
 	var time = new Time();

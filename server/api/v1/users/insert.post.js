@@ -6,7 +6,7 @@ var router = require("express").Router();
 //Models
 var User = require(__models + "/user.js");
 
-router.post("/v1/users", function (req, res, next){	
+router.post("/v1/users", (req, res, next) => {
 	
 	//Parse body
 	var username = req.body.username || null;
@@ -26,7 +26,7 @@ router.post("/v1/users", function (req, res, next){
 			user.email = email;
 			
 			//Save changes to database
-			user.save(function(err){
+			user.save((err) => {
 				if (err){
 					done(err);
 				}else{

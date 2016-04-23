@@ -1,22 +1,22 @@
 //Modules
-var https = require("https");
-var http = require("http");
-var fs = require("fs");
-var path = require("path");
-var favicon = require("serve-favicon");
-var morgan = require("morgan");
-var cookieParser = require("cookie-parser");
-var recursive = require("recursive-readdir");
-var async = require("async");
-var bodyParser = require("body-parser");
-var helmet = require("helmet");
-var compression = require("compression");
-var express = require("express");
-var app = express();
+const https = require("https");
+const http = require("http");
+const fs = require("fs");
+const path = require("path");
+const favicon = require("serve-favicon");
+const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
+const recursive = require("recursive-readdir");
+const async = require("async");
+const bodyParser = require("body-parser");
+const helmet = require("helmet");
+const compression = require("compression");
+const express = require("express");
+const app = express();
 module.exports = { app: app };
 
 //Includes
-var Config = require(__config);
+const Config = require(__config);
 
 log.info("Express initialized");
 
@@ -42,7 +42,7 @@ if (Config.http.hostname !== ""){
 	module.exports.http = http.createServer(app).listen(Config.http.port.internal, Config.http.hostname);
 	
 	//Logging for events
-	module.exports.http.on("close", function(){
+	module.exports.http.on("close", () => {
 		log.info("HTTP server ended and stream closed");
 	});
 	log.info("HTTP listening at " + Config.http.hostname + ":" + Config.http.port.internal);
@@ -58,7 +58,7 @@ if (Config.https.hostname !== "" && Config.https.ssl.key !== "" && Config.https.
 	}, app).listen(Config.https.port.internal, Config.https.hostname);
 	
 	//Logging for events
-	module.exports.https.on("close", function(){
+	module.exports.https.on("close", () => {
 		log.info("HTTPS server ended and stream closed");
 	});
 	log.info("HTTPS listening at " + Config.https.hostname + ":" + Config.https.port.internal);
@@ -70,16 +70,16 @@ app.use(express.static(__client));
 log.info("Setup client static routes");
 
 //Load api calls from file
-recursive(__api, function (err, files) {
+recursive(__api, (err, files) => {
 	
 	//Remove all non router files
-	var includeFiles = [];
+	var endpoints = [];
 	for (var i=0; i<files.length; i++){
 		if (files[i].indexOf(".get.js") >= 0 ||
 			files[i].indexOf(".post.js") >= 0 ||
 			files[i].indexOf(".put.js") >= 0 ||
 			files[i].indexOf(".delete.js") >= 0){
-			includeFiles.push(files[i]);
+			endpoints.push(files[i]);
 		}
 	}
 	
@@ -89,22 +89,21 @@ recursive(__api, function (err, files) {
 	}else{
 		
 		//Log endpoint count
-		log.info("Loaded " + includeFiles.length + " api endpoints");
+		log.info("Loaded " + endpoints.length + " api endpoints");
 		
 		//Import individual api routers
-		for (var a=0; a<includeFiles.length; a++){
-			var route = require(includeFiles[a]);
-			app.use("/api", route);
+		for (var a=0; a<endpoints.length; a++){
+			app.use("/api", require(endpoints[a]));
 		}
 	}
 	
 	log.info("Setup routes for api endpoints");
 	
 	//Error handler for server side api requests
-	app.use("/api", function(req, res, next){
+	app.use("/api", (req, res, next) => {
 		res.status(404).json({ error: "Not Found" });
 	});
-	app.use("/api", function(err, req, res, next){
+	app.use("/api", (err, req, res, next) => {
 		if (err instanceof String || typeof err === "string"){
 			
 			//User error 
@@ -122,10 +121,10 @@ recursive(__api, function (err, files) {
 	});
 	
 	//Error handler for client side requests
-	app.get("*", function(req, res, next){
+	app.get("*", (req, res, next) => {
 		res.status(404).redirect("/errors/404.html");
 	});
-	app.get("*", function(err, req, res, next){
+	app.get("*", (err, req, res, next) => {
 		log.error(err.stack);
 		res.status(500).redirect("/errors/500.html");
 	});

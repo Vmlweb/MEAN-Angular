@@ -6,7 +6,7 @@ var router = require("express").Router();
 //Models
 var User = require(__models + "/user.js");
 
-router.get("/v1/users", function (req, res, next){	
+router.get("/v1/users", (req, res, next) => {
 	
 	//Check for all required parameters
 	var limit = req.query.limit ? parseInt(req.query.limit) : -1;

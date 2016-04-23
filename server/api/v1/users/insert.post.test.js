@@ -9,7 +9,7 @@ var Config = require(__config);
 var User = require(__models + "/user.js");
 
 //Request prototype
-var startRequest = function(params, checks){
+var startRequest = (params, checks) => {
 	request({
 		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.internal, "/api/v1/users"),
 		method: "POST",
@@ -26,20 +26,20 @@ var startRequest = function(params, checks){
 	});
 };
 
-describe("Insert Users", function(){
+describe("Insert Users", () => {
 	
 	//! Positive Tests
 	
-	describe("Positive Tests", function(){
+	describe("Positive Tests", () => {
 		
-		it("should insert details for user", function(done){
+		it("should insert details for user", (done) => {
 			startRequest({
 				username: "NewUsername",
 				email: "NewEmail@NewEmail.com"
-			}, function(body){
+			}, (body) => {
 				
 				//Check that user was inserted to database
-				User.find({ username: "NewUsername", email: "NewEmail@NewEmail.com" }, function(err){
+				User.find({ username: "NewUsername", email: "NewEmail@NewEmail.com" }, (err) => {
 					done();
 				});
 			});
@@ -50,12 +50,12 @@ describe("Insert Users", function(){
 	
 	//! Negative Tests
 	
-	describe("Negative Tests", function(){
+	describe("Negative Tests", () => {
 		
-		it("should return error if no username is given", function(done){
+		it("should return error if no username is given", (done) => {
 			startRequest({
 				email: "NewEmail@NewEmail.com"
-			}, function(body){
+			}, (body) => {
 				
 				//Check error was correct
 				expect(body.error).toBe("Username must be given");

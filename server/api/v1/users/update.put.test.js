@@ -9,7 +9,7 @@ var Config = require(__config);
 var User = require(__models + "/user.js");
 
 //Request prototype
-var startRequest = function(params, checks){
+var startRequest = (params, checks) => {
 	request({
 		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.internal, "/api/v1/users"),
 		method: "PUT",
@@ -26,21 +26,21 @@ var startRequest = function(params, checks){
 	});
 };
 
-describe("Update Users", function(){
+describe("Update Users", () => {
 	
 	//! Positive Tests
 	
-	describe("Positive Tests", function(){
+	describe("Positive Tests", () => {
 		
-		it("should update details for user", function(done){
+		it("should update details for user", (done) => {
 			startRequest({
 				userId: "607f1f77bcf86cd799439013",
 				username: "NewUsername",
 				email: "NewEmail@NewEmail.com"
-			}, function(body){
+			}, (body) => {
 				
 				//Check that user was changed in database
-				User.findById("607f1f77bcf86cd799439013", function(err, user){
+				User.findById("607f1f77bcf86cd799439013", (err, user) => {
 					
 					//Check user details
 					expect(user.username).toBe("NewUsername");
@@ -56,13 +56,13 @@ describe("Update Users", function(){
 	
 	//! Negative Tests
 	
-	describe("Negative Tests", function(){
+	describe("Negative Tests", () => {
 		
-		it("should return error if no user id is given", function(done){
+		it("should return error if no user id is given", (done) => {
 			startRequest({
 				username: "NewUsername",
 				email: "NewEmail@NewEmail.com"
-			}, function(body){
+			}, (body) => {
 				
 				//Username must be given
 				expect(body.error).toBe("User identifier must be given");

@@ -17,7 +17,7 @@ var config = require("../config.js");
 */
 
 //Remove all build files
-gulp.task("build.reset", function(){
+gulp.task("build.reset", () => {
 	return del([
 		"builds/**/*"
 	]);
@@ -35,7 +35,7 @@ gulp.task("build.semantic", shell.task([
 gulp.task("build.config", gulp.parallel("build.config.nodejs", "build.config.mongodb", "build.config.docker"));
 
 //Build node config file
-gulp.task("build.config.nodejs", function(){
+gulp.task("build.config.nodejs", () => {
 	return gulp.src([
 		"config.js",
 		"package.json"
@@ -44,7 +44,7 @@ gulp.task("build.config.nodejs", function(){
 });
 
 //Build mongodb.js file
-gulp.task("build.config.mongodb", function(){
+gulp.task("build.config.mongodb", () => {
 	return gulp.src("mongodb.js")
 		.pipe(replace("@@DATABASE_REPL_NAME", config.database.repl.name))
 		.pipe(replace("@@DATABASE_REPL_NODES_HOSTNAME", config.database.repl.nodes[0].hostname))
@@ -56,7 +56,7 @@ gulp.task("build.config.mongodb", function(){
 });
 
 //Build docker file
-gulp.task("build.config.docker", function(){
+gulp.task("build.config.docker", () => {
 	
 	//Prepare port dumps
 	var exposedPorts = [];

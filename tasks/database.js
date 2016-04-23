@@ -32,7 +32,7 @@ if (config.database.ssl.enabled){
 }
 
 //Start database server
-gulp.task("database.start", function(done){
+gulp.task("database.start", (done) => {
 	
 	//Prepare container
 	docker.createContainer({
@@ -43,7 +43,7 @@ gulp.task("database.start", function(done){
 		Volumes: {
 			"/home/certs": {}
 		}
-	}, function(err, container) {
+	}, (err, container) => {
 		if (err){ throw err; }
 		
 		//Start container
@@ -55,7 +55,7 @@ gulp.task("database.start", function(done){
 			PortBindings: {
 				["27017/tcp"]: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
 			}
-		}, function(err, data){
+		}, (err, data) => {
 			if (err){ throw err; }
 			setTimeout(done, 1500);
 		});
@@ -63,7 +63,7 @@ gulp.task("database.start", function(done){
 });
 
 //Start testing database server (flushes data when finished)
-gulp.task("database.test", function(done){
+gulp.task("database.test", (done) => {
 	
 	//Prepare container
 	docker.createContainer({
@@ -74,7 +74,7 @@ gulp.task("database.test", function(done){
 		Volumes: {
 			"/home/certs": {}
 		}
-	}, function(err, container) {
+	}, (err, container) => {
 		if (err){ throw err; }
 		
 		//Start container
@@ -85,7 +85,7 @@ gulp.task("database.test", function(done){
 			PortBindings: {
 				["27017/tcp"]: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
 			}
-		}, function(err, data){
+		}, (err, data) => {
 			if (err){ throw err; }
 			setTimeout(done, 1500);
 		});
@@ -93,11 +93,11 @@ gulp.task("database.test", function(done){
 });
 
 //Stop database server
-gulp.task("database.stop", function(done){
+gulp.task("database.stop", (done) => {
 	var container = docker.getContainer(config.name + "_db");
-	container.remove(function(err, data){
-		container.stop(function(err, data){
-			container.remove(function(err, data){
+	container.remove((err, data) => {
+		container.stop((err, data) => {
+			container.remove((err, data) => {
 				setTimeout(done, 1000);
 			});
 		});
@@ -111,14 +111,14 @@ gulp.task("database.reset", gulp.series(
 ));
 
 //Remove all database files
-gulp.task("database.reset.clean", function(done){
+gulp.task("database.reset.clean", (done) => {
 	return del([
 		"data/**/*"
 	]);
 });
 
 //Reconfigure database with mongodb.js
-gulp.task("database.reset.config", function(done){
+gulp.task("database.reset.config", (done) => {
 	var container = docker.getContainer(config.name + "_db");
 	
 	//Prepare command
@@ -136,7 +136,7 @@ gulp.task("database.reset.config", function(done){
 		AttachStdin: true,
 		AttachStdout: true,
 		Tty: false
-	}, function(err, exec) {
+	}, (err, exec) => {
 		if (err){ throw err; }
 		
 		//Execute command
@@ -144,14 +144,14 @@ gulp.task("database.reset.config", function(done){
 			hijack: true,
 			stdin: true,
 			stdout: true
-		}, function(err, stream) {
+		}, (err, stream) => {
 			if (err){ throw err; }
 						
 			//Stream output to console
 	        container.modem.demuxStream(stream, process.stdout, process.stderr);
 		
 			//Stream file into container mongo cli
-			fs.createReadStream("builds/mongodb.js", "binary").pipe(stream).on("end", function(){
+			fs.createReadStream("builds/mongodb.js", "binary").pipe(stream).on("end", () => {
 				setTimeout(done, 500);
 			});
 		});

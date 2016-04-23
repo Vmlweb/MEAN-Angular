@@ -22,7 +22,7 @@ gulp.task("server.test", gulp.series(
 ));
 
 //Test server with jasmine
-gulp.task("server.test.jasmine", function(){
+gulp.task("server.test.jasmine", () => {
 	return gulp.src([
 		"builds/server/tests/setup.test.js",
 		"builds/server/tests/*.test.js",

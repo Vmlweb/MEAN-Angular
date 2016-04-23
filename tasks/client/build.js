@@ -39,7 +39,7 @@ gulp.task("client.build", gulp.series(
 gulp.task("client.build.copy", gulp.parallel("client.build.copy.source", "client.build.copy.libs"));
 
 //Copy over client source files
-gulp.task("client.build.copy.source", function(){
+gulp.task("client.build.copy.source", () => {
 	return gulp.src([
 		"client/**/*",
 		"!client/**/*.md",
@@ -54,7 +54,7 @@ gulp.task("client.build.copy.source", function(){
 });
 
 //Copy over library dependancies
-gulp.task("client.build.copy.libs", function(){
+gulp.task("client.build.copy.libs", () => {
 	return gulp.src([
 		//Modules
 		"node_modules/systemjs/dist/system-polyfills.js",
@@ -83,7 +83,7 @@ gulp.task("client.build.copy.libs", function(){
 gulp.task("client.build.javascript", gulp.series("client.build.javascript.lint"));
 
 //Check javascript for lint
-gulp.task("client.build.javascript.lint", function(){
+gulp.task("client.build.javascript.lint", () => {
 	return gulp.src([
 		"client/**/*.js",
 		"!client/typings/**/*"
@@ -101,7 +101,7 @@ gulp.task("client.build.typescript", gulp.series(
 ));
 
 //Check typescript lint
-gulp.task("client.build.typescript.lint", function(){
+gulp.task("client.build.typescript.lint", () => {
 	return gulp.src([
 		"client/**/*.ts",
 		"!client/typings/**/*"
@@ -121,7 +121,7 @@ gulp.task("client.build.typescript.lint", function(){
 });
 
 //Compile typescript into javascript
-gulp.task("client.build.typescript.compile", function() {
+gulp.task("client.build.typescript.compile", () => {
 	var output = gulp.src([
 			"client/**/*.ts",
 			"!client/**/*.d.ts",
@@ -153,7 +153,7 @@ gulp.task("client.build.typescript.compile", function() {
 gulp.task("client.build.markup", gulp.parallel("client.build.markup.jade", "client.build.markup.stylus"));
 
 //Compile jade into html
-gulp.task("client.build.markup.jade", function(){
+gulp.task("client.build.markup.jade", () => {
 	return gulp.src([
 		"client/**/*.jade",
 		"!client/**/*.inc.jade",
@@ -163,7 +163,7 @@ gulp.task("client.build.markup.jade", function(){
 });
 
 //Compile stylus to css
-gulp.task("client.build.markup.stylus", function(){
+gulp.task("client.build.markup.stylus", () => {
 	return gulp.src([
 		"client/**/*.styl",
 		"!client/**/*.inc.styl"

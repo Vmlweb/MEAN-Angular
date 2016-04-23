@@ -10,7 +10,7 @@ var Config = require(__config);
 var User = require(__models + "/user.js");
 
 //Request prototype
-var startRequest = function(params, checks){
+var startRequest = (params, checks) => {
 	request({
 		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.internal, "/api/v1/users?") + querystring.stringify(params),
 		method: "DELETE",
@@ -26,19 +26,19 @@ var startRequest = function(params, checks){
 	});
 };
 
-describe("Delete User", function(){
+describe("Delete User", () => {
 	
 	//! Positive Tests
 	
-	describe("Positive Tests", function(){
+	describe("Positive Tests", () => {
 		
-		it("should delete user", function(done){
+		it("should delete user", (done) => {
 			startRequest({
 				userId: "607f1f77bcf86cd799439013",
-			}, function(body){
+			}, (body) => {
 				
 				//Check that user was removed from database
-				User.findById("607f1f77bcf86cd799439013", function(err, user){
+				User.findById("607f1f77bcf86cd799439013", (err, user) => {
 					
 					//Check user doesnt exist
 					expect(user).toBe(null);
@@ -53,10 +53,10 @@ describe("Delete User", function(){
 	
 	//! Negative Tests
 	
-	describe("Negative Tests", function(){
+	describe("Negative Tests", () => {
 		
-		it("should return error if no user id is given", function(done){
-			startRequest({}, function(body){
+		it("should return error if no user id is given", (done) => {
+			startRequest({}, (body) => {
 				
 				//Check error was correct
 				expect(body.error).toBe("User identifier must be given");

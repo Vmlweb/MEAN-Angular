@@ -1,28 +1,28 @@
 //Modules
-var path = require("path");
-var fs = require("fs-extra");
-var morgan = require("morgan");
-var moment = require("moment");
-var winston = require("winston");
-var winstonRotate = require("winston-daily-rotate-file");
-var app = require("express")();
+const path = require("path");
+const fs = require("fs-extra");
+const morgan = require("morgan");
+const moment = require("moment");
+const winston = require("winston");
+const winstonRotate = require("winston-daily-rotate-file");
+const app = require("express")();
 
 //Check and create log directories
-var errorPath = path.join(__logs, "errors");
+const errorPath = path.join(__logs, "errors");
 if (!fs.ensureDirSync(errorPath)){
 	fs.mkdirsSync(errorPath);
 }
-var infoPath = path.join(__logs, "info");
+const infoPath = path.join(__logs, "info");
 if (!fs.ensureDirSync(infoPath)){
 	fs.mkdirsSync(infoPath);
 }
-var accessPath = path.join(__logs, "access");
+const accessPath = path.join(__logs, "access");
 if (!fs.ensureDirSync(accessPath)){
 	fs.mkdirsSync(accessPath);
 }
 
 //Logging output formatter
-var formatter = function(options){
+const formatter = (options) => {
 	var format = "(" + moment().format("YYYY-MM-DD_HH-mm-ss") + ") ";
     format += "[" + winston.config.colorize(options.level,options.level.toUpperCase()) + "] ";
     format += options.message;
@@ -33,7 +33,7 @@ var formatter = function(options){
 };
 
 //Setup log file transports
-var transports = [
+const transports = [
 	new winstonRotate({
 	    name: "error",
 	    level: "error",
@@ -81,7 +81,7 @@ if (process.env.NODE_ENV != "silent"){
 }
 
 //Setup winston logger and stream transports
-var logger = new winston.Logger({
+const logger = new winston.Logger({
     transports: transports,
     exitOnError: false
 });
@@ -89,7 +89,7 @@ var logger = new winston.Logger({
 //Globalize new logger
 log = {};
 log.stream = {
-	write: function(message, encoding){
+	write: (message, encoding) => {
         logger.verbose(message.replace(/^\s+|\s+$/g, ""));
     }
 };

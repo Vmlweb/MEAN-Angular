@@ -1,9 +1,9 @@
 //Modules
-var mock =  require("mock-require");
+const mock =  require("mock-require");
 
 //Create stub object
-var Time = require("./time.js");
-Time.prototype.getTime = function(){
+const Time = require("./time.js");
+Time.prototype.getTime = () => {
 	return "Sunday, December 12th 2012, 12:12:12 am";
 };
 

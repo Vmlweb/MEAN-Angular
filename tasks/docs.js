@@ -15,19 +15,19 @@ var foreach = require("gulp-foreach");
 */
 
 //Remove all documentation files
-gulp.task("docs.reset", function(){
+gulp.task("docs.reset", () => {
 	return del([
 		"builds/docs/**/*"
 	]);
 });
 
 //Build api documentation from single directory
-gulp.task("docs.single", function(){
+gulp.task("docs.single", () => {
 	return gulp.src("package.json").pipe(prompt.prompt({
 		type: "input",
 		name: "dir",
 		message: "Enter the api path to generate documentation"
-	}, function(res){
+	}, (res) => {
 		
 		//Generate docs for directory
 		return gulp.src([
@@ -39,18 +39,18 @@ gulp.task("docs.single", function(){
 });
 
 //Build api documentation from directory recursively
-gulp.task("docs.recursive", function(){
+gulp.task("docs.recursive", () => {
 	return gulp.src("package.json").pipe(prompt.prompt({
 		type: "input",
 		name: "dir",
 		message: "Enter the api path to generate documentation"
-	}, function(res){
+	}, (res) => {
 		
 		//Scan directory recursively
 		return gulp.src([
 			path.join("server/api", path.join(res.dir, "*"))
 		])
-		.pipe(foreach(function(stream, folder){
+		.pipe(foreach((stream, folder) => {
 			
 			//Generate docs for directory
 			return gulp.src([
