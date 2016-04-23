@@ -48,8 +48,6 @@ npm install
 gulp setup
 ```
 
-If prompted for input use the default location or setting. (Press Enter)
-
 ## Directory Structure
 
 - `builds` - Temporary built and compiled files.
@@ -60,7 +58,7 @@ If prompted for input use the default location or setting. (Press Enter)
 - `client/typings` - Typescript library type mappings.
 - `data` - Development database binary files.
 - `dist` - Production ready distribution builds.
-- `logs` - Development JSON log files.
+- `logs` - JSON console logs and test XML reports.
 - `semantic` - User interface framework source.
 - `server` - Server side application source.
 - `server/api` - API endpoints.
