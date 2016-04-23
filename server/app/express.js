@@ -93,7 +93,7 @@ recursive(__api, function (err, files) {
 		
 		//Import individual api routers
 		for (var a=0; a<endpoints.length; a++){
-			app.use("/api", require(includeFiles[a]));
+			app.use("/api", require(endpoints[a]));
 		}
 	}
 	
