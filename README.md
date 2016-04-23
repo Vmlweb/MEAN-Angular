@@ -15,6 +15,7 @@ Quick and simple template to get up and running with a MEAN stack web app inside
   * Winston File & Console Logs
   * Gulp 4 Workflow (Dev, Test & Dist)
   * PM2 (Multi-Core, Load Balancing)
+  * Compatible with CI Tools (Bamboo)
 
 ## Prequisitions
 

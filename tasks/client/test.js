@@ -23,7 +23,7 @@ gulp.task("client.test.karma", function(done){
 	var server = new Karma({
 		basePath: "",
 		frameworks: ["jasmine"],
-		plugins: ["karma-phantomjs2-launcher", "karma-jasmine", "karma-mocha-reporter"],
+		plugins: ["karma-phantomjs2-launcher", "karma-jasmine", "karma-mocha-reporter", "karma-junit-reporter"],
 		browsers: ["PhantomJS2"],
 		colors: true,
 		autoWatch: false,
@@ -48,7 +48,10 @@ gulp.task("client.test.karma", function(done){
 			{ pattern: "builds/client/**/*.js", included: false },
 			{ pattern: "builds/client/**/*.js.map", included: false },
 		],
-		reporters: ["mocha"]
+		reporters: ["mocha", "junit"],
+		junitReporter: {
+			outputDir: 'logs/tests'
+		}
 	}, function(){
 		done();
 	});

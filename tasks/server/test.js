@@ -1,7 +1,8 @@
 //Modules
 var gulp = require("gulp");
 var jasmine = require("gulp-jasmine");
-var reporter = require("jasmine-spec-reporter");
+var sreporter = require("jasmine-spec-reporter");
+var jreporter = require("jasmine-reporters");
 
 /*! Tasks 
 - server.test
@@ -28,8 +29,14 @@ gulp.task("server.test.jasmine", function(){
 		"builds/server/**/*.test.js"
 	])
 	.pipe(jasmine({
-		reporter: new reporter({
-			displayStacktrace: "all"
-		})
+		reporter: [
+			new sreporter({
+				displayStacktrace: "all"
+			}),
+			new jreporter.JUnitXmlReporter({
+				savePath: "logs/tests",
+				consolidateAll: false
+			})
+		]
 	}));
 });
