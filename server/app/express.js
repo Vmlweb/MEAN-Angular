@@ -73,13 +73,13 @@ log.info("Setup client static routes");
 recursive(__api, function (err, files) {
 	
 	//Remove all non router files
-	var includeFiles = [];
+	var endpoints = [];
 	for (var i=0; i<files.length; i++){
 		if (files[i].indexOf(".get.js") >= 0 ||
 			files[i].indexOf(".post.js") >= 0 ||
 			files[i].indexOf(".put.js") >= 0 ||
 			files[i].indexOf(".delete.js") >= 0){
-			includeFiles.push(files[i]);
+			endpoints.push(files[i]);
 		}
 	}
 	
@@ -89,12 +89,11 @@ recursive(__api, function (err, files) {
 	}else{
 		
 		//Log endpoint count
-		log.info("Loaded " + includeFiles.length + " api endpoints");
+		log.info("Loaded " + endpoints.length + " api endpoints");
 		
 		//Import individual api routers
-		for (var a=0; a<includeFiles.length; a++){
-			var route = require(includeFiles[a]);
-			app.use("/api", route);
+		for (var a=0; a<endpoints.length; a++){
+			app.use("/api", require(includeFiles[a]));
 		}
 	}
 	
