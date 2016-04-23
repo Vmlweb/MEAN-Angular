@@ -19,5 +19,4 @@ if (process.env.NODE_ENV === "testing"){
 //App Files
 global.__config = path.join(__dirname, "../config.js");
 global.__errors = path.join(__dirname, "app/errors.js");
-global.__helper = path.join(__dirname, "app/helper.js");
 global.__time = path.join(__dirname, "app/time.js");

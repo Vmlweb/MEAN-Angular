@@ -5,7 +5,6 @@ var fs = require("fs");
 
 //Includes
 var Config = require(__config);
-var Helper = require(__helper);
 
 //Prepare connection string
 var auth = Config.database.auth.username + ":" + Config.database.auth.password;
@@ -19,10 +18,10 @@ var repl = "replicaSet=" + Config.database.repl.name + "&ssl=" + Config.database
 //Prepare connection options
 var options = { 
 	replset: {
-		sslValidate: Config.database.ssl.validate || false,
-		sslKey: Helper.loadCertificate(Config.database.ssl.key),
-		sslCert: Helper.loadCertificate(Config.database.ssl.cert),
-		sslCA: Helper.loadCertificate(Config.database.ssl.ca),
+		sslValidate: Config.database.ssl.validate,
+		sslKey: Config.database.ssl.validate ? fs.readFileSync(path.join(__certs, Config.database.ssl.key)) : null,
+		sslCert: Config.database.ssl.validate ? fs.readFileSync(path.join(__certs, Config.database.ssl.cert)) : null,
+		sslCA: Config.database.ssl.validate ? fs.readFileSync(path.join(__certs, Config.database.ssl.ca)) : null,
 		readPreference: Config.database.repl.read || "nearest"
 	}
 };

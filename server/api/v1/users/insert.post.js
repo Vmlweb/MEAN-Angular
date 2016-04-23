@@ -3,9 +3,6 @@ var validator = require("validator");
 var async = require("async");
 var router = require("express").Router();
 
-//Includes
-var Helper = require(__helper);
-
 //Models
 var User = require(__models + "/user.js");
 

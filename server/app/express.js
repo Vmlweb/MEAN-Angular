@@ -17,7 +17,6 @@ module.exports = { app: app };
 
 //Includes
 var Config = require(__config);
-var Helper = require(__helper);
 
 log.info("Express initialized");
 
@@ -54,8 +53,8 @@ if (Config.https.hostname !== "" && Config.https.ssl.key !== "" && Config.https.
 	
 	//Create server and listen
 	module.exports.https = https.createServer({
-		key: Helper.loadCertificate(Config.https.ssl.key),
-		cert: Helper.loadCertificate(Config.https.ssl.cert)
+		key: fs.readFileSync(path.join(__certs, Config.https.ssl.key)) || "",
+		cert: fs.readFileSync(path.join(__certs, Config.https.ssl.cert)) || ""
 	}, app).listen(Config.https.port.internal, Config.https.hostname);
 	
 	//Logging for events
@@ -72,7 +71,7 @@ log.info("Setup client static routes");
 
 //Load api calls from file
 recursive(__api, function (err, files) {
-
+	
 	//Remove all non router files
 	var includeFiles = [];
 	for (var i=0; i<files.length; i++){
@@ -83,12 +82,12 @@ recursive(__api, function (err, files) {
 			includeFiles.push(files[i]);
 		}
 	}
-
+	
 	//Routing handler for api calls
 	if (err){
 		log.error(err.message);	
 	}else{
-
+		
 		//Log endpoint count
 		log.info("Loaded " + includeFiles.length + " api endpoints");
 		
@@ -98,20 +97,15 @@ recursive(__api, function (err, files) {
 			app.use("/api", route);
 		}
 	}
-
-	log.info("Setup routes for api endpoints");
 	
-	app.use("/victor", function (req, res, next){
-		console.log(req);
-		res.status(200).json({ test: "test" });
-	});
+	log.info("Setup routes for api endpoints");
 	
 	//Error handler for server side api requests
 	app.use("/api", function(req, res, next){
 		res.status(404).json({ error: "Not Found" });
 	});
 	app.use("/api", function(err, req, res, next){
-		if (Helper.isString(err)){
+		if (err instanceof String || typeof err === "string"){
 			
 			//User error 
 			res.status(200).json({ error: err });
@@ -129,7 +123,6 @@ recursive(__api, function (err, files) {
 	
 	//Error handler for client side requests
 	app.get("*", function(req, res, next){
-		console.log(req.path);
 		res.status(404).redirect("/errors/404.html");
 	});
 	app.get("*", function(err, req, res, next){
