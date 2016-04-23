@@ -10,7 +10,7 @@ rs.initiate({
 
 //Wait for replica set to finish instantiating
 while (rs.status().startupStatus || (rs.status().hasOwnProperty("myState") && rs.status().myState != 1)){
-	sleep(1500);
+	sleep(2000);
 };
 
 //Create administrator account
