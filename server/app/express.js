@@ -111,12 +111,16 @@ recursive(__api, function (err, files) {
 		}else{
 			
 			//Interal server error
-			if (err.hasOwnProperty("message")){
+			if (err.hasOwnProperty("message") && err.hasOwnProperty("error")){
+				log.error(err.message, err.error);
+			}else if (err.hasOwnProperty("message")){
 				log.error(err.message, err.stack);
+			}else if (err.hasOwnProperty("error")){
+				log.error(err.error);
 			}else{
 				log.error("Internal server error", err.stack);	
 			}
-			res.status(500).json({ error: "Server Error" });
+			res.status(500).json({ error: ErrorCodes.ServerError });
 		}
 	});
 	
