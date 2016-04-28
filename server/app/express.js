@@ -3,9 +3,7 @@ var https = require("https");
 var http = require("http");
 var fs = require("fs");
 var path = require("path");
-var favicon = require("serve-favicon");
 var morgan = require("morgan");
-var cookieParser = require("cookie-parser");
 var recursive = require("recursive-readdir");
 var async = require("async");
 var bodyParser = require("body-parser");
@@ -20,22 +18,18 @@ var Config = require(__config);
 
 log.info("Express initialized");
 
-//Favicon
-//express.use(favicon(path.join(__dirname, "public", "favicon.ico")));
-
 //Attach access logging to express
 app.use(require("morgan")(Config.logs.format, { "stream": log.stream }));
 
-//Request Parser
+//Request parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
 app.use(helmet());
 app.use(compression());
 
 log.info("Express middleware attached");
 
-//HTTP Listen
+//HTTP listen
 if (Config.http.hostname !== ""){
 	
 	//Create server and listen
@@ -48,7 +42,7 @@ if (Config.http.hostname !== ""){
 	log.info("HTTP listening at " + Config.http.hostname + ":" + Config.http.port.internal);
 }
 
-//HTTPS Listen
+//HTTPS listen
 if (Config.https.hostname !== "" && Config.https.ssl.key !== "" && Config.https.ssl.cert !== ""){
 	
 	//Create server and listen

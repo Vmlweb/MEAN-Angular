@@ -1,11 +1,9 @@
 //Modules
 var path = require("path");
 var fs = require("fs-extra");
-var morgan = require("morgan");
 var moment = require("moment");
 var winston = require("winston");
 var winstonRotate = require("winston-daily-rotate-file");
-var app = require("express")();
 
 //Check and create log directories
 var errorPath = path.join(__logs, "errors");

@@ -9,7 +9,7 @@ import {HTTP_PROVIDERS} from 'angular2/http';
 
 //Hashed URL
 import {provide} from 'angular2/core';
-import {LocationStrategy, HashLocationStrategy} from 'angular2/router';
+import {LocationStrategy, HashLocationStrategy} from 'angular2/platform/common';
 
 //Bootstrap application
 bootstrap(AppComponent,[

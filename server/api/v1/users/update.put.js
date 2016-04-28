@@ -1,5 +1,4 @@
 //Modules
-var validator = require("validator");
 var async = require("async");
 var router = require("express").Router();
 

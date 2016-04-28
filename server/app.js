@@ -1,19 +1,19 @@
 //Modules
-var path = require("path");
 var async = require("async");
 
-//Setup
+//Config
 var dirs = require("./dirs.js");
+var Config = require(__config);
+
+//Setup
 var logger = require(__app + "/logger.js");
 var mongo = require(__app + "/mongo.js");
 var express = require(__app + "/express.js");
 
-//Config
-var Config = require(__config);
-
 //Setup mocks
 if (process.env.NODE_ENV === "testing"){
 	require(__app + "/time.test.js");
+	
 	log.info("Setup test mocks and stubs");
 }
 
