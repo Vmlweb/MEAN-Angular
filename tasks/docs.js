@@ -22,48 +22,25 @@ gulp.task("docs.reset", function(){
 });
 
 //Build api documentation from config
-gulp.task("", function(){
-	return gulp.src(config.)
-		.pipe
-});
-
-//Build api documentation from single directory
-/*gulp.task("docs.single", function(){
-	return gulp.src("package.json").pipe(prompt.prompt({
-		type: "input",
-		name: "dir",
-		message: "Enter the api path to generate documentation"
-	}, function(res){
-		
-		//Generate docs for directory
-		return gulp.src([
-			path.join("server/api", res.dir, "/*.md")
-		])
-		.pipe(concat(res.dir.replace(/\//g, '_') + "." + moment().format("YYYY-MM-DD") + ".md"))
+gulp.task("docs.generate", function(){
+	var includes = [];
+	var name = "";
+	
+	//Check if using a test plan
+	if (process.env.hasOwnProperty("docs") && process.env.docs.length > 0){
+		name = process.env.docs;
+		for (i in config.docs[process.env.docs]){
+			includes.push(path.join("server", config.docs[process.env.docs][i]));
+		}
+	}else{
+		name = "api";
+		includes = [
+			"server/api/**/*.md"
+		];
+	}
+	
+	//Generate concat documentation
+	return gulp.src(includes)
+		.pipe(concat(name + "." + moment().format("YYYY-MM-DD") + ".md"))
 		.pipe(gulp.dest("builds/docs"));
-	}));
 });
-
-//Build api documentation from directory recursively
-gulp.task("docs.recursive", function(){
-	return gulp.src("package.json").pipe(prompt.prompt({
-		type: "input",
-		name: "dir",
-		message: "Enter the api path to generate documentation"
-	}, function(res){
-		
-		//Scan directory recursively
-		return gulp.src([
-			path.join("server/api", path.join(res.dir, "*"))
-		])
-		.pipe(foreach(function(stream, folder){
-			
-			//Generate docs for directory
-			return gulp.src([
-				path.join(folder.path, "/**.md")
-			])
-			.pipe(concat(folder.basename.replace(/\//g, '_') + "." + moment().format("YYYY-MM-DD") + ".md"))
-		}))
-		.pipe(gulp.dest("builds/docs"));
-	}));
-});*/

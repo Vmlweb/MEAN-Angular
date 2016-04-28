@@ -66,9 +66,6 @@ gulp.task("dist", gulp.series(
 	"dist.build"
 ));
 
-//! Documentation
-gulp.task("docs", gulp.series("docs.reset", "docs.generate"));
-
 //! Database & App
 gulp.task("start", gulp.series("database.start", "app.start"));
 gulp.task("stop", gulp.series("app.stop", "database.stop"));
@@ -83,6 +80,7 @@ gulp.task("docker", gulp.parallel("setup.docker"));
 
 //! Build Convenience
 gulp.task("semantic", gulp.parallel("build.semantic"));
+gulp.task("docs", gulp.parallel("docs.generate"));
 gulp.task("lint", gulp.parallel("client.lint", "server.lint"));
 gulp.task("build", gulp.parallel("client.build", "server.build", "build.config"));
 
@@ -98,6 +96,16 @@ for (var i in config.tests){
 			process.env.test = i;
 			done();
 		}, "server.test"));
+	})(i);
+}
+
+//! API Docs
+for (var i in config.docs){
+	(function(i) {
+		gulp.task("docs." + i, gulp.series(function (done){
+			process.env.docs = i;
+			done();
+		}, "docs.generate"));
 	})(i);
 }
 

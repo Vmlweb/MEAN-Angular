@@ -82,11 +82,21 @@ module.exports = {
 	tests: {
 		get: [
 			"/tests/*.test.js",
-			"/**/*.get.test.js"
+			"/api/**/*.get.test.js"
 		],
 		post: [
 			"/tests/*.test.js",
-			"/**/*.post.test.js"
+			"/api/**/*.post.test.js"
+		]
+	},
+	
+	//! API Documentation
+	docs: {
+		v1: [
+			"/api/v1/**/*.md"
+		],
+		users: [
+			"/api/v1/users/**/*.md"
 		]
 	},
 	
