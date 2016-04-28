@@ -1,6 +1,7 @@
 //Modules
 var gulp = require("gulp");
 var Karma = require("karma").Server;
+var config = require("../../config.js");
 
 /*! Tasks 
 - client.test
@@ -19,6 +20,15 @@ gulp.task("client.test", gulp.series(
 //Test client with karma
 gulp.task("client.test.karma", function(done){
 	
+	//Generate include files
+	var includes = [];
+	for (var i in config.libraries){
+		includes.push({
+			pattern: config.libraries[i],
+			included: config.libraries[i].endsWith("js")
+		});
+	}
+	
 	//Setup configuration
 	var server = new Karma({
 		basePath: "",
@@ -28,34 +38,16 @@ gulp.task("client.test.karma", function(done){
 		colors: true,
 		autoWatch: false,
 		singleRun: true,
-		files: [
-			//Modules
-			{ pattern: "node_modules/systemjs/dist/system-polyfills.js", included: true },
-			{ pattern: "node_modules/systemjs/dist/system.src.js", included: true },
-			{ pattern: "node_modules/es6-shim/es6-shim.js", included: true },
-			{ pattern: "node_modules/rxjs/bundles/Rx.js", included: true },
-			{ pattern: "node_modules/angular2/bundles/angular2-polyfills.js", included: true },
-			//AngularJS
-			{ pattern: "node_modules/angular2/bundles/angular2.js", included: true },
-			{ pattern: "node_modules/angular2/bundles/router.dev.js", included: true },
-			{ pattern: "node_modules/angular2/bundles/http.dev.js", included: true },
-			{ pattern: "node_modules/angular2/bundles/testing.dev.js", included: true },
-			//Dependancies
-			{ pattern: "bower_components/jquery/dist/jquery.min.js", included: true },
-			//Karma
+		files: includes.concat([
 			{ pattern: "karma.shim.js", included: true },
-			//Source
 			{ pattern: "builds/client/**/*.js", included: false },
-			{ pattern: "builds/client/**/*.js.map", included: false },
-		],
+			{ pattern: "builds/client/**/*.js.map", included: false }
+		]),
 		reporters: ["mocha", "junit"],
 		junitReporter: {
 			outputDir: 'logs/tests'
 		}
 	}, function(){
 		done();
-	});
-	
-	//Start server
-	server.start();
+	}).start();
 });

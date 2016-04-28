@@ -55,6 +55,33 @@ module.exports = {
 		}
 	},
 	
+	//! Libraries
+	libraries: [
+		
+		//Modules
+		"node_modules/systemjs/dist/system-polyfills.js",
+		"node_modules/systemjs/dist/system-polyfills.js.map",
+		"node_modules/systemjs/dist/system.src.js",
+		"node_modules/es6-shim/es6-shim.js",
+		"node_modules/rxjs/bundles/Rx.js",
+		"node_modules/angular2/bundles/angular2-polyfills.js",
+		
+		//AngularJS
+		"node_modules/angular2/bundles/angular2.js",
+		"node_modules/angular2/bundles/router.dev.js",
+		"node_modules/angular2/bundles/http.dev.js",
+		"node_modules/angular2/bundles/testing.dev.js",
+		
+		//Dependancies
+		"bower_components/jquery/dist/jquery.min.js",
+		"bower_components/jquery/dist/jquery.min.map",
+		
+		//Semantic UI
+		"semantic/dist/semantic.min.js",
+		"semantic/dist/semantic.min.css",
+		"semantic/dist/*/**/*"
+	],
+	
 	//! Certificates
 	certs: {
 		path: "/opt/mean/certs",
