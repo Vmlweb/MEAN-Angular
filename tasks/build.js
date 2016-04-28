@@ -32,7 +32,11 @@ gulp.task("build.semantic", shell.task([
 }));
 
 //! Config
-gulp.task("build.config", gulp.parallel("build.config.nodejs", "build.config.mongodb", "build.config.docker"));
+gulp.task("build.config", gulp.parallel(
+	"build.config.nodejs",
+	"build.config.mongodb",
+	"build.config.docker"
+));
 
 //Build node config file
 gulp.task("build.config.nodejs", function(){

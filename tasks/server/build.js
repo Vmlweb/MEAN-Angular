@@ -1,36 +1,22 @@
 //Modules
 var gulp = require("gulp");
 var shell = require("gulp-shell");
-var replace = require("gulp-replace");
 var tslint = require("gulp-tslint");
 var ts = require("gulp-typescript");
 var jshint = require("gulp-jshint");
 
 /*! Tasks 
 - server.build
-	
-- server.build.copy
-- server.build.copy.source
 
-- server.build.javascript
-- server.build.javascript.lint
-
+- server.build.source
 - server.build.typescript
-- server.build.typescript.lint
-- server.build.typescript.compile
 */
 
 //! Build
-gulp.task("server.build", gulp.series(
-	gulp.parallel("server.build.javascript", "server.build.typescript"),
-	gulp.parallel("server.build.copy")
-));
+gulp.task("server.build", gulp.parallel("server.build.source", "server.build.typescript"));
 
-//! Copy
-gulp.task("server.build.copy", gulp.parallel("server.build.copy.source"));
-
-//Copy over server source files
-gulp.task("server.build.copy.source", function(){
+//Copy over source files
+gulp.task("server.build.source", function(){
 	return gulp.src([
 		"server/**/*",
 		"!server/**/*.md",
@@ -42,46 +28,8 @@ gulp.task("server.build.copy.source", function(){
 	.pipe(gulp.dest("builds/server"));
 });
 
-//! Javascript
-gulp.task("server.build.javascript", gulp.series("server.build.javascript.lint"));
-
-//Check javascript for lint
-gulp.task("server.build.javascript.lint", function(){
-	return gulp.src([
-		"server/**/*.js",
-		"!server/typings/**/*",
-	])
-	.pipe(jshint({
-		esversion: 6
-	}))
-    .pipe(jshint.reporter("default"));
-});
-
-//! Typescript
-gulp.task("server.build.typescript", gulp.series("server.build.typescript.lint", "server.build.typescript.compile"));
-
-//Check typescript for lint
-gulp.task("server.build.typescript.lint", function(){
-	return gulp.src([
-		"server/**/*.ts",
-		"!server/typings/**/*",
-	])
-	.pipe(tslint({
-        configuration: {
-	        rules: {
-				"no-duplicate-key": true,
-				"no-duplicate-variable": true,
-				"semicolon": true
-	        }
-        }
-    }))
-    .pipe(tslint.report("verbose", {
-	    emitError: false
-    }));
-});
-
 //Compile typescript into javascript
-gulp.task("server.build.typescript.compile", function() {
+gulp.task("server.build.typescript", function() {
 	return gulp.src([
 		"server/**/*.ts",
 		"!server/**/*.d.ts",

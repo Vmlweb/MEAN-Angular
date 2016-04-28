@@ -10,7 +10,12 @@ var gulp = require("gulp");
 */
 
 //! Development
-gulp.task("client.watch", gulp.parallel("client.watch.source", "client.watch.typescript", "client.watch.jade", "client.watch.stylus"));
+gulp.task("client.watch", gulp.parallel(
+	"client.watch.source",
+	"client.watch.typescript",
+	"client.watch.jade",
+	"client.watch.stylus"
+));
 
 //Watch for source files changes
 gulp.task("client.watch.source", function(done){
@@ -20,7 +25,7 @@ gulp.task("client.watch.source", function(done){
 		"!client/**/*.styl",
 		"!client/**/*.ts",
 		"!client/**/*.d.ts"
-	], gulp.series("client.build.copy.source"));
+	], gulp.series("client.build.source"));
 	done();
 });
 

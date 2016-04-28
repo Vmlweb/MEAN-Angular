@@ -16,7 +16,7 @@
   "devDependencies": {
     "angular2": "2.0.0-beta.15",
     "del": "^2.2.0",
-    "dockerode": "^2.2.7",
+    "dockerode": "^2.2.10",
     "es6-promise": "^3.0.2",
     "es6-shim": "^0.35.0",
     "gulp": "gulpjs/gulp.git#4.0",

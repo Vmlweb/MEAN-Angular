@@ -1,9 +1,5 @@
 //Modules
 var gulp = require("gulp");
-var shell = require("gulp-shell");
-var replace = require("gulp-replace");
-var tslint = require("gulp-tslint");
-var jshint = require("gulp-jshint");
 var ts = require("gulp-typescript");
 var sourcemaps = require("gulp-sourcemaps");
 var concat = require("gulp-concat");
@@ -16,16 +12,9 @@ var config = require("../../config.js");
 /*! Tasks 
 - client.build
 
-- client.build.copy
-- client.build.copy.source
-- client.build.copy.libs
-
-- client.build.javascript
-- client.build.javascript.lint
-
+- client.build.libs
+- client.build.source
 - client.build.typescript
-- client.build.typescript.lint
-- client.build.typescript.compile
 
 - client.build.markup
 - client.build.markup.jade
@@ -33,16 +22,21 @@ var config = require("../../config.js");
 */
 
 //! Build
-gulp.task("client.build", gulp.series(
-	gulp.parallel("client.build.javascript", "client.build.typescript"),
-	gulp.parallel("client.build.copy", "client.build.markup")
+gulp.task("client.build", gulp.parallel(
+	"client.build.libs",
+	"client.build.source",
+	"client.build.typescript",
+	"client.build.markup"
 ));
 
-//! Copy
-gulp.task("client.build.copy", gulp.parallel("client.build.copy.source", "client.build.copy.libs"));
+//Copy over library dependancies
+gulp.task("client.build.libs", function(){
+	return gulp.src(config.libraries)
+	.pipe(gulp.dest("builds/client/libs"));
+});
 
 //Copy over client source files
-gulp.task("client.build.copy.source", function(){
+gulp.task("client.build.source", function(){
 	return gulp.src([
 		"client/**/*",
 		"!client/**/*.md",
@@ -56,55 +50,8 @@ gulp.task("client.build.copy.source", function(){
 	.pipe(gulp.dest("builds/client"));
 });
 
-//Copy over library dependancies
-gulp.task("client.build.copy.libs", function(){
-	return gulp.src(config.libraries)
-	.pipe(gulp.dest("builds/client/libs"));
-});
-
-//! Javascript
-gulp.task("client.build.javascript", gulp.series("client.build.javascript.lint"));
-
-//Check javascript for lint
-gulp.task("client.build.javascript.lint", function(){
-	return gulp.src([
-		"client/**/*.js",
-		"!client/typings/**/*"
-	])
-	.pipe(jshint({
-		esversion: 6
-	}))
-    .pipe(jshint.reporter("default"));
-});
-
-//! Typescript
-gulp.task("client.build.typescript", gulp.series(
-	"client.build.typescript.lint",
-	"client.build.typescript.compile"
-));
-
-//Check typescript lint
-gulp.task("client.build.typescript.lint", function(){
-	return gulp.src([
-		"client/**/*.ts",
-		"!client/typings/**/*"
-	])
-	.pipe(tslint({
-        configuration: {
-	        rules: {
-				"no-duplicate-key": true,
-				"no-duplicate-variable": true,
-				"semicolon": true
-	        }
-        }
-    }))
-    .pipe(tslint.report("verbose", {
-	    emitError: false
-    }));
-});
-
 //Compile typescript into javascript
-gulp.task("client.build.typescript.compile", function() {
+gulp.task("client.build.typescript", function() {
 	var output = gulp.src([
 			"client/**/*.ts",
 			"!client/**/*.d.ts",

@@ -1,20 +1,23 @@
 //Modules
 var gulp = require("gulp");
 var Karma = require("karma").Server;
+
+//Config
 var config = require("../../config.js");
 
 /*! Tasks 
 - client.test
+
 - client.test.karma
 */
 
 //! Test
 gulp.task("client.test", gulp.series(
-	gulp.parallel("env.test"),
-	gulp.parallel("stop"),
-	gulp.parallel("clean"),
+	"env.test",
+	"stop",
+	"clean",
 	gulp.parallel("client.build", "build.config"),
-	gulp.parallel("client.test.karma")
+	"client.test.karma"
 ));
 
 //Test client with karma

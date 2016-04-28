@@ -3,6 +3,7 @@ var gulp = require("gulp");
 
 /*! Tasks 
 - server.watch
+
 - server.watch.source
 - server.watch.typescript
 */
@@ -16,7 +17,7 @@ gulp.task("server.watch.source", function(done){
 		"server/**/*",
 		"!server/**/*.ts",
 		"!server/**/*.d.ts"
-	], gulp.series("app.stop", "server.build.copy.source", "app.start", "app.attach"));
+	], gulp.series("app.stop", "server.build.source", "app.start", "app.attach"));
 	done();
 });
 

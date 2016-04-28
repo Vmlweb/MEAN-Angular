@@ -1,8 +1,9 @@
 //Modules
 var gulp = require("gulp");
 var reference = require("undertaker-forward-reference");
-var dockerode = require("dockerode");
-var docker = dockerode();
+var docker = require("dockerode")();
+
+//Config
 var config = require("./config.js");
 gulp.registry(reference());
 
@@ -15,10 +16,12 @@ require("./tasks/dist.js");
 require("./tasks/docs.js");
 //Client
 require("./tasks/client/build.js");
+require("./tasks/client/lint.js");
 require("./tasks/client/test.js");
 require("./tasks/client/watch.js");
 //Server
 require("./tasks/server/build.js");
+require("./tasks/server/lint.js");
 require("./tasks/server/test.js");
 require("./tasks/server/watch.js");
 
@@ -27,62 +30,63 @@ gulp.task("default", gulp.series("dev"));
  
 //! Setup
 gulp.task("setup", gulp.series(
-	gulp.parallel("stop"),
+	"stop",
 	gulp.parallel("setup.dependant", "setup.typings", "setup.docker", "setup.certs"),
-	gulp.parallel("build.semantic"),
-	gulp.parallel("database.reset")
+	"build.semantic",
+	"database.reset"
 ));
  
 //! Development
 gulp.task("dev", gulp.series(
-	gulp.parallel("env.dev"),
-	gulp.parallel("stop"),
-	gulp.parallel("clean"),
-	gulp.parallel("build"),
-	gulp.parallel("start"),
+	"env.dev",
+	"stop",
+	"clean",
+	"build",
+	"start",
 	gulp.parallel("server.watch", "client.watch", "app.attach")
 ));
 
 //! Testing
 gulp.task("test", gulp.series(
-	gulp.parallel("env.test"),
-	gulp.parallel("server.test"),
-	gulp.parallel("client.test")
+	"env.test",
+	"server.test",
+	"client.test"
 ));
  
 //! Distribution
 gulp.task("dist", gulp.series(
-	gulp.parallel("env.dist"),
-	gulp.parallel("stop"),
-	gulp.parallel("clean"),
-	gulp.parallel("semantic"),
-	gulp.parallel("build"),
-	gulp.parallel("dist.copy"),
-	gulp.parallel("dist.minify"),
-	gulp.parallel("dist.obfuscate"),
-	gulp.parallel("dist.build")
+	"env.dist",
+	"stop",
+	"clean",
+	"semantic",
+	"build",
+	"dist.copy",
+	"dist.minify",
+	"dist.obfuscate",
+	"dist.build"
 ));
 
 //! Documentation
-gulp.task("docs", gulp.series(
-	gulp.parallel("docs.reset"),
-	gulp.parallel("docs.recursive")
-));
+gulp.task("docs", gulp.series("docs.reset", "docs.recursive"));
 
 //! Database & App
 gulp.task("start", gulp.series("database.start", "app.start"));
 gulp.task("stop", gulp.series("app.stop", "database.stop"));
 gulp.task("restart", gulp.series("stop", "start"));
 gulp.task("reload", gulp.series("app.stop", "app.start"));
-gulp.task("reset", gulp.parallel("database.reset"));
+gulp.task("reset", gulp.series("database.reset"));
  
-//! Convenience
-gulp.task("clean", gulp.parallel("dist.reset", "build.reset"));
+//! Setup Convenience
+gulp.task("clean", gulp.parallel("build.reset", "dist.reset"));
 gulp.task("certs", gulp.parallel("setup.certs"));
+gulp.task("docker", gulp.parallel("setup.docker"));
+
+//! Build Convenience
 gulp.task("semantic", gulp.parallel("build.semantic"));
+gulp.task("lint", gulp.parallel("client.lint", "server.lint"));
 gulp.task("build", gulp.parallel("client.build", "server.build", "build.config"));
 
-//Enviroment variables
+//Enviroment Variables
 gulp.task("env.dev", function(done) { process.env.NODE_ENV = "dev"; done(); });
 gulp.task("env.test", function(done) { process.env.NODE_ENV = "test"; done(); });
 gulp.task("env.dist", function(done) { process.env.NODE_ENV = "dist"; done(); });

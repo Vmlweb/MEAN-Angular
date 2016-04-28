@@ -2,20 +2,18 @@
 var gulp = require("gulp");
 var shell = require("gulp-shell");
 var del = require("del");
-var fs = require("fs");
-var path = require("path");
 var uglify = require("gulp-uglify");
 var obfuscator = require('gulp-js-obfuscator');
 var cssnano = require("gulp-cssnano");
-var sourcemaps = require("gulp-sourcemaps");
+var docker = require("dockerode")();
+
+//Config
 var config = require("../config.js");
-var dockerode = require("dockerode");
-var docker = dockerode();
 
 /*! Tasks 
 - dist.reset
 - dist.build
-	
+
 - dist.copy
 - dist.copy.certs
 - dist.copy.config

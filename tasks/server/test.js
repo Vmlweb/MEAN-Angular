@@ -6,19 +6,20 @@ var jreporter = require("jasmine-reporters");
 
 /*! Tasks 
 - server.test
+
 - server.test.jasmine
 */
 
 //! Test
 gulp.task("server.test", gulp.series(
-	gulp.parallel("env.test"),
-	gulp.parallel("stop"),
-	gulp.parallel("clean"),
+	"env.test",
+	"stop",
+	"clean",
 	gulp.parallel("server.build", "build.config"),
-	gulp.parallel("database.test"),
-	gulp.parallel("database.reset.config"),
-	gulp.parallel("server.test.jasmine"),
-	gulp.parallel("stop")
+	"database.test",
+	"database.reset.config",
+	"server.test.jasmine",
+	"stop"
 ));
 
 //Test server with jasmine

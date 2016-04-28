@@ -1,12 +1,12 @@
 //Modules
 var gulp = require("gulp");
-var shell = require("gulp-shell");
 var del = require("del");
 var fs = require("fs");
 var path = require("path");
+var docker = require("dockerode")()
+
+//Config
 var config = require("../config.js");
-var dockerode = require("dockerode");
-var docker = dockerode();
 
 /*! Tasks 
 - database.start
@@ -57,7 +57,7 @@ gulp.task("database.start", function(done){
 			}
 		}, function(err, data){
 			if (err){ throw err; }
-			setTimeout(done, 1500);
+			setTimeout(done, 500);
 		});
 	});
 });
@@ -87,19 +87,30 @@ gulp.task("database.test", function(done){
 			}
 		}, function(err, data){
 			if (err){ throw err; }
-			setTimeout(done, 1500);
+			done();
 		});
 	});
 });
 
 //Stop database server
 gulp.task("database.stop", function(done){
+	//Stop and remove container
 	var container = docker.getContainer(config.name + "_db");
 	container.remove(function(err, data){
-		container.stop(function(err, data){
-			container.remove(function(err, data){
-				setTimeout(done, 1000);
-			});
+		
+		//Check if container still exists
+		container.inspect(function (err, data) {
+			if (!data){
+				done();
+			}else{
+			
+				//Stop and remove again if still existing
+				container.stop(function(err, data){
+					container.remove(function(err, data){
+						done();
+					});
+				});
+			}
 		});
 	});
 });
@@ -152,7 +163,7 @@ gulp.task("database.reset.config", function(done){
 		
 			//Stream file into container mongo cli
 			fs.createReadStream("builds/mongodb.js", "binary").pipe(stream).on("end", function(){
-				setTimeout(done, 500);
+				done();
 			});
 		});
 	});

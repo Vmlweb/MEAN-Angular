@@ -1,11 +1,11 @@
 //Modules
 var gulp = require("gulp");
-var shell = require("gulp-shell");
 var path = require("path");
 var del = require("del");
+var docker = require("dockerode")();
+
+//Config
 var config = require("../config.js");
-var dockerode = require("dockerode");
-var docker = dockerode();
 
 /*! Tasks 
 - app.reset
@@ -74,7 +74,7 @@ gulp.task("app.start", function(done){
 			PortBindings: externalPorts
 		}, function(err, data){
 			if (err){ throw err; }
-			setTimeout(done, 500);
+			done();
 		});
 	});
 });
@@ -98,12 +98,24 @@ gulp.task("app.attach", function(done){
 
 //Stop app server
 gulp.task("app.stop", function(done){
+	
+	//Stop and remove container
 	var container = docker.getContainer(config.name + "_app");
 	container.remove(function(err, data){
-		container.stop(function(err, data){
-			container.remove(function(err, data){
-				setTimeout(done, 1000);
-			});
+		
+		//Check if container still exists
+		container.inspect(function (err, data) {
+			if (!data){
+				done();
+			}else{
+			
+				//Stop and remove again if still existing
+				container.stop(function(err, data){
+					container.remove(function(err, data){
+						done();
+					});
+				});
+			}
 		});
 	});
 });
