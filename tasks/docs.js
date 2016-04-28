@@ -4,14 +4,14 @@ var del = require("del");
 var path = require("path");
 var moment = require("moment");
 var gulp = require("gulp");
-var prompt = require("gulp-prompt");
 var concat = require("gulp-concat");
-var foreach = require("gulp-foreach");
+
+//Config
+var config = require("../config.js");
 
 /*! Tasks 
 - docs.reset
-- docs.single
-- docs.recursive
+- docs.generate
 */
 
 //Remove all documentation files
@@ -21,8 +21,14 @@ gulp.task("docs.reset", function(){
 	]);
 });
 
+//Build api documentation from config
+gulp.task("", function(){
+	return gulp.src(config.)
+		.pipe
+});
+
 //Build api documentation from single directory
-gulp.task("docs.single", function(){
+/*gulp.task("docs.single", function(){
 	return gulp.src("package.json").pipe(prompt.prompt({
 		type: "input",
 		name: "dir",
@@ -54,10 +60,10 @@ gulp.task("docs.recursive", function(){
 			
 			//Generate docs for directory
 			return gulp.src([
-				path.join(folder.path, "/**/*.md")
+				path.join(folder.path, "/**.md")
 			])
 			.pipe(concat(folder.basename.replace(/\//g, '_') + "." + moment().format("YYYY-MM-DD") + ".md"))
 		}))
 		.pipe(gulp.dest("builds/docs"));
 	}));
-});
+});*/

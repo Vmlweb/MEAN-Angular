@@ -67,7 +67,7 @@ gulp.task("dist", gulp.series(
 ));
 
 //! Documentation
-gulp.task("docs", gulp.series("docs.reset", "docs.recursive"));
+gulp.task("docs", gulp.series("docs.reset", "docs.generate"));
 
 //! Database & App
 gulp.task("start", gulp.series("database.start", "app.start"));
@@ -94,7 +94,7 @@ gulp.task("env.dist", function(done) { process.env.NODE_ENV = "dist"; done(); })
 //! Test Plans
 for (var i in config.tests){
 	(function(i) {
-		gulp.task(i + ".test", gulp.series(function (done){
+		gulp.task("test." + i, gulp.series(function (done){
 			process.env.test = i;
 			done();
 		}, "server.test"));
