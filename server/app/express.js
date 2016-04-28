@@ -14,12 +14,12 @@ var app = express();
 module.exports = { app: app };
 
 //Includes
-var Config = require(__config);
+var config = require(__config);
 
 log.info("Express initialized");
 
 //Attach access logging to express
-app.use(require("morgan")(Config.logs.format, { "stream": log.stream }));
+app.use(require("morgan")(config.logs.format, { "stream": log.stream }));
 
 //Request parser
 app.use(bodyParser.json());
@@ -30,32 +30,32 @@ app.use(compression());
 log.info("Express middleware attached");
 
 //HTTP listen
-if (Config.http.hostname !== ""){
+if (config.http.hostname !== ""){
 	
 	//Create server and listen
-	module.exports.http = http.createServer(app).listen(Config.http.port.internal, Config.http.hostname);
+	module.exports.http = http.createServer(app).listen(config.http.port.internal, config.http.hostname);
 	
 	//Logging for events
 	module.exports.http.on("close", function(){
 		log.info("HTTP server ended and stream closed");
 	});
-	log.info("HTTP listening at " + Config.http.hostname + ":" + Config.http.port.internal);
+	log.info("HTTP listening at " + config.http.hostname + ":" + config.http.port.internal);
 }
 
 //HTTPS listen
-if (Config.https.hostname !== "" && Config.https.ssl.key !== "" && Config.https.ssl.cert !== ""){
+if (config.https.hostname !== "" && config.https.ssl.key !== "" && config.https.ssl.cert !== ""){
 	
 	//Create server and listen
 	module.exports.https = https.createServer({
-		key: fs.readFileSync(path.join(__certs, Config.https.ssl.key)) || "",
-		cert: fs.readFileSync(path.join(__certs, Config.https.ssl.cert)) || ""
-	}, app).listen(Config.https.port.internal, Config.https.hostname);
+		key: fs.readFileSync(path.join(__certs, config.https.ssl.key)) || "",
+		cert: fs.readFileSync(path.join(__certs, config.https.ssl.cert)) || ""
+	}, app).listen(config.https.port.internal, config.https.hostname);
 	
 	//Logging for events
 	module.exports.https.on("close", function(){
 		log.info("HTTPS server ended and stream closed");
 	});
-	log.info("HTTPS listening at " + Config.https.hostname + ":" + Config.https.port.internal);
+	log.info("HTTPS listening at " + config.https.hostname + ":" + config.https.port.internal);
 }
 
 //Static routes for public folder
@@ -114,7 +114,7 @@ recursive(__api, function (err, files) {
 			}else{
 				log.error("Internal server error", err.stack);	
 			}
-			res.status(500).json({ error: ErrorCodes.ServerError });
+			res.status(500).json({ error: "Server Error" });
 		}
 	});
 	

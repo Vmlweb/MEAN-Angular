@@ -3,12 +3,12 @@ var url = require("url");
 var request = require("request");
 
 //Includes
-var Config = require(__config);
+var config = require(__config);
 
 //Request prototype
 var startRequest = function(params, checks){
 	request({
-		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.internal, "/api/v1/time"),
+		url: url.resolve("http://" + config.http.url + ":" + config.http.port.internal, "/api/v1/time"),
 		method: "GET",
 		json: true,
 		body: params

@@ -92,12 +92,8 @@ module.exports = {
 	
 	//! API Documentation
 	docs: {
-		v1: [
-			"/api/v1/**/*.md"
-		],
-		users: [
-			"/api/v1/users/**/*.md"
-		]
+		v1: [ "/api/v1/**/*.md" ],
+		users: [ "/api/v1/users/**/*.md" ]
 	},
 	
 	//! Certificates

@@ -4,12 +4,12 @@ var request = require("request");
 var querystring = require("querystring");
 
 //Includes
-var Config = require(__config);
+var config = require(__config);
 
 //Request prototype
 var startRequest = function(params, checks){
 	request({
-		url: url.resolve("http://" + Config.http.url + ":" + Config.http.port.internal, "/api/v1/users?") + querystring.stringify(params),
+		url: url.resolve("http://" + config.http.url + ":" + config.http.port.internal, "/api/v1/users?") + querystring.stringify(params),
 		method: "GET",
 		json: true
 	}, function (err, res, body) {

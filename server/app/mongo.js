@@ -4,25 +4,25 @@ var mongoose = require("mongoose");
 var fs = require("fs");
 
 //Includes
-var Config = require(__config);
+var config = require(__config);
 
 //Prepare connection string
-var auth = Config.database.auth.username + ":" + Config.database.auth.password;
+var auth = config.database.auth.username + ":" + config.database.auth.password;
 var nodes = [];
-for (var i=0; i<Config.database.repl.nodes.length; i++){
-	nodes.push(Config.database.repl.nodes[i].hostname + ":" + Config.database.repl.nodes[i].port);
+for (var i=0; i<config.database.repl.nodes.length; i++){
+	nodes.push(config.database.repl.nodes[i].hostname + ":" + config.database.repl.nodes[i].port);
 }
-var database = Config.database.auth.database;
-var repl = "replicaSet=" + Config.database.repl.name + "&ssl=" + Config.database.ssl.enabled;
+var database = config.database.auth.database;
+var repl = "replicaSet=" + config.database.repl.name + "&ssl=" + config.database.ssl.enabled;
 
 //Prepare connection options
 var options = { 
 	replset: {
-		sslValidate: Config.database.ssl.validate,
-		sslKey: Config.database.ssl.validate ? fs.readFileSync(path.join(__certs, Config.database.ssl.key)) : null,
-		sslCert: Config.database.ssl.validate ? fs.readFileSync(path.join(__certs, Config.database.ssl.cert)) : null,
-		sslCA: Config.database.ssl.validate ? fs.readFileSync(path.join(__certs, Config.database.ssl.ca)) : null,
-		readPreference: Config.database.repl.read || "nearest"
+		sslValidate: config.database.ssl.validate,
+		sslKey: config.database.ssl.validate ? fs.readFileSync(path.join(__certs, config.database.ssl.key)) : null,
+		sslCert: config.database.ssl.validate ? fs.readFileSync(path.join(__certs, config.database.ssl.cert)) : null,
+		sslCA: config.database.ssl.validate ? fs.readFileSync(path.join(__certs, config.database.ssl.ca)) : null,
+		readPreference: config.database.repl.read || "nearest"
 	}
 };
 
@@ -35,7 +35,7 @@ mongoose.connection.on("error", function(error){
 	log.error("Error connecting to database at " + nodes.join(","), error.message);
 });
 mongoose.connection.once("open", function(){
-	log.info("Connected " + (Config.database.ssl.enabled ? "securely " : "" ) + "to database at " + nodes.join(","));
+	log.info("Connected " + (config.database.ssl.enabled ? "securely " : "" ) + "to database at " + nodes.join(","));
 });
 mongoose.connection.on("close", function(){
 	log.info("Database connection ended and stream closed");

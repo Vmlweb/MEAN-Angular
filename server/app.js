@@ -3,7 +3,7 @@ var async = require("async");
 
 //Config
 var dirs = require("./dirs.js");
-var Config = require(__config);
+var config = require(__config);
 
 //Setup
 var logger = require(__app + "/logger.js");
@@ -47,7 +47,7 @@ var shutdown = function(callback){
 		}, function(done){
 
 			//MongoDB
-			if (Config.database.repl.nodes.length > 0){
+			if (config.database.repl.nodes.length > 0){
 				mongo.connection.close(function () {
 					done(null);
 				});

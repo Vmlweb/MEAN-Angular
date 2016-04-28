@@ -5,18 +5,9 @@ var async = require("async");
 //Includes
 var Mongo = require(__app + "/mongo.js");
 
-//Models
-var User = require(__models + "/user.js");
-
 //Data
+var User = require(__models + "/user.js");
 var users = require(path.join(__dirname, "users.test.json"));
-
-//Wait for database connection
-beforeAll(function(callback){
-	Mongo.connection.on('open', function(){
-		callback();
-	});
-});
 	
 //Clear and repopulate database
 beforeEach(function(callback){
