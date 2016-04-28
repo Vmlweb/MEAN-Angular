@@ -91,6 +91,16 @@ gulp.task("env.dev", function(done) { process.env.NODE_ENV = "dev"; done(); });
 gulp.task("env.test", function(done) { process.env.NODE_ENV = "test"; done(); });
 gulp.task("env.dist", function(done) { process.env.NODE_ENV = "dist"; done(); });
 
+//! Test Plans
+for (var i in config.tests){
+	(function(i) {
+		gulp.task(i + ".test", gulp.series(function (done){
+			process.env.test = i;
+			done();
+		}, "server.test"));
+	})(i);
+}
+
 //Stop database and app server on exit
 var shutdown = function(){
 	var app = docker.getContainer(config.name + "_app");

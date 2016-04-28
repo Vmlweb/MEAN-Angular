@@ -1,5 +1,6 @@
 //Modules
 var gulp = require("gulp");
+var path = require("path");
 var Karma = require("karma").Server;
 
 //Config
@@ -22,9 +23,9 @@ gulp.task("client.test", gulp.series(
 
 //Test client with karma
 gulp.task("client.test.karma", function(done){
+	var includes = [];
 	
 	//Generate include files
-	var includes = [];
 	for (var i in config.libraries){
 		includes.push({
 			pattern: config.libraries[i],
@@ -44,7 +45,7 @@ gulp.task("client.test.karma", function(done){
 		files: includes.concat([
 			{ pattern: "karma.shim.js", included: true },
 			{ pattern: "builds/client/**/*.js", included: false },
-			{ pattern: "builds/client/**/*.js.map", included: false }
+			{ pattern: "builds/client/**/*.js.map", included: false },
 		]),
 		reporters: ["mocha", "junit"],
 		junitReporter: {

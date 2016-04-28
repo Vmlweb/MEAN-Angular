@@ -1,8 +1,12 @@
 //Modules
 var gulp = require("gulp");
+var path = require("path");
 var jasmine = require("gulp-jasmine");
 var sreporter = require("jasmine-spec-reporter");
 var jreporter = require("jasmine-reporters");
+
+//Config
+var config = require("../../config.js");
 
 /*! Tasks 
 - server.test
@@ -24,11 +28,24 @@ gulp.task("server.test", gulp.series(
 
 //Test server with jasmine
 gulp.task("server.test.jasmine", function(){
+	var includes = [];
+	
+	//Check if using a test plan
+	if (process.env.hasOwnProperty("test") && process.env.test.length > 0){
+		for (i in config.tests[process.env.test]){
+			var tests = config.tests[process.env.test][i];
+			includes.push(path.join("builds/server", tests));
+		}
+	}else{
+		includes = includes.concat([
+			"builds/server/tests/*.test.js",
+			"builds/server/**/*.test.js"
+		]);
+	}
+	
 	return gulp.src([
-		"builds/server/tests/setup.test.js",
-		"builds/server/tests/*.test.js",
-		"builds/server/**/*.test.js"
-	])
+		"builds/server/tests/setup.test.js"
+	].concat(includes))
 	.pipe(jasmine({
 		reporter: [
 			new sreporter({

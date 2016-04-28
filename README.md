@@ -11,7 +11,7 @@ Quick and simple template to get up and running with a MEAN stack web app inside
   * Semantic UI & jQuery
   * Jade & Stylus Templates
   * JS Minification & Obfuscation
-  * Jasmin & Karma Unit Tests
+  * Jasmin & Karma Unit Tests (Test Plans)
   * Winston File & Console Logs
   * Gulp 4 Workflow (Dev, Test & Dist)
   * PM2 (Multi-Core, Load Balancing)
@@ -104,6 +104,8 @@ gulp reset
 
 The development server stores its `data` and `logs` in the local directory.
 
+For browser libraries add the paths to `config.js` and they will be included in builds and testing.
+
 ## Console Logging
 
 Use the following commands to log messages directly to the console and `logs` directory
@@ -136,6 +138,8 @@ gulp server.test
 Test files should be included in the `server` and `client` directories and use the `.test.ts, .test.js or .test.json` extensions.
 
 When testing a blank database will be used, see `server/tests/database.test.js` for populating it before each test.
+
+Server side test plans can be created in `config.js` and can then be executed using the `my_plan.test` command.
 
 ## Documentation
 
