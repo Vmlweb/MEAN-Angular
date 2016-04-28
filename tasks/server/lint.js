@@ -17,6 +17,7 @@ gulp.task("server.lint", gulp.parallel("server.lint.javascript", "server.lint.ty
 gulp.task("server.lint.javascript", function(){
 	return gulp.src([
 		"server/**/*.js",
+		"!server/**/*.min.js",
 		"!server/typings/**/*"
 	])
 	.pipe(jshint({
