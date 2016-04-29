@@ -87,7 +87,7 @@ gulp.task("database.test", function(done){
 			}
 		}, function(err, data){
 			if (err){ throw err; }
-			done();
+			setTimeout(done, 500);
 		});
 	});
 });
