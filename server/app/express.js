@@ -9,6 +9,7 @@ var async = require("async");
 var bodyParser = require("body-parser");
 var helmet = require("helmet");
 var compression = require("compression");
+var filter = require('content-filter')
 var express = require("express");
 var app = express();
 module.exports = { app: app };
@@ -24,6 +25,7 @@ app.use(require("morgan")(config.logs.format, { "stream": log.stream }));
 //Request parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(filter());
 app.use(helmet());
 app.use(compression());
 
