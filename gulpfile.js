@@ -93,7 +93,7 @@ gulp.task("docker", gulp.parallel("setup.docker"));
 
 //! Build Convenience
 gulp.task("semantic", gulp.parallel("build.semantic"));
-gulp.task("docs", gulp.parallel("docs.generate"));
+gulp.task("docs", gulp.parallel("api.docs"));
 gulp.task("lint", gulp.parallel("client.lint", "server.lint"));
 gulp.task("build", gulp.parallel("client.build", "server.build", "build.config"));
 
@@ -109,16 +109,6 @@ for (var i in config.tests){
 			process.env.test = i;
 			done();
 		}, "server.test"));
-	})(i);
-}
-
-//! API Docs
-for (var i in config.docs){
-	(function(i) {
-		gulp.task(i + ".docs", gulp.series(function (done){
-			process.env.docs = i;
-			done();
-		}, "docs.generate"));
 	})(i);
 }
 

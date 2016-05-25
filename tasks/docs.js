@@ -11,7 +11,6 @@ var config = require("../config.js");
 
 /*! Tasks 
 - docs.reset
-- docs.generate
 */
 
 //Remove all documentation files
@@ -22,25 +21,24 @@ gulp.task("docs.reset", function(){
 });
 
 //Build api documentation from config
-gulp.task("docs.generate", function(){
-	var includes = [];
-	var name = "";
-	
-	//Check if using a test plan
-	if (process.env.hasOwnProperty("docs") && process.env.docs.length > 0){
-		name = process.env.docs;
-		for (i in config.docs[process.env.docs]){
-			includes.push(path.join("server", config.docs[process.env.docs][i]));
-		}
-	}else{
-		name = "api";
-		includes = [
-			"server/api/**/*.md"
-		];
-	}
-	
-	//Generate concat documentation
-	return gulp.src(includes)
-		.pipe(concat(name + "." + moment().format("YYYY-MM-DD") + ".md"))
-		.pipe(gulp.dest("builds/docs"));
-});
+config.docs.api = [ "/api/**/*.md" ];
+for (var i in config.docs){
+	(function(i) {
+		
+		//Define individual task for each doc
+		gulp.task(i + ".docs", function(){
+			
+			//Gather files to include
+			var includes = [];
+			for (d in config.docs[i]){
+				includes.push(path.join("server", config.docs[i][d]));
+			}
+			
+			//Generate concat documentation
+			return gulp.src(includes)
+				.pipe(concat(i + "." + moment().format("YYYY-MM-DD") + ".md"))
+				.pipe(gulp.dest("builds/docs"));
+		});
+
+	})(i);
+}
