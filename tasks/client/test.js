@@ -40,8 +40,8 @@ gulp.task("client.test.karma", function(done){
 	var server = new Karma({
 		basePath: "",
 		frameworks: ["jasmine"],
-		plugins: ["karma-phantomjs2-launcher", "karma-jasmine", "karma-mocha-reporter", "karma-junit-reporter"],
-		browsers: ["PhantomJS2"],
+		plugins: ["karma-phantomjs-launcher", "karma-jasmine", "karma-mocha-reporter", "karma-junit-reporter"],
+		browsers: ["PhantomJS"],
 		colors: true,
 		autoWatch: false,
 		singleRun: true,
