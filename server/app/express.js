@@ -9,10 +9,10 @@ var async = require("async");
 var bodyParser = require("body-parser");
 var helmet = require("helmet");
 var compression = require("compression");
-var filter = require('content-filter')
+var filter = require('content-filter');
 var express = require("express");
 var app = express();
-module.exports = { app: app };
+module.exports = { app: app, connections: { http: {}, https: {} } };
 
 //Includes
 var config = require(__config);
@@ -22,7 +22,7 @@ log.info("Express initialized");
 //Attach access logging to express
 app.use(require("morgan")(config.logs.format, { "stream": log.stream }));
 
-//Request parser
+//Request Parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(filter());
@@ -31,11 +31,20 @@ app.use(compression());
 
 log.info("Express middleware attached");
 
-//HTTP listen
+//HTTP Listen
 if (config.http.hostname !== ""){
 	
 	//Create server and listen
 	module.exports.http = http.createServer(app).listen(config.http.port.internal, config.http.hostname);
+	
+	//New connections
+	module.exports.http.on("connection", function(conn){
+		var key = conn.remoteAddress + ':' + conn.remotePort;
+	    module.exports.connections.http[key] = conn;
+	    conn.on('close', function() {
+		    delete module.exports.connections.http[key];
+	    });
+	});
 	
 	//Logging for events
 	module.exports.http.on("close", function(){
@@ -44,7 +53,7 @@ if (config.http.hostname !== ""){
 	log.info("HTTP listening at " + config.http.hostname + ":" + config.http.port.internal);
 }
 
-//HTTPS listen
+//HTTPS Listen
 if (config.https.hostname !== "" && config.https.ssl.key !== "" && config.https.ssl.cert !== ""){
 	
 	//Create server and listen
@@ -52,6 +61,15 @@ if (config.https.hostname !== "" && config.https.ssl.key !== "" && config.https.
 		key: fs.readFileSync(path.join(__certs, config.https.ssl.key)) || "",
 		cert: fs.readFileSync(path.join(__certs, config.https.ssl.cert)) || ""
 	}, app).listen(config.https.port.internal, config.https.hostname);
+	
+	//New connections
+	module.exports.https.on("connection", function(conn){
+		var key = conn.remoteAddress + ':' + conn.remotePort;
+	    module.exports.connections.https[key] = conn;
+	    conn.on('close', function() {
+		    delete module.exports.connections.https[key];
+	    });
+	});
 	
 	//Logging for events
 	module.exports.https.on("close", function(){
@@ -69,13 +87,13 @@ log.info("Setup client static routes");
 recursive(__api, function (err, files) {
 	
 	//Remove all non router files
-	var endpoints = [];
+	var includeFiles = [];
 	for (var i=0; i<files.length; i++){
 		if (files[i].indexOf(".get.js") >= 0 ||
 			files[i].indexOf(".post.js") >= 0 ||
 			files[i].indexOf(".put.js") >= 0 ||
 			files[i].indexOf(".delete.js") >= 0){
-			endpoints.push(files[i]);
+			includeFiles.push(files[i]);
 		}
 	}
 	
@@ -85,11 +103,12 @@ recursive(__api, function (err, files) {
 	}else{
 		
 		//Log endpoint count
-		log.info("Loaded " + endpoints.length + " api endpoints");
+		log.info("Loaded " + includeFiles.length + " api endpoints");
 		
 		//Import individual api routers
-		for (var a=0; a<endpoints.length; a++){
-			app.use("/api", require(endpoints[a]));
+		for (var a=0; a<includeFiles.length; a++){
+			var route = require(includeFiles[a]);
+			app.use("/api", route);
 		}
 	}
 	
@@ -97,7 +116,7 @@ recursive(__api, function (err, files) {
 	
 	//Error handler for server side api requests
 	app.use("/api", function(req, res, next){
-		res.status(404).json({ error: "Not Found" });
+		res.status(404).json({ error: "NotFoundError" });
 	});
 	app.use("/api", function(err, req, res, next){
 		if (err instanceof String || typeof err === "string"){
@@ -116,7 +135,7 @@ recursive(__api, function (err, files) {
 			}else{
 				log.error("Internal server error", err.stack);	
 			}
-			res.status(500).json({ error: "Server Error" });
+			res.status(500).json({ error: "ServerError" });
 		}
 	});
 	

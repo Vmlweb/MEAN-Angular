@@ -52,6 +52,22 @@ gulp.task("client.build.source", function(){
 
 //Compile typescript into javascript
 gulp.task("client.build.typescript", function() {
+	var config = {
+		typescript: require("typescript"),
+		target: "es5",
+		module: "system",
+		moduleResolution: "node",
+		sourceMap: true,
+		emitDecoratorMetadata: true,
+		experimentalDecorators: true,
+		removeComments: true,
+		noImplicitAny: false,
+		suppressImplicitAnyIndexErrors: true,
+		sortOutput: true,
+	};
+	if (process.env.NODE_ENV !== "test"){
+		config.outFile = "app.js";
+	}
 	var output = gulp.src([
 			"client/**/*.ts",
 			"!client/**/*.d.ts",
@@ -60,20 +76,7 @@ gulp.task("client.build.typescript", function() {
 		    "node_modules/angular2/typings/browser.d.ts"
 		])
 		.pipe(sourcemaps.init())
-		.pipe(ts(ts.createProject({
-			typescript: require("typescript"),
-			target: "es5",
-			module: "system",
-			moduleResolution: "node",
-			sourceMap: true,
-			emitDecoratorMetadata: true,
-			experimentalDecorators: true,
-			removeComments: true,
-			noImplicitAny: false,
-			suppressImplicitAnyIndexErrors: true,
-			sortOutput: true,
-			outFile: (process.env.NODE_ENV === "test" ? undefined : "app.js")
-		})))
+		.pipe(ts(ts.createProject(config)))
 	return output.js
 		.pipe(sourcemaps.write("./"))
 		.pipe(gulp.dest("builds/client"));

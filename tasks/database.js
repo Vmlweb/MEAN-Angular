@@ -2,8 +2,10 @@
 var gulp = require("gulp");
 var del = require("del");
 var fs = require("fs");
+var async = require("async");
 var path = require("path");
 var docker = require("dockerode")()
+var recursive = require("recursive-readdir");
 
 //Config
 var config = require("../config.js");
@@ -11,6 +13,7 @@ var config = require("../config.js");
 /*! Tasks 
 - database.start
 - database.test
+- database.mock
 - database.stop
 
 - database.reset
@@ -92,25 +95,60 @@ gulp.task("database.test", function(done){
 	});
 });
 
+//Start mock database with reset endpoint (flushes data when finished)
+gulp.task("database.mock", function(done){
+	
+	//Search for test files
+	recursive(path.join(__dirname, "../builds/server/tests"), ["!*.test.js", "setup.test.js"], function (err, files) {
+		
+		//Define testing capture functions
+		var beforeAlls = [];
+		var beforeEachs = [];
+		var afterAlls = [];
+		beforeAll = function(func){
+			beforeAlls.push(func);
+		};
+		beforeEach = function(func){
+			beforeEachs.push(func);
+		};
+		afterAll = function(func){
+			afterAlls.push(func);
+		};
+		
+		//Start main app
+		require(path.join(__dirname, "../builds/server/tests/setup.test.js"));
+		for (i in files){ require(files[i]); }
+		
+		//Run before all functions
+		async.each(beforeAlls, function (item, back){ item(back); }, function(){
+			
+			//Define reset database api endpoint route
+			global.app.express.app.delete("/reset", function (req, res){
+				async.each(beforeEachs, function (item, back){ item(back); }, function (){
+					res.sendStatus(200);
+				});
+			});
+			
+			log.info("Database testing reset endpoint loaded");
+			
+			//Run after all functions
+			global.shutdown = function(callback){
+				async.each(afterAlls, function (item, back){ item(back); }, function (){
+					callback();
+				});
+			};
+			
+			setTimeout(done, 500);
+		});
+	});
+});
+
 //Stop database server
 gulp.task("database.stop", function(done){
-	//Stop and remove container
 	var container = docker.getContainer(config.name + "_db");
-	container.remove(function(err, data){
-		
-		//Check if container still exists
-		container.inspect(function (err, data) {
-			if (!data){
-				done();
-			}else{
-			
-				//Stop and remove again if still existing
-				container.stop(function(err, data){
-					container.remove(function(err, data){
-						done();
-					});
-				});
-			}
+	container.stop({ t: 5 }, function(err, data){
+		container.remove({ force: true }, function(err, data){
+			done();
 		});
 	});
 });

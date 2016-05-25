@@ -98,24 +98,10 @@ gulp.task("app.attach", function(done){
 
 //Stop app server
 gulp.task("app.stop", function(done){
-	
-	//Stop and remove container
 	var container = docker.getContainer(config.name + "_app");
-	container.remove(function(err, data){
-		
-		//Check if container still exists
-		container.inspect(function (err, data) {
-			if (!data){
-				done();
-			}else{
-			
-				//Stop and remove again if still existing
-				container.stop(function(err, data){
-					container.remove(function(err, data){
-						done();
-					});
-				});
-			}
+	container.stop({ t: 5 }, function(err, data){
+		container.remove({ force: true }, function(err, data){
+			done();
 		});
 	});
 });

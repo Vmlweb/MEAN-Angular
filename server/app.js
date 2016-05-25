@@ -1,4 +1,5 @@
 //Modules
+var path = require("path");
 var async = require("async");
 
 //Config
@@ -6,9 +7,11 @@ var dirs = require("./dirs.js");
 var config = require(__config);
 
 //Setup
-var logger = require(__app + "/logger.js");
-var mongo = require(__app + "/mongo.js");
-var express = require(__app + "/express.js");
+module.exports = {
+	logger: require(__app + "/logger.js"),
+	mongo: require(__app + "/mongo.js"),
+	express: require(__app + "/express.js")
+};
 
 //Setup mocks
 if (process.env.NODE_ENV === "testing"){
@@ -26,44 +29,61 @@ var shutdown = function(callback){
 		function(done){
 		    
 			//HTTP
-		    if (express.hasOwnProperty("http")){
-				express.http.close(function(){
-					done(null);
+		    if (module.exports.express.hasOwnProperty("http")){
+			    
+			    //Destroy existing keep-alive connections
+				setTimeout(function(){
+					log.info("HTTP connections killed");
+					for (var i in module.exports.express.connections.http){
+						module.exports.express.connections.http[i].destroy();
+					}
+				}, 3000).unref();
+			    
+			    //Close server and socket
+			    module.exports.express.http.close(function(){
+					done();
 				});
 			}else{
-				done(null);
+				done();
 			}
-
 		}, function(done){
 
 			//HTTPS
-			if (express.hasOwnProperty("https")){
-				express.https.close(function(){
-					done(null);
+			if (module.exports.express.hasOwnProperty("https")){
+			
+				//Destroy existing keep-alive connections
+				setTimeout(function(){
+					log.info("HTTPS connections killed");
+					for (var i in module.exports.express.connections.https){
+						module.exports.express.connections.https[i].destroy();
+					}
+				}, 3000).unref();
+			
+				//Close server and socket
+			    module.exports.express.https.close(function(){
+					done();
 				});
 			}else{
-				done(null);
+				done();
 			}
 		}, function(done){
 
 			//MongoDB
 			if (config.database.repl.nodes.length > 0){
-				mongo.connection.close(function () {
-					done(null);
+				module.exports.mongo.connection.close(function () {
+					done();
 				});
 			}else{
-				done(null);
+				done();
 			}
 		}
 	], function(error){
-		
-		//Execute error callback
-		if (callback !== null){
+		if (callback){
 			callback(error);
 		}
 	});
 };
-exports.shutdown = shutdown;
+module.exports.shutdown = shutdown;
 
 //Graceful shutdown
 var force = function(error) {
@@ -82,6 +102,7 @@ var force = function(error) {
 		process.exit();
 	}, 2000);
 };
+module.exports.force = force;
 
 //Intercept kill and end signals
 process.on("SIGTERM", function(){ shutdown(force); });

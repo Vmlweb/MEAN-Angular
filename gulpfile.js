@@ -1,5 +1,6 @@
 //Modules
 var gulp = require("gulp");
+var async = require("async");
 var reference = require("undertaker-forward-reference");
 var docker = require("dockerode")();
 
@@ -52,6 +53,18 @@ gulp.task("test", gulp.series(
 	"server.test",
 	"client.test"
 ));
+
+//! Mocking
+gulp.task("mock", gulp.series(
+	"env.test",
+	"stop",
+	"clean",
+	gulp.parallel("server.build", "build.config"),
+	"database.test",
+	"database.reset.config",
+	"database.mock",
+	"server.watch"
+));
  
 //! Distribution
 gulp.task("dist", gulp.series(
@@ -92,7 +105,7 @@ gulp.task("env.dist", function(done) { process.env.NODE_ENV = "dist"; done(); })
 //! Test Plans
 for (var i in config.tests){
 	(function(i) {
-		gulp.task("test." + i, gulp.series(function (done){
+		gulp.task(i + ".test", gulp.series(function (done){
 			process.env.test = i;
 			done();
 		}, "server.test"));
@@ -102,26 +115,29 @@ for (var i in config.tests){
 //! API Docs
 for (var i in config.docs){
 	(function(i) {
-		gulp.task("docs." + i, gulp.series(function (done){
+		gulp.task(i + ".docs", gulp.series(function (done){
 			process.env.docs = i;
 			done();
 		}, "docs.generate"));
 	})(i);
 }
 
-//Stop database and app server on exit
+//Stop database and app containers on exit
 var shutdown = function(){
 	var app = docker.getContainer(config.name + "_app");
 	var db = docker.getContainer(config.name + "_db");
-	app.stop(function(err, data){
-		app.remove(function(err, data){
-			db.stop(function(err, data){
-				db.remove(function(err, data){
-					process.exit();
+	app.stop({ t: 5 }, function(err, data){
+		app.remove({ force: true }, function(err, data){
+			db.stop({ t: 5 }, function(err, data){
+				db.remove({ force: true }, function(err, data){
+					if (!global.hasOwnProperty("app")){
+						process.exit();
+					}
 				});
 			});
 		});
 	});
 }
+
 process.on("SIGTERM", shutdown);
 process.on("SIGINT", shutdown);

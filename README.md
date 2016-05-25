@@ -139,7 +139,7 @@ Test files should be included in the `server` and `client` directories and use t
 
 When testing a blank database will be used, see `server/tests/database.test.js` for populating it before each test.
 
-Server side test plans can be created in `config.js` and can then be executed using the `test.my_plan` command.
+Server side test plans can be created in `config.js` and can then be executed using the `my_plan.test` command.
 
 ## Documentation
 
@@ -151,7 +151,7 @@ gulp docs
 
 The documentation will be generated in the `builds/docs` directory.
 
-You can specify custom sets of documentation files through `config.js` which can be generated using the `docs.my_plan` command.
+You can specify custom sets of documentation files through `config.js` which can be generated using the `my_plan.docs` command.
 
 ## Distribution
 

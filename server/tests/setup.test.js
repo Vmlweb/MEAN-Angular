@@ -7,17 +7,17 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; //Accept self signed ssl certifi
 process.env.NODE_ENV = "testing"; //Disable all logging in app
 
 //Start app
-var app = require(path.join(__dirname, "../app.js"));
-var Mongo = require("../app/mongo.js");
+global.app = require(path.join(__dirname, "../app.js"));
+var mongo = require(path.join(__dirname, "../app/mongo.js"))
 
 //Wait for database connection
 beforeAll(function(callback){
-	Mongo.connection.on('open', function(){
+	mongo.connection.on('open', function(){
 		callback();
 	});
 });
 
 //Stop app
 afterAll(function(callback){
-	app.shutdown(callback);
+	global.app.shutdown(callback);
 });

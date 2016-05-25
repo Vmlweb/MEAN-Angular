@@ -17,7 +17,10 @@ gulp.task("client.test", gulp.series(
 	"env.test",
 	"stop",
 	"clean",
-	gulp.parallel("client.build", "build.config"),
+	"build",
+	"database.test",
+	"database.reset.config",
+	"database.mock",
 	"client.test.karma"
 ));
 
@@ -52,6 +55,6 @@ gulp.task("client.test.karma", function(done){
 			outputDir: 'logs/tests'
 		}
 	}, function(){
-		done();
+		global.shutdown(done);
 	}).start();
 });
