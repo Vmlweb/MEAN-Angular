@@ -72,6 +72,6 @@ gulp.task("server.test.jasmine", function(){
 	}))
 	.pipe(istanbul.writeReports({
 		dir: "logs/coverage/server",
-		reporters: ["html", "text-summary", "clover"]
+		reporters: ["html", "text-summary", "clover", "json"]
 	}));
 });
