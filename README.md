@@ -12,6 +12,7 @@ Quick and simple template to get up and running with a MEAN stack web app inside
   * Jade & Stylus Templates
   * JS Minification & Obfuscation
   * Jasmin & Karma Unit Tests (Test Plans)
+  * Istanbul Code Coverage (HTML & Clover)
   * Winston File & Console Logs
   * Gulp 4 Workflow (Dev, Test & Dist)
   * PM2 (Multi-Core, Load Balancing)
@@ -140,6 +141,8 @@ Test files should be included in the `server` and `client` directories and use t
 When testing a blank database will be used, see `server/tests/database.test.js` for populating it before each test.
 
 Server side test plans can be created in `config.js` and can then be executed using the `my_plan.test` command.
+
+Testing and coverage reports will be generated in the `logs` directory.
 
 ## Documentation
 

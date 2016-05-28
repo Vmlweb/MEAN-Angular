@@ -4,6 +4,7 @@ var path = require("path");
 var jasmine = require("gulp-jasmine");
 var sreporter = require("jasmine-spec-reporter");
 var jreporter = require("jasmine-reporters");
+var istanbul = require('gulp-istanbul');
 
 //Config
 var config = require("../../config.js");
@@ -11,6 +12,7 @@ var config = require("../../config.js");
 /*! Tasks 
 - server.test
 
+- server.test.coverage
 - server.test.jasmine
 */
 
@@ -22,9 +24,20 @@ gulp.task("server.test", gulp.series(
 	gulp.parallel("server.build", "build.config"),
 	"database.test",
 	"database.reset.config",
+	"server.test.coverage",
 	"server.test.jasmine",
 	"stop"
 ));
+
+//Insert coverage hooks
+gulp.task("server.test.coverage", function(){
+	return gulp.src([
+		"builds/server/api/**/*.js",
+		"!builds/server/api/**/*.test.js"
+	])
+	.pipe(istanbul())
+    .pipe(istanbul.hookRequire());
+});
 
 //Test server with jasmine
 gulp.task("server.test.jasmine", function(){
@@ -52,9 +65,13 @@ gulp.task("server.test.jasmine", function(){
 				displayStacktrace: "all"
 			}),
 			new jreporter.JUnitXmlReporter({
-				savePath: "logs/tests",
+				savePath: "logs/tests/server",
 				consolidateAll: false
 			})
 		]
+	}))
+	.pipe(istanbul.writeReports({
+		dir: "logs/coverage/server",
+		reporters: ["html", "text-summary", "clover"]
 	}));
 });
