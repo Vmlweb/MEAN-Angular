@@ -19,7 +19,6 @@
     "dockerode": "^2.2.10",
     "es6-shim": "^0.35.0",
     "gulp": "gulpjs/gulp.git#4.0",
-    "gulp-concat": "^2.6.0",
     "gulp-cssnano": "^2.1.2",
     "gulp-istanbul": "^0.10.4",
     "gulp-jade": "^1.1.0",

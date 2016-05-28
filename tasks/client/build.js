@@ -2,7 +2,6 @@
 var gulp = require("gulp");
 var ts = require("gulp-typescript");
 var sourcemaps = require("gulp-sourcemaps");
-var concat = require("gulp-concat");
 var jade = require("gulp-jade");
 var stylus = require("gulp-stylus");
 
@@ -102,6 +101,5 @@ gulp.task("client.build.markup.stylus", function(){
 		"!client/**/*.inc.styl"
 	])
 	.pipe(stylus())
-	.pipe(concat("app.css"))
 	.pipe(gulp.dest("builds/client"));
 });
