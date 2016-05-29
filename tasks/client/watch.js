@@ -25,7 +25,7 @@ gulp.task("client.watch.source", function(done){
 		"!client/**/*.styl",
 		"!client/**/*.ts",
 		"!client/**/*.d.ts"
-	], gulp.series("client.build.source"));
+	], gulp.series("client.build.source", "beep"));
 	done();
 });
 
@@ -34,7 +34,7 @@ gulp.task("client.watch.typescript", function(done){
 	gulp.watch([
 		"client/**/*.ts",
 		"!client/**/*.d.ts"
-	], gulp.series("client.build.typescript"));
+	], gulp.series("client.build.typescript", "beep"));
 	done();
 });
 
@@ -42,7 +42,7 @@ gulp.task("client.watch.typescript", function(done){
 gulp.task("client.watch.jade", function(done){
 	gulp.watch([
 		"client/**/*.jade"
-	], gulp.series("client.build.markup.jade"));
+	], gulp.series("client.build.markup.jade", "beep"));
 	done();
 });
 
@@ -50,6 +50,6 @@ gulp.task("client.watch.jade", function(done){
 gulp.task("client.watch.stylus", function(done){
 	gulp.watch([
 		"client/**/*.styl"
-	], gulp.series("client.build.markup.stylus"));
+	], gulp.series("client.build.markup.stylus", "beep"));
 	done();
 });

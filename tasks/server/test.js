@@ -26,7 +26,8 @@ gulp.task("server.test", gulp.series(
 	"database.reset.config",
 	"server.test.coverage",
 	"server.test.jasmine",
-	"stop"
+	"stop",
+	"beep2"
 ));
 
 //Insert coverage hooks

@@ -1,6 +1,7 @@
 //Modules
 var gulp = require("gulp");
 var async = require("async");
+var beep = require('beepbeep');
 var reference = require("undertaker-forward-reference");
 var docker = require("dockerode")();
 
@@ -101,6 +102,11 @@ gulp.task("build", gulp.parallel("client.build", "server.build", "build.config")
 gulp.task("env.dev", function(done) { process.env.NODE_ENV = "dev"; done(); });
 gulp.task("env.test", function(done) { process.env.NODE_ENV = "test"; done(); });
 gulp.task("env.dist", function(done) { process.env.NODE_ENV = "dist"; done(); });
+
+//Beep
+gulp.task("beep", function (done){ beep(); done(); });
+gulp.task("beep2", function (done){ beep(2); done(); });
+gulp.task("beep3", function (done){ beep(3); done(); });
 
 //! Test Plans
 for (var i in config.tests){
