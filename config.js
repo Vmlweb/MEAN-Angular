@@ -81,12 +81,12 @@ module.exports = {
 	//! Server Test Plans
 	tests: {
 		get: [
-			"/tests/*.test.js",
-			"/api/**/*.get.test.js"
+			"/tests/",
+			"/api/**/"
 		],
 		post: [
-			"/tests/*.test.js",
-			"/api/**/*.post.test.js"
+			"/tests/",
+			"/api/**/"
 		]
 	},
 	

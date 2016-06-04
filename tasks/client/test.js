@@ -23,7 +23,7 @@ gulp.task("client.test", gulp.series(
 	"database.reset.config",
 	"database.mock",
 	"client.test.karma",
-	"beep2"
+	"beep"
 ));
 
 //Test client with karma

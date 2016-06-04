@@ -27,15 +27,28 @@ gulp.task("server.test", gulp.series(
 	"server.test.coverage",
 	"server.test.jasmine",
 	"stop",
-	"beep2"
+	"beep"
 ));
 
 //Insert coverage hooks
 gulp.task("server.test.coverage", function(){
-	return gulp.src([
-		"builds/server/api/**/*.js",
-		"!builds/server/api/**/*.test.js"
-	])
+	var includes = [];
+	
+	//Check if using a test plan
+	if (process.env.hasOwnProperty("test") && process.env.test.length > 0){
+		for (i in config.tests[process.env.test]){
+			var tests = config.tests[process.env.test][i];
+			includes.push(path.join("builds/server", tests, "*.js"));
+			includes.push(path.join("!builds/server", tests, "*.test.js"));
+		}
+	}else{
+		includes = includes.concat([
+			"builds/server/api/**/*.js",
+			"!builds/server/api/**/*.test.js"
+		]);
+	}
+	
+	return gulp.src(includes)
 	.pipe(istanbul())
     .pipe(istanbul.hookRequire());
 });
@@ -48,7 +61,7 @@ gulp.task("server.test.jasmine", function(){
 	if (process.env.hasOwnProperty("test") && process.env.test.length > 0){
 		for (i in config.tests[process.env.test]){
 			var tests = config.tests[process.env.test][i];
-			includes.push(path.join("builds/server", tests));
+			includes.push(path.join("builds/server", tests, "*.test.js"));
 		}
 	}else{
 		includes = includes.concat([
