@@ -28,25 +28,24 @@ gulp.task("server.build.source", function(){
 	.pipe(gulp.dest("builds/server"));
 });
 
+//Create typescript project
+var tsProject = ts.createProject({
+	typescript: require("typescript"),
+	target: "es5",
+	module: "commonjs",
+	moduleResolution: "node",
+	sourceMap: true,
+	emitDecoratorMetadata: true,
+	experimentalDecorators: true,
+	removeComments: true,
+	noImplicitAny: true,
+	suppressImplicitAnyIndexErrors: true,
+	sortOutput: true
+});
+
 //Compile typescript into javascript
 gulp.task("server.build.typescript", function() {
-	return gulp.src([
-		"server/**/*.ts",
-		"!server/**/*.d.ts",
-		"server/typings/index.d.ts"
-	])
-	.pipe(ts(ts.createProject({
-		typescript: require("typescript"),
-		target: "es5",
-		module: "commonjs",
-		moduleResolution: "node",
-		sourceMap: true,
-		emitDecoratorMetadata: true,
-		experimentalDecorators: true,
-		removeComments: true,
-		noImplicitAny: true,
-		suppressImplicitAnyIndexErrors: true,
-		sortOutput: true
-	})))
+	return gulp.src("**/*.ts", { cwd: "server" })
+	.pipe(ts(tsProject))
 	.pipe(gulp.dest("builds/server"))
 });

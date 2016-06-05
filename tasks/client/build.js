@@ -49,32 +49,30 @@ gulp.task("client.build.source", function(){
 	.pipe(gulp.dest("builds/client"));
 });
 
+//Create typescript project
+var tsConfig = {
+	typescript: require("typescript"),
+	target: "es5",
+	module: "system",
+	moduleResolution: "node",
+	sourceMap: true,
+	emitDecoratorMetadata: true,
+	experimentalDecorators: true,
+	removeComments: true,
+	noImplicitAny: false,
+	suppressImplicitAnyIndexErrors: true,
+	sortOutput: true
+};
+if (process.env.NODE_ENV !== "test"){
+	tsConfig.outFile = "app.js";
+}
+var tsProject = ts.createProject(tsConfig);
+
 //Compile typescript into javascript
 gulp.task("client.build.typescript", function() {
-	var config = {
-		typescript: require("typescript"),
-		target: "es5",
-		module: "system",
-		moduleResolution: "node",
-		sourceMap: true,
-		emitDecoratorMetadata: true,
-		experimentalDecorators: true,
-		removeComments: true,
-		noImplicitAny: false,
-		suppressImplicitAnyIndexErrors: true,
-		sortOutput: true,
-	};
-	if (process.env.NODE_ENV !== "test"){
-		config.outFile = "app.js";
-	}
-	var output = gulp.src([
-			"client/**/*.ts",
-			"!client/**/*.d.ts",
-			"client/typings/index.d.ts",
-		    "node_modules/angular2/typings/browser.d.ts"
-		])
+	var output = gulp.src("**/*.ts", { cwd: "client" })
 		.pipe(sourcemaps.init())
-		.pipe(ts(ts.createProject(config)))
+		.pipe(ts(tsProject))
 	return output.js
 		.pipe(sourcemaps.write("./"))
 		.pipe(gulp.dest("builds/client"));
