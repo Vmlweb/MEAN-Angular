@@ -49,7 +49,7 @@ gulp.task("client.build.source", function(){
 	.pipe(gulp.dest("builds/client"));
 });
 
-//Create typescript project
+//Setup typescript compiler config
 var tsConfig = {
 	typescript: require("typescript"),
 	target: "es5",
@@ -63,16 +63,18 @@ var tsConfig = {
 	suppressImplicitAnyIndexErrors: true,
 	sortOutput: true
 };
-if (process.env.NODE_ENV !== "test"){
-	tsConfig.outFile = "app.js";
-}
+
+//Create typescript projects
 var tsProject = ts.createProject(tsConfig);
+var tsTestProject = ts.createProject(Object.assign(tsConfig, {
+	outFile: "app.js"
+}));
 
 //Compile typescript into javascript
 gulp.task("client.build.typescript", function() {
 	var output = gulp.src("**/*.ts", { cwd: "client" })
 		.pipe(sourcemaps.init())
-		.pipe(ts(tsProject))
+		.pipe(ts(process.env.NODE_ENV === "test" ? tsProject : tsTestProject))
 	return output.js
 		.pipe(sourcemaps.write("./"))
 		.pipe(gulp.dest("builds/client"));
