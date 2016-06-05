@@ -2,7 +2,7 @@
   "name": "MEAN",
   "version": "1.0.0",
   "description": "MEAN Stack",
-  "main": "app.js",
+  "main": "server/app.js",
   "author": "Victor Leach <admin@vmlweb.co.uk>",
   "license": "MIT",
   "homepage": "https://github.com/Vmlweb/MEAN-AngularJS-2#readme",
