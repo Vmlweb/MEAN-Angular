@@ -33,8 +33,7 @@ gulp.task("server.build.typescript", function() {
 	return gulp.src([
 		"server/**/*.ts",
 		"!server/**/*.d.ts",
-		"server/typings/main.d.ts",
-	    "server/typings/main/*.d.ts"
+		"server/typings/index.d.ts"
 	])
 	.pipe(ts(ts.createProject({
 		typescript: require("typescript"),

@@ -70,8 +70,7 @@ gulp.task("client.build.typescript", function() {
 	var output = gulp.src([
 			"client/**/*.ts",
 			"!client/**/*.d.ts",
-			"client/typings/main.d.ts",
-		    "client/typings/main/*.d.ts",
+			"client/typings/index.d.ts",
 		    "node_modules/angular2/typings/browser.d.ts"
 		])
 		.pipe(sourcemaps.init())
