@@ -9,11 +9,11 @@ router.get("/v1/time", function (req, res, next){
 	
 	//Create new time object, set format and retrieve value
 	var time = new Time();
-	time.format = "dddd, MMMM Do YYYY, h:mm:ss";
+	time.format = "dddd, MMMM Do YYYY, h:mm:ss a";
 	var currentTime = time.getTime();
 	
 	//Send time response
-	res.json({ time: currentTime });
+	res.json({ time: "test" });
 });
 
 module.exports = router;
