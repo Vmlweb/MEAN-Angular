@@ -13,7 +13,7 @@ router.get("/v1/time", function (req, res, next){
 	var currentTime = time.getTime();
 	
 	//Send time response
-	res.json({ time: "test" });
+	res.json({ time: currentTime });
 });
 
 module.exports = router;

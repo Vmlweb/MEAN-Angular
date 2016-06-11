@@ -52,7 +52,7 @@ export class UserService{
 				"Content-Type": "application/json"
 			}),
 			method: RequestMethod.Post,
-			url: "/api/v1/users2",
+			url: "/api/v1/users",
 			body: JSON.stringify({
 				username: username,
 				email: email
