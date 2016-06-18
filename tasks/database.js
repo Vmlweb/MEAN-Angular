@@ -51,6 +51,7 @@ gulp.task('database.start', function(done){
 		
 		//Start container
 		container.start({
+			Privileged: true,
 			Binds: [
 				path.join(process.cwd(), 'data') + ':/data/db',
 				path.join(process.cwd(), 'certs') + ':/home/certs'
@@ -82,6 +83,7 @@ gulp.task('database.test', function(done){
 		
 		//Start container
 		container.start({
+			Privileged: true,
 			Binds: [
 				path.join(process.cwd(), 'certs') + ':/home/certs'
 			],

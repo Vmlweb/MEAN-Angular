@@ -63,6 +63,7 @@ gulp.task('app.start', function(done){
 		
 		//Start container
 		container.start({
+			Privileged: true,
 			Binds: [
 				path.join(process.cwd(), 'builds', 'server') + ':/home/server',
 				path.join(process.cwd(), 'builds', 'client') + ':/home/client',

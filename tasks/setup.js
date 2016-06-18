@@ -86,7 +86,7 @@ gulp.task("setup.docker.mongodb", function(done){
 
 //Pull required nodejs docker images
 gulp.task("setup.docker.nodejs", function(done){
-	docker.pull("node:slim", function (err, stream) {
+	docker.pull("node:slim", {Privileged: true}, function (err, stream) {
 		if (err){ throw err; }
 		
 		//Track progress
@@ -108,8 +108,8 @@ gulp.task("setup.certs", shell.task([
 	"openssl req -new -newkey rsa:2048 -days 1825 -nodes -x509 -subj " + subj + " -keyout " + config.https.ssl.key + " -out " + config.https.ssl.cert,
 	"openssl req -new -newkey rsa:2048 -days 1825 -nodes -x509 -subj " + subj + " -keyout " + config.database.ssl.key + " -out " + config.database.ssl.cert,
 	"openssl rand -base64 741 > " + config.database.repl.key + " && chmod 600 " + config.database.repl.key,
-	"cat " + config.database.ssl.key + " " + config.database.ssl.cert + " > " + config.database.ssl.pem,
-	"chown 999:999 " + config.https.ssl.cert + " " + config.database.ssl.cert + " " + config.database.repl.key + " " + config.database.ssl.pem,
+	"cat " + config.database.ssl.key + " " + config.database.ssl.cert + " > " + config.database.ssl.pem
+	//"sudo chown 999:999 " + config.https.ssl.cert + " " + config.database.ssl.cert + " " + config.database.repl.key + " " + config.database.ssl.pem,
 ],{
 	verbose: true,
 	cwd: "certs"
