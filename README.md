@@ -7,6 +7,7 @@ Quick and simple template to get up and running with a MEAN stack web app inside
   * NodeJS 5.x
   * Docker & Compose
   * MongoDB & Mongoose
+  * Webpack Module Loader
   * AngularJS 2 & Typescript
   * Semantic UI & jQuery
   * Jade & Stylus Templates
@@ -34,10 +35,10 @@ chmod +x server.sh
 ./server.sh install
 ```
 
-Next install the Gulp 4, Bower, Karma, Typings and Jasmine command line tools if you have not already.
+Next install the Gulp 4, Bower and Typings command line tools if you have not already.
 
 ```bash
-sudo npm install -g gulpjs/gulp.git#4.0 bower karma typings jasmine
+sudo npm install -g gulpjs/gulp.git#4.0 bower typings
 ```
 
 ## Installation
@@ -47,6 +48,12 @@ Then install the project dependancies and setup the development environment.
 ```bash
 npm install
 gulp setup
+```
+
+Some non-root environments may require modified file permissions for the certificates.
+
+```
+chown -R 999:999 certs
 ```
 
 ## Directory Structure
@@ -59,7 +66,7 @@ gulp setup
 - `client/typings` - Typescript library type mappings.
 - `data` - Development database binary files.
 - `dist` - Production ready distribution builds.
-- `logs` - JSON console logs and test XML reports.
+- `logs` - Console logs, coverage and test reports.
 - `semantic` - User interface framework source.
 - `server` - Server side application source.
 - `server/api` - API endpoints.
@@ -80,6 +87,7 @@ gulp setup
 - `package.json` - Server application package dependancies.
 - `semantic.json` - User interface framework configuration.
 - `server.sh` - Start or stop the production server.
+- `tsconfig.json` - Typescript compilation settings.
 
 ## Development
 
@@ -138,11 +146,25 @@ gulp server.test
 
 Test files should be included in the `server` and `client` directories and use the `.test.ts, .test.js or .test.json` extensions.
 
-When testing a blank database will be used, see `server/tests/database.test.js` for populating it before each test.
-
 Server side test plans can be created in `config.js` and can then be executed using the `my_plan.test` command.
 
 Testing and coverage reports will be generated in the `logs` directory.
+
+## Testing Database
+
+When testing a blank database will be used, see `server/tests/database.test.js` for populating it before each test.
+
+When running client or external unit tests you can repopulate the database with test data using a http endpoint.
+
+```
+DELETE /reset
+```
+
+You can also start the database in standalone mock test data mode to run tests cases externally.
+
+```
+gulp mock
+```
 
 ## Documentation
 
