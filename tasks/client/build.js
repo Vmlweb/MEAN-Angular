@@ -1,12 +1,13 @@
 //Modules
-var gulp = require("gulp");
-var ts = require("gulp-typescript");
-var sourcemaps = require("gulp-sourcemaps");
-var jade = require("gulp-jade");
-var stylus = require("gulp-stylus");
+var gulp = require('gulp');
+var beep = require('beepbeep');
+var path = require('path');
+var webpack = require('webpack');
+var obfuscator = require('webpack-js-obfuscator');
+var html = require('html-webpack-plugin');
 
 //Config
-var config = require("../../config.js");
+var config = require('../../config.js');
 
 /*! Tasks 
 - client.build
@@ -14,91 +15,178 @@ var config = require("../../config.js");
 - client.build.libs
 - client.build.source
 - client.build.typescript
-
-- client.build.markup
-- client.build.markup.jade
-- client.build.markup.stylus
 */
 
 //! Build
-gulp.task("client.build", gulp.parallel(
-	"client.build.libs",
-	"client.build.source",
-	"client.build.typescript",
-	"client.build.markup"
+gulp.task('client.build', gulp.parallel(
+	'client.build.libs',
+	'client.build.source',
+	'client.build.webpack'
 ));
 
 //Copy over library dependancies
-gulp.task("client.build.libs", function(){
+gulp.task('client.build.libs', function(){
 	return gulp.src(config.libraries)
-	.pipe(gulp.dest("builds/client/libs"));
+	.pipe(gulp.dest('builds/client/libs'));
 });
 
 //Copy over client source files
-gulp.task("client.build.source", function(){
+gulp.task('client.build.source', function(){
 	return gulp.src([
-		"client/**/*",
-		"!client/**/*.md",
-		"!client/**/*.ts",
-		"!client/**/*.jade",
-		"!client/**/*.styl",
-		"!client/typings.json",
-		"!client/typings",
-		"!client/typings/**/*"
+		'client/**/*',
+		'!client/**/*.ts',
+		'!client/app/**/*',
+		'!client/typings.json',
+		'!client/typings',
+		'!client/typings/**/*'
 	])
-	.pipe(gulp.dest("builds/client"));
+	.pipe(gulp.dest('builds/client'));
 });
 
-//Setup typescript compiler config
-var tsConfig = {
-	typescript: require("typescript"),
-	target: "es5",
-	module: "system",
-	moduleResolution: "node",
-	sourceMap: true,
-	emitDecoratorMetadata: true,
-	experimentalDecorators: true,
-	removeComments: true,
-	noImplicitAny: false,
-	suppressImplicitAnyIndexErrors: true,
-	sortOutput: true
-};
-
-//Create typescript projects
-var tsProject = ts.createProject(tsConfig);
-var tsTestProject = ts.createProject(Object.assign(tsConfig, {
-	outFile: "app.js"
-}));
-
-//Compile typescript into javascript
-gulp.task("client.build.typescript", function() {
-	var output = gulp.src("**/*.ts", { cwd: "client" })
-		.pipe(sourcemaps.init())
-		.pipe(ts(process.env.NODE_ENV === "test" ? tsProject : tsTestProject))
-	return output.js
-		.pipe(sourcemaps.write("./"))
-		.pipe(gulp.dest("builds/client"));
-});
-
-//! Markup
-gulp.task("client.build.markup", gulp.parallel("client.build.markup.jade", "client.build.markup.stylus"));
-
-//Compile jade into html
-gulp.task("client.build.markup.jade", function(){
-	return gulp.src([
-		"client/**/*.jade",
-		"!client/**/*.inc.jade",
-	])
-	.pipe(jade())
-	.pipe(gulp.dest("builds/client"));
-});
-
-//Compile stylus to css
-gulp.task("client.build.markup.stylus", function(){
-	return gulp.src([
-		"client/**/*.styl",
-		"!client/**/*.inc.styl"
-	])
-	.pipe(stylus())
-	.pipe(gulp.dest("builds/client"));
+//Compile source into a webpack
+gulp.task('client.build.webpack', function(done) {
+	var options = {
+		
+		//Source maps
+		devtool: 'eval-source-map',
+		
+		//Input and outputs
+		entry: {
+			polyfills: './client/polyfills.ts',
+			vendors: './client/vendors.ts',
+			app: './client/bootstrap.ts'
+		},
+		output: {
+			path: './builds/client',
+			filename: '[name].js'
+		},
+		
+		//File types
+		resolve: {
+			extensions: ['', '.js', '.ts', '.html', '.jade', '.css', '.styl'],
+			alias: {
+				app: 'client/app',
+				common: 'client/common'
+			}
+		},
+		module: {
+			noParse: [/.+zone\.js\/dist\/.+/, /.+angular2\/bundles\/.+/, /angular2-polyfills\.js/],
+			preLoaders: [
+				{ test: /\.js$/, loader: 'source-map-loader', exclude: ['node_modules/rxjs', 'node_modules/@angular'] }
+			],
+			loaders: [
+				{ test: /\.ts$/, loader: 'ts' },
+				{ test: /\.html$/, loader: 'html' },
+				{ test: /\.css$/, loader: 'css' },
+				{ test: /\.(png|jpg|gif)$/, loader: 'url-loader?limit=8192' }
+			]
+		},
+		
+		//Plugins
+		plugins: [
+			new webpack.DefinePlugin({
+				'process.env': {
+					'ENV': JSON.stringify(process.env.NODE_ENV),
+				}
+			})
+		]
+	}
+	
+	//Shared development and distribution options
+	if (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'dist'){
+	
+		//Generate landing html page
+		options.plugins.push(new webpack.NoErrorsPlugin());
+		options.plugins.push(new html({
+			template: 'client/index.html'
+		}));
+		
+		//Split into common chunks
+		options.plugins.push(new webpack.optimize.CommonsChunkPlugin({
+			name: ['app', 'vendors', 'polyfills']
+		}));
+	}
+	
+	//Distribution options
+	if (process.env.NODE_ENV === 'dist'){	
+	
+		//Remove source maps
+		delete options.devtool;
+	
+		//Minify
+		options.plugins.push(new webpack.optimize.UglifyJsPlugin({
+			mangle: false,
+			compress: {
+				warnings: false
+			}
+		}));
+		
+		//Obsfucate
+		options.plugins.push(new obfuscator({}, [
+			'vendors.js',
+			'polyfills.js',
+			'**.html'
+		]));
+		
+	//Testing options 
+	}else if (process.env.NODE_ENV === 'test'){
+		
+		//Remove unwanted sections
+		delete options.entry;
+		delete options.output;
+		
+		//Modify typescript compilation
+		options.ts = {
+			compilerOptions: {
+				sourceMap: false,
+		        sourceRoot: './client',
+		        inlineSourceMap: true
+			}
+		}
+		
+		//Insert coverage instruments
+		options.module.postLoaders = [{
+	        test: /\.ts$/,
+	        loader: 'istanbul-instrumenter-loader',
+	        include: path.resolve('client'),
+	        exclude: [/\.test\.ts$/, /node_modules/]
+	    }];
+	    
+	//Development options
+	}else if (process.env.NODE_ENV === 'dev'){
+	
+	}
+	
+	//Setup callback for completion
+	var callback = function(err, stats) {
+		
+		//Log output of build
+		console.log(stats.toString({
+			chunkModules: false,
+			assets: false
+		}));
+		
+		//Beep for success or errors
+		if (process.env.NODE_ENV === 'dev'){
+			if (stats.hasErrors()){
+				beep(2);
+			}else{
+				beep();
+			}
+		}
+		
+		done();
+	};
+	
+	//Compile and watch for changes if needed
+	global.webpack = options;
+	var pack = webpack(options);
+	if (process.env.NODE_ENV === 'dev'){
+		pack.watch({
+			aggregateTimeout: 200,
+			poll: false
+		}, callback);
+	}else{
+		pack.run(callback);
+	}
 });

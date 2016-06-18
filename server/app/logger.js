@@ -1,23 +1,19 @@
 //Modules
+var fs = require("fs");
 var path = require("path");
-var fs = require("fs-extra");
 var moment = require("moment");
 var winston = require("winston");
 var winstonRotate = require("winston-daily-rotate-file");
 
-//Check and create log directories
+//Create log paths
 var errorPath = path.join(__logs, "errors");
-if (!fs.ensureDirSync(errorPath)){
-	fs.mkdirsSync(errorPath);
-}
 var infoPath = path.join(__logs, "info");
-if (!fs.ensureDirSync(infoPath)){
-	fs.mkdirsSync(infoPath);
-}
 var accessPath = path.join(__logs, "access");
-if (!fs.ensureDirSync(accessPath)){
-	fs.mkdirsSync(accessPath);
-}
+
+//Check if directories exist and create
+try { fs.statSync(errorPath); } catch(e) { fs.mkdirSync(errorPath); }
+try { fs.statSync(infoPath); } catch(e) { fs.mkdirSync(infoPath); }
+try { fs.statSync(accessPath); } catch(e) { fs.mkdirSync(accessPath); }
 
 //Logging output formatter
 var formatter = function(options){

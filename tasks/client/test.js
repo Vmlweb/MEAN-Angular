@@ -1,11 +1,11 @@
 //Modules
-var gulp = require("gulp");
-var path = require("path");
-var Karma = require("karma").Server;
+var gulp = require('gulp');
+var beep = require('beepbeep');
+var Karma = require('karma').Server;
 var remap = require('remap-istanbul');
 
 //Config
-var config = require("../../config.js");
+var config = require('../../config.js');
 
 /*! Tasks 
 - client.test
@@ -14,71 +14,77 @@ var config = require("../../config.js");
 */
 
 //! Test
-gulp.task("client.test", gulp.series(
-	"env.test",
-	"stop",
-	"clean",
-	"build",
-	"database.test",
-	"database.reset.config",
-	"database.mock",
-	"client.test.karma",
-	"beep"
+gulp.task('client.test', gulp.series(
+	'env.test',
+	'stop',
+	'clean',
+	'build',
+	'database.test',
+	'database.reset.config',
+	'database.mock',
+	'client.test.karma'
 ));
 
 //Test client with karma
-gulp.task("client.test.karma", function(done){
-	var includes = [];
-	
-	//Generate include files
-	for (var i in config.libraries){
-		includes.push({
-			pattern: config.libraries[i],
-			included: config.libraries[i].endsWith("js")
-		});
-	}
-	
-	//Setup configuration
+gulp.task('client.test.karma', function(done){
 	var server = new Karma({
-		basePath: "",
-		frameworks: ["jasmine"],
+		basePath: '',
+		
+		//Frameworks and plugins
+		frameworks: ['jasmine'],
 		plugins: [
-			"karma-coverage",
-			"karma-phantomjs-launcher",
-			"karma-jasmine",
-			"karma-mocha-reporter",
-			"karma-junit-reporter"
+			'karma-coverage',
+			'karma-phantomjs-launcher',
+			'karma-jasmine',
+			'karma-mocha-reporter',
+			'karma-junit-reporter',
+			'karma-webpack',
+			'karma-sourcemap-loader',
+			'karma-remap-istanbul'
 		],
-		browsers: ["PhantomJS"],
+		
+		//Settings
+		browsers: ['PhantomJS'],
 		colors: true,
 		autoWatch: false,
 		singleRun: true,
-		files: includes.concat([
-			{ pattern: "karma.shim.js", included: true },
-			{ pattern: "builds/client/**/*.js", included: false },
-			{ pattern: "builds/client/**/*.js.map", included: false }
-		]),
-		reporters: ["mocha", "junit", "coverage"],
-		preprocessors: {
-			"builds/client/**/!(*.test).js": ["coverage"]
-		},
+		
+		//Files
+		files: [ { pattern: './karma.shim.js' } ],
+		preprocessors: { './karma.shim.js': ['webpack', 'sourcemap'] },
+		
+		//Webpack
+		webpack: global.webpack,
+	    webpackMiddleware: { stats: 'errors-only' },
+		
+		//Reporting
+		reporters: ['mocha', 'junit', 'coverage', 'karma-remap-istanbul'],
 		coverageReporter: {
 			reporters: [
-				{type: "json", dir:"logs/coverage/client", file: "coverage-final.json", subdir: "."},
-				{type: "text-summary"}
+				{type: 'json', dir:'logs/coverage/client', file: 'coverage-final.json', subdir: '.'},
+				{type: 'text-summary'}
 			]
 		},
 		junitReporter: {
-			outputDir: "logs/tests/client"
+			outputDir: 'logs/tests/client'
 		}
-	}, function(){
+		
+	}, function(failed){
 		
 		//Lookup typescript generated code from source map
 		remap('logs/coverage/client/coverage-final.json', {
-			html: "logs/coverage/client",
-			clover: "logs/coverage/client/clover.xml"
+			html: 'logs/coverage/client',
+			clover: 'logs/coverage/client/clover.xml'
+		}).then(function(){
+			
+			//Reports written
+			if (failed){
+				beep(2);
+			}else{
+				beep();
+			}
+			global.shutdown(done);
 		});
 		
-		global.shutdown(done);
 	}).start();
 });

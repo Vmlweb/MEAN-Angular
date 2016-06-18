@@ -1,14 +1,11 @@
 //Modules
-var gulp = require("gulp");
-var shell = require("gulp-shell");
-var del = require("del");
-var uglify = require("gulp-uglify");
-var obfuscator = require('gulp-js-obfuscator');
-var cssnano = require("gulp-cssnano");
-var docker = require("dockerode")();
+var gulp = require('gulp');
+var shell = require('gulp-shell');
+var del = require('del');
+var docker = require('dockerode')();
 
 //Config
-var config = require("../config.js");
+var config = require('../config.js');
 
 /*! Tasks 
 - dist.reset
@@ -19,149 +16,63 @@ var config = require("../config.js");
 - dist.copy.config
 - dist.copy.server
 - dist.copy.client
-
-- dist.minify
-- dist.minify.css
-- dist.minify.server
-- dist.minify.client
-- dist.minify.libs
-
-- dist.obfuscate
-- dist.obfuscate.server
-- dist.obfuscate.client
 */
 
 //Remove all dist files
-gulp.task("dist.reset", function(){
+gulp.task('dist.reset', function(){
 	return del([
-		"dist/**/*"
+		'dist/**/*'
 	]);
 });
 
 //Build the docker images and app
-gulp.task("dist.build", shell.task([
-	"docker build -t " + config.name + "_app $PWD",
-	"docker save " + config.name + "_app > " + config.name + "_app.tar",
-	"chmod +x server.sh"
+gulp.task('dist.build', shell.task([
+	'docker build -t ' + config.name + '_app $PWD',
+	'docker save ' + config.name + '_app > ' + config.name + '_app.tar',
+	'chmod +x server.sh'
 ],{
 	verbose: true,
-	cwd: "dist"
+	cwd: 'dist'
 }));
 
 //! Copy
-gulp.task("dist.copy", gulp.parallel("dist.copy.config", "dist.copy.server", "dist.copy.client"));
+gulp.task('dist.copy', gulp.parallel('dist.copy.config', 'dist.copy.server', 'dist.copy.client'));
 
 //Copy over config files
-gulp.task("dist.copy.config", function(){
+gulp.task('dist.copy.config', function(){
 	return gulp.src([
-		"builds/config.js",
-		"builds/package.json",
-		"builds/Dockerfile",
-		"builds/docker-compose.yml",
-		"builds/mongodb.js",
-		"builds/server.sh"
+		'builds/config.js',
+		'builds/package.json',
+		'builds/Dockerfile',
+		'builds/docker-compose.yml',
+		'builds/mongodb.js',
+		'builds/server.sh'
 	])
-	.pipe(gulp.dest("dist"));
+	.pipe(gulp.dest('dist'));
 });
 
 //Copy over server source files
-gulp.task("dist.copy.server", function(){
+gulp.task('dist.copy.server', function(){
 	return gulp.src([
-		"builds/server/**/*",
-		"!builds/server/tests/*",
-		"!builds/server/**/*.js.map",
-		"!builds/server/**/*.min.map",
-		"!builds/server/**/*.test.js",
-		"!builds/server/**/*.test.json"
+		'builds/server/**/*',
+		'!builds/server/tests/*',
+		'!builds/server/**/*.js.map',
+		'!builds/server/**/*.min.map',
+		'!builds/server/**/*.test.js',
+		'!builds/server/**/*.test.json'
 	])
-	.pipe(gulp.dest("dist/server"));
+	.pipe(gulp.dest('dist/server'));
 });
 
 //Copy over client source files
-gulp.task("dist.copy.client", function(){
+gulp.task('dist.copy.client', function(){
 	return gulp.src([
-		"builds/client/**/*",
-		"!builds/client/tests/*",
-		"!builds/client/**/*.js.map",
-		"!builds/client/**/*.min.map",
-		"!builds/client/**/*.test.js",
-		"!builds/client/**/*.test.json"
+		'builds/client/**/*',
+		'!builds/client/tests/*',
+		'!builds/client/**/*.js.map',
+		'!builds/client/**/*.min.map',
+		'!builds/client/**/*.test.js',
+		'!builds/client/**/*.test.json'
 	])
-	.pipe(gulp.dest("dist/client"));
-});
-
-//! Minify
-gulp.task("dist.minify", gulp.parallel(
-	"dist.minify.css",
-	"dist.minify.server",
-	"dist.minify.client",
-	"dist.minify.libs"
-));
-
-//Minify server and client css files
-gulp.task("dist.minify.css", function(){
-	return gulp.src([
-		"dist/client/**/*.css"
-	])
-	.pipe(cssnano())
-	.pipe(gulp.dest("dist/client"));
-});
-
-//Minify server javascript files
-gulp.task("dist.minify.server", function(){
-	return gulp.src([
-		"dist/server/**/*.js"
-	])
-	.pipe(uglify())
-	.pipe(gulp.dest("dist/server"));
-});
-
-//Minify client javascript files
-gulp.task("dist.minify.client", function(){
-	return gulp.src([
-		"dist/client/**/*.js",
-		"!dist/client/libs/**/*.js"
-	])
-	.pipe(uglify())
-	.pipe(gulp.dest("dist/client"));
-});
-
-//Minify client javascript library files
-gulp.task("dist.minify.libs", function(){
-	return gulp.src([
-		"dist/client/libs/**/*.js"
-	])
-	.pipe(uglify({
-		mangle: false,
-		preserveComments: function(node, comment) {
-			return !(comment.value.indexOf("sourceMapping") != -1);
-		}
-	}))
-	.pipe(gulp.dest("dist/client/libs"));
-});
-
-//! Obfuscate
-gulp.task("dist.obfuscate", gulp.series(
-	"dist.obfuscate.server",
-	"dist.obfuscate.client"
-));
-
-//Obfuscate server javascript files
-gulp.task("dist.obfuscate.server", function(){
-	return gulp.src([
-		"dist/server/**/*.js",
-		"!dist/server/libs/**/*.js"
-	])
-	.pipe(obfuscator())
-	.pipe(gulp.dest("dist/server"));
-});
-
-//Obfuscate client javascript files
-gulp.task("dist.obfuscate.client", function(){
-	return gulp.src([
-		"dist/client/**/*.js",
-		"!dist/client/libs/**/*.js"
-	])
-	.pipe(obfuscator())
-	.pipe(gulp.dest("dist/client"));
+	.pipe(gulp.dest('dist/client'));
 });

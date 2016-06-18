@@ -1,9 +1,6 @@
 //Modules
-var gulp = require("gulp");
-var shell = require("gulp-shell");
-var tslint = require("gulp-tslint");
-var ts = require("gulp-typescript");
-var jshint = require("gulp-jshint");
+var gulp = require('gulp');
+var ts = require('gulp-typescript');
 
 /*! Tasks 
 - server.build
@@ -13,27 +10,27 @@ var jshint = require("gulp-jshint");
 */
 
 //! Build
-gulp.task("server.build", gulp.parallel("server.build.source", "server.build.typescript"));
+gulp.task('server.build', gulp.parallel('server.build.source', 'server.build.typescript'));
 
 //Copy over source files
-gulp.task("server.build.source", function(){
+gulp.task('server.build.source', function(){
 	return gulp.src([
-		"server/**/*",
-		"!server/**/*.md",
-		"!server/**/*.ts",
-		"!server/typings.json",
-		"!server/typings",
-		"!server/typings/**/*"
+		'server/**/*',
+		'!server/**/*.md',
+		'!server/**/*.ts',
+		'!server/typings.json',
+		'!server/typings',
+		'!server/typings/**/*'
 	])
-	.pipe(gulp.dest("builds/server"));
+	.pipe(gulp.dest('builds/server'));
 });
 
 //Create typescript project
 var tsProject = ts.createProject({
-	typescript: require("typescript"),
-	target: "es5",
-	module: "commonjs",
-	moduleResolution: "node",
+	typescript: require('typescript'),
+	target: 'es5',
+	module: 'commonjs',
+	moduleResolution: 'node',
 	sourceMap: true,
 	emitDecoratorMetadata: true,
 	experimentalDecorators: true,
@@ -44,8 +41,8 @@ var tsProject = ts.createProject({
 });
 
 //Compile typescript into javascript
-gulp.task("server.build.typescript", function() {
-	return gulp.src("**/*.ts", { cwd: "server" })
+gulp.task('server.build.typescript', function() {
+	return gulp.src('**/*.ts', { cwd: 'server' })
 	.pipe(ts(tsProject))
-	.pipe(gulp.dest("builds/server"))
+	.pipe(gulp.dest('builds/server'))
 });

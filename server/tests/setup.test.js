@@ -8,7 +8,7 @@ process.env.NODE_ENV = "testing"; //Disable all logging in app
 
 //Start app
 global.app = require(path.join(__dirname, "../app.js"));
-var mongo = require(path.join(__dirname, "../app/mongo.js"))
+var mongo = require(path.join(__dirname, "../app/mongo.js"));
 
 //Wait for database connection
 beforeAll(function(callback){

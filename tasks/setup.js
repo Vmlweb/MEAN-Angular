@@ -1,8 +1,7 @@
 //Modules
 var gulp = require("gulp");
 var shell = require("gulp-shell");
-var dockerode = require("dockerode");
-var docker = dockerode();
+var docker = require("dockerode")();
 var config = require("../config.js");
 
 /*! Tasks 
@@ -38,7 +37,8 @@ gulp.task("setup.dependant.npm", shell.task([
 
 //Install semantic dependancies
 gulp.task("setup.dependant.semantic", shell.task([
-	"npm install",
+	"npm install --production",
+	"rm -r node_modules/gulp-header",
 	"gulp install"
 ],{
 	verbose: true,

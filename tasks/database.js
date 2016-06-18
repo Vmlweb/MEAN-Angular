@@ -1,14 +1,14 @@
 //Modules
-var gulp = require("gulp");
-var del = require("del");
-var fs = require("fs");
-var async = require("async");
-var path = require("path");
-var docker = require("dockerode")()
-var recursive = require("recursive-readdir");
+var gulp = require('gulp');
+var del = require('del');
+var fs = require('fs');
+var async = require('async');
+var path = require('path');
+var docker = require('dockerode')()
+var recursive = require('recursive-readdir');
 
 //Config
-var config = require("../config.js");
+var config = require('../config.js');
 
 /*! Tasks 
 - database.start
@@ -24,27 +24,27 @@ var config = require("../config.js");
 //! Database Server
 
 //Prepare command
-var cmd = ["mongod", "--auth", "--keyFile", path.join("/home/certs/", config.database.repl.key), "--replSet", config.database.repl.name];
+var cmd = ['mongod', '--auth', '--keyFile', path.join('/home/certs/', config.database.repl.key), '--replSet', config.database.repl.name];
 
 //Prepare SSL
 if (config.database.ssl.enabled){
-	cmd.push("--sslMode");
-	cmd.push("requireSSL");
-	cmd.push("--sslPEMKeyFile");
-	cmd.push(path.join("/home/certs/", config.database.ssl.pem));
+	cmd.push('--sslMode');
+	cmd.push('requireSSL');
+	cmd.push('--sslPEMKeyFile');
+	cmd.push(path.join('/home/certs/', config.database.ssl.pem));
 }
 
 //Start database server
-gulp.task("database.start", function(done){
+gulp.task('database.start', function(done){
 	
 	//Prepare container
 	docker.createContainer({
 		Hostname: config.database.repl.nodes[0].hostname,
-		Image: "mongo",
+		Image: 'mongo',
 		Cmd: cmd,
-		name: config.name + "_db",
+		name: config.name + '_db',
 		Volumes: {
-			"/home/certs": {}
+			'/home/certs': {}
 		}
 	}, function(err, container) {
 		if (err){ throw err; }
@@ -52,11 +52,11 @@ gulp.task("database.start", function(done){
 		//Start container
 		container.start({
 			Binds: [
-				path.join(process.cwd(), "data") + ":/data/db",
-				path.join(process.cwd(), "certs") + ":/home/certs"
+				path.join(process.cwd(), 'data') + ':/data/db',
+				path.join(process.cwd(), 'certs') + ':/home/certs'
 			],
 			PortBindings: {
-				["27017/tcp"]: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
+				['27017/tcp']: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
 			}
 		}, function(err, data){
 			if (err){ throw err; }
@@ -66,16 +66,16 @@ gulp.task("database.start", function(done){
 });
 
 //Start testing database server (flushes data when finished)
-gulp.task("database.test", function(done){
+gulp.task('database.test', function(done){
 	
 	//Prepare container
 	docker.createContainer({
 		Hostname: config.database.repl.nodes[0].hostname,
-		Image: "mongo",
+		Image: 'mongo',
 		Cmd: cmd,
-		name: config.name + "_db",
+		name: config.name + '_db',
 		Volumes: {
-			"/home/certs": {}
+			'/home/certs': {}
 		}
 	}, function(err, container) {
 		if (err){ throw err; }
@@ -83,10 +83,10 @@ gulp.task("database.test", function(done){
 		//Start container
 		container.start({
 			Binds: [
-				path.join(process.cwd(), "certs") + ":/home/certs"
+				path.join(process.cwd(), 'certs') + ':/home/certs'
 			],
 			PortBindings: {
-				["27017/tcp"]: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
+				['27017/tcp']: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
 			}
 		}, function(err, data){
 			if (err){ throw err; }
@@ -96,10 +96,10 @@ gulp.task("database.test", function(done){
 });
 
 //Start mock database with reset endpoint (flushes data when finished)
-gulp.task("database.mock", function(done){
+gulp.task('database.mock', function(done){
 	
 	//Search for test files
-	recursive(path.join(__dirname, "../builds/server/tests"), ["!*.test.js", "setup.test.js"], function (err, files) {
+	recursive(path.join(__dirname, '../builds/server/tests'), ['!*.test.js', 'setup.test.js'], function (err, files) {
 		
 		//Define testing capture functions
 		var beforeAlls = [];
@@ -116,20 +116,20 @@ gulp.task("database.mock", function(done){
 		};
 		
 		//Start main app
-		require(path.join(__dirname, "../builds/server/tests/setup.test.js"));
+		require(path.join(__dirname, '../builds/server/tests/setup.test.js'));
 		for (i in files){ require(files[i]); }
 		
 		//Run before all functions
 		async.each(beforeAlls, function (item, back){ item(back); }, function(){
 			
 			//Define reset database api endpoint route
-			global.app.express.app.delete("/reset", function (req, res){
+			global.app.express.app.delete('/reset', function (req, res){
 				async.each(beforeEachs, function (item, back){ item(back); }, function (){
 					res.sendStatus(200);
 				});
 			});
 			
-			log.info("Database testing reset endpoint loaded");
+			log.info('Database testing reset endpoint loaded');
 			
 			//Run after all functions
 			global.shutdown = function(callback){
@@ -144,8 +144,8 @@ gulp.task("database.mock", function(done){
 });
 
 //Stop database server
-gulp.task("database.stop", function(done){
-	var container = docker.getContainer(config.name + "_db");
+gulp.task('database.stop', function(done){
+	var container = docker.getContainer(config.name + '_db');
 	container.stop({ t: 5 }, function(err, data){
 		container.remove({ force: true }, function(err, data){
 			done();
@@ -154,29 +154,29 @@ gulp.task("database.stop", function(done){
 });
 
 //! Reset Data
-gulp.task("database.reset", gulp.series(
-	gulp.parallel("database.stop", "build.config.mongodb"),
-	gulp.series("database.reset.clean", "database.start", "database.reset.config", "database.stop")
+gulp.task('database.reset', gulp.series(
+	gulp.parallel('database.stop', 'build.config.mongodb'),
+	gulp.series('database.reset.clean', 'database.start', 'database.reset.config', 'database.stop')
 ));
 
 //Remove all database files
-gulp.task("database.reset.clean", function(done){
+gulp.task('database.reset.clean', function(done){
 	return del([
-		"data/**/*"
+		'data/**/*'
 	]);
 });
 
 //Reconfigure database with mongodb.js
-gulp.task("database.reset.config", function(done){
-	var container = docker.getContainer(config.name + "_db");
+gulp.task('database.reset.config', function(done){
+	var container = docker.getContainer(config.name + '_db');
 	
 	//Prepare command
-	var cmd = ["mongo"];
+	var cmd = ['mongo'];
 	
 	//Prepare SSL
 	if (config.database.ssl.enabled){
-		cmd.push("--ssl");
-		cmd.push("--sslAllowInvalidCertificates");
+		cmd.push('--ssl');
+		cmd.push('--sslAllowInvalidCertificates');
 	}
 	
 	//Prepare command
@@ -200,7 +200,7 @@ gulp.task("database.reset.config", function(done){
 	        container.modem.demuxStream(stream, process.stdout, process.stderr);
 		
 			//Stream file into container mongo cli
-			fs.createReadStream("builds/mongodb.js", "binary").pipe(stream).on("end", function(){
+			fs.createReadStream('builds/mongodb.js', 'binary').pipe(stream).on('end', function(){
 				done();
 			});
 		});
