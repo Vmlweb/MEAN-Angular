@@ -17,7 +17,7 @@ gulp.task('server.watch.source', function(done){
 		'server/**/*',
 		'!server/**/*.ts',
 		'!server/**/*.d.ts'
-	], gulp.series('app.stop', 'server.build.source', 'app.start', 'app.attach', 'beep'));
+	], gulp.series('app.stop', 'server.build.source', 'app.start', 'app.attach'));
 	done();
 });
 
@@ -26,6 +26,6 @@ gulp.task('server.watch.typescript', function(done){
 	gulp.watch([
 		'server/**/*.ts',
 		'!server/**/*.d.ts'
-	], gulp.series('app.stop', 'server.build.typescript', 'app.start', 'app.attach', 'beep'));
+	], gulp.series('app.stop', 'server.build.typescript', 'app.start', 'app.attach'));
 	done();
 });
