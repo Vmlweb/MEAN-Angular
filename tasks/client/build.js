@@ -5,6 +5,7 @@ var path = require('path');
 var webpack = require('webpack');
 var obfuscator = require('webpack-js-obfuscator');
 var html = require('html-webpack-plugin');
+var typeChecker = require('awesome-typescript-loader').ForkCheckerPlugin;
 
 //Config
 var config = require('../../config.js');
@@ -75,7 +76,7 @@ gulp.task('client.build.webpack', function(done) {
 				{ test: /\.js$/, loader: 'source-map-loader', exclude: ['node_modules/rxjs', 'node_modules/@angular'] }
 			],
 			loaders: [
-				{ test: /\.ts$/, loader: 'ts' },
+				{ test: /\.ts$/, loader: 'awesome-typescript-loader' },
 				{ test: /\.html$/, loader: 'html' },
 				{ test: /\.css$/, loader: 'css' },
 				{ test: /\.(png|jpg|gif)$/, loader: 'url-loader?limit=8192' }
@@ -154,7 +155,9 @@ gulp.task('client.build.webpack', function(done) {
 	    
 	//Development options
 	}else if (process.env.NODE_ENV === 'dev'){
-	
+		
+		//Add forked type checker for quicker builds
+		options.plugins.push(new typeChecker());
 	}
 	
 	//Setup callback for completion
