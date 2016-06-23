@@ -3,9 +3,9 @@ var gulp = require('gulp');
 var beep = require('beepbeep');
 var path = require('path');
 var webpack = require('webpack');
-var obfuscator = require('webpack-js-obfuscator');
-var html = require('html-webpack-plugin');
-var typeChecker = require('awesome-typescript-loader').ForkCheckerPlugin;
+var obfuscatorPlugin = require('webpack-js-obfuscator');
+var htmlPlugin = require('html-webpack-plugin');
+var typeCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
 
 //Config
 var config = require('../../config.js');
@@ -97,8 +97,7 @@ gulp.task('client.build.webpack', function(done) {
 	if (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'dist'){
 	
 		//Generate landing html page
-		options.plugins.push(new webpack.NoErrorsPlugin());
-		options.plugins.push(new html({
+		options.plugins.push(new htmlPlugin({
 			template: 'client/index.html'
 		}));
 		
@@ -123,7 +122,7 @@ gulp.task('client.build.webpack', function(done) {
 		}));
 		
 		//Obsfucate
-		options.plugins.push(new obfuscator({}, [
+		options.plugins.push(new obfuscatorPlugin({}, [
 			'vendors.js',
 			'polyfills.js',
 			'**.html'
@@ -157,7 +156,8 @@ gulp.task('client.build.webpack', function(done) {
 	}else if (process.env.NODE_ENV === 'dev'){
 		
 		//Add forked type checker for quicker builds
-		options.plugins.push(new typeChecker());
+		options.plugins.push(new typeCheckerPlugin());
+		options.plugins.push(new webpack.NoErrorsPlugin());
 	}
 	
 	//Setup callback for completion

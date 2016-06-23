@@ -29,6 +29,8 @@ gulp.task('dist.reset', function(){
 gulp.task('dist.build', shell.task([
 	'docker build -t ' + config.name + '_app $PWD',
 	'docker save ' + config.name + '_app > ' + config.name + '_app.tar',
+	'zip ' + config.name + '_app.zip ' + config.name + '_app.tar',
+	'rm -r ' + config.name + '_app.tar',
 	'chmod +x server.sh'
 ],{
 	verbose: true,
