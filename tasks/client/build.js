@@ -48,20 +48,6 @@ gulp.task('client.build.source', function(){
 gulp.task('client.build.webpack', function(done) {
 	var options = {
 		
-		//Source maps
-		devtool: 'eval-source-map',
-		
-		//Input and outputs
-		entry: {
-			polyfills: './client/polyfills.ts',
-			vendors: './client/vendors.ts',
-			app: './client/bootstrap.ts'
-		},
-		output: {
-			path: './builds/client',
-			filename: '[name].js'
-		},
-		
 		//File types
 		resolve: {
 			extensions: ['', '.js', '.ts', '.html', '.jade', '.css', '.styl'],
@@ -76,7 +62,9 @@ gulp.task('client.build.webpack', function(done) {
 				{ test: /\.js$/, loader: 'source-map-loader', exclude: ['node_modules/rxjs', 'node_modules/@angular'] }
 			],
 			loaders: [
-				{ test: /\.ts$/, loader: 'awesome-typescript-loader' },
+				{ test: /\.ts$/, loader: 'awesome-typescript-loader', query: {
+					tsconfig: 'tsconfig.' + process.env.NODE_ENV + '.json'
+				} },
 				{ test: /\.html$/, loader: 'html' },
 				{ test: /\.css$/, loader: 'css' },
 				{ test: /\.(png|jpg|gif)$/, loader: 'url-loader?limit=8192' }
@@ -96,6 +84,17 @@ gulp.task('client.build.webpack', function(done) {
 	//Shared development and distribution options
 	if (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'dist'){
 	
+		//Input and outputs
+		options.entry = {
+			polyfills: './client/polyfills.ts',
+			vendors: './client/vendors.ts',
+			app: './client/bootstrap.ts'
+		};
+		options.output = {
+			path: './builds/client',
+			filename: '[name].js'
+		};
+	
 		//Generate landing html page
 		options.plugins.push(new htmlPlugin({
 			template: 'client/index.html'
@@ -109,9 +108,6 @@ gulp.task('client.build.webpack', function(done) {
 	
 	//Distribution options
 	if (process.env.NODE_ENV === 'dist'){	
-	
-		//Remove source maps
-		delete options.devtool;
 	
 		//Minify
 		options.plugins.push(new webpack.optimize.UglifyJsPlugin({
@@ -131,9 +127,8 @@ gulp.task('client.build.webpack', function(done) {
 	//Testing options 
 	}else if (process.env.NODE_ENV === 'test'){
 		
-		//Remove unwanted sections
-		delete options.entry;
-		delete options.output;
+		//Source maps
+		options.devtool = 'eval-source-map';
 		
 		//Modify typescript compilation
 		options.ts = {
@@ -154,6 +149,9 @@ gulp.task('client.build.webpack', function(done) {
 	    
 	//Development options
 	}else if (process.env.NODE_ENV === 'dev'){
+		
+		//Source maps
+		options.devtool = 'eval-source-map';
 		
 		//Add forked type checker for quicker builds
 		options.plugins.push(new typeCheckerPlugin());

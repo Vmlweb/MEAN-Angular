@@ -73,6 +73,7 @@ gulp.task('client.test.karma', function(done){
 		
 		//Lookup typescript generated code from source map
 		remap('logs/coverage/client/coverage-final.json', {
+			json: 'logs/coverage/client/coverage-final.json',
 			html: 'logs/coverage/client',
 			clover: 'logs/coverage/client/clover.xml'
 		}).then(function(){

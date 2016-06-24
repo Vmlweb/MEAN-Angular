@@ -14,6 +14,7 @@ require('./tasks/database.js');
 require('./tasks/setup.js');
 require('./tasks/dist.js');
 require('./tasks/docs.js');
+require('./tasks/test.js');
 //Client
 require('./tasks/client/build.js');
 require('./tasks/client/lint.js');
@@ -49,7 +50,8 @@ gulp.task('dev', gulp.series(
 gulp.task('test', gulp.series(
 	'env.test',
 	'server.test',
-	'client.test'
+	'client.test',
+	'test.merge'
 ));
 
 //! Mocking
