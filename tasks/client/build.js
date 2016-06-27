@@ -128,7 +128,7 @@ gulp.task('client.build.webpack', function(done) {
 	}else if (process.env.NODE_ENV === 'test'){
 		
 		//Source maps
-		options.devtool = 'eval-source-map';
+		options.devtool = 'inline-source-map';
 		
 		//Modify typescript compilation
 		options.ts = {

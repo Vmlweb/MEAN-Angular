@@ -1,8 +1,9 @@
 //Modules
 var gulp = require('gulp');
+var path = require('path');
 var beep = require('beepbeep');
 var Karma = require('karma').Server;
-var remap = require('remap-istanbul');
+var remap = require('remap-istanbul/lib/gulpRemapIstanbul');
 
 //Config
 var config = require('../../config.js');
@@ -11,6 +12,7 @@ var config = require('../../config.js');
 - client.test
 
 - client.test.karma
+- client.test.remap
 */
 
 //! Test
@@ -22,7 +24,8 @@ gulp.task('client.test', gulp.series(
 	'database.test',
 	'database.reset.config',
 	'database.mock',
-	'client.test.karma'
+	'client.test.karma',
+	'client.test.remap'
 ));
 
 //Test client with karma
@@ -39,8 +42,7 @@ gulp.task('client.test.karma', function(done){
 			'karma-mocha-reporter',
 			'karma-junit-reporter',
 			'karma-webpack',
-			'karma-sourcemap-loader',
-			'karma-remap-istanbul'
+			'karma-sourcemap-loader'
 		],
 		
 		//Settings
@@ -58,7 +60,7 @@ gulp.task('client.test.karma', function(done){
 	    webpackMiddleware: { stats: 'errors-only' },
 		
 		//Reporting
-		reporters: ['mocha', 'junit', 'coverage', 'karma-remap-istanbul'],
+		reporters: ['mocha', 'junit', 'coverage'],
 		coverageReporter: {
 			reporters: [
 				{type: 'json', dir:'logs/coverage/client', file: 'coverage-final.json', subdir: '.'},
@@ -71,21 +73,29 @@ gulp.task('client.test.karma', function(done){
 		
 	}, function(failed){
 		
-		//Lookup typescript generated code from source map
-		remap('logs/coverage/client/coverage-final.json', {
+		//Beep to alert user
+	    if (failed){
+			beep(2);
+		}else{
+			beep();
+		}
+	    
+	    done();
+	}).start();
+});
+
+//Test client with karma
+gulp.task('client.test.remap', function(done){
+	return gulp.src('logs/coverage/client/coverage-final.json')
+	.pipe(remap({
+		useAbsolutePaths: true,
+		reports: {
 			json: 'logs/coverage/client/coverage-final.json',
 			html: 'logs/coverage/client',
 			clover: 'logs/coverage/client/clover.xml'
-		}).then(function(){
-			
-			//Reports written
-			if (failed){
-				beep(2);
-			}else{
-				beep();
-			}
-			global.shutdown(done);
-		});
-		
-	}).start();
+		}
+	}))
+	.on("end", () => {
+		global.shutdown(done);
+    });
 });
