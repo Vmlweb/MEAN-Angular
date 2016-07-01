@@ -141,7 +141,6 @@ gulp semantic
 You can execute the automated unit tests either combined or individually for the server and client.
 
 ```bash
-gulp test
 gulp client.test
 gulp server.test
 ```
