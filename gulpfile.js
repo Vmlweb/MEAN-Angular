@@ -49,8 +49,8 @@ gulp.task('dev', gulp.series(
 //! Testing
 gulp.task('test', gulp.series(
 	'env.test',
-	'server.test',
 	'client.test',
+	'server.test',
 	'test.merge'
 ));
 

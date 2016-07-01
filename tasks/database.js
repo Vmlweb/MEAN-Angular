@@ -128,7 +128,6 @@ gulp.task('database.mock', function(done){
 			global.app.express.app.delete('/reset', function (req, res){
 				async.each(beforeEachs, function (item, back){ item(back); }, function (){
 					res.json({});
-					log.info("Mock database has been reset");
 				});
 			});
 			
