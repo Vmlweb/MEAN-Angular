@@ -47,12 +47,7 @@ gulp.task('dev', gulp.series(
 ));
 
 //! Testing
-gulp.task('test', gulp.series(
-	'env.test',
-	'client.test',
-	'server.test',
-	'test.merge'
-));
+gulp.task('test', gulp.series('server.test'));
 
 //! Mocking
 gulp.task('mock', gulp.series(
