@@ -30,6 +30,17 @@ gulp.task('client.test', gulp.series(
 
 //Test client with karma
 gulp.task('client.test.karma', function(done){
+	
+	//Compile library includes
+	var libs = [];
+	for (var item in config.libraries){
+		libs.push({
+			included: path.extname(config.libraries[item]) === '.js',
+			pattern: path.join("./builds/client/libs/", path.basename(config.libraries[item]))
+		});
+	}
+	
+	//Setup karma configuration
 	var server = new Karma({
 		basePath: '',
 		
@@ -69,7 +80,9 @@ gulp.task('client.test.karma', function(done){
 		},
 		
 		//Files
-		files: [ { pattern: './karma.shim.js' } ],
+		files: [
+			{ pattern: './karma.shim.js' }
+		].concat(libs),
 		preprocessors: { './karma.shim.js': ['webpack', 'sourcemap'] },
 		
 		//Webpack
