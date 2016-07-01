@@ -46,10 +46,27 @@ gulp.task('client.test.karma', function(done){
 		],
 		
 		//Settings
-		browsers: ['PhantomJS'],
+		browsers: ['PhantomJS2'],
 		colors: true,
 		autoWatch: false,
 		singleRun: true,
+		
+		//PhantomJS
+		customLaunchers: {
+			PhantomJS2: {
+				base: 'PhantomJS',
+				options: {
+					settings: {
+						webSecurityEnabled: false
+					}
+				},
+				flags: [
+					'--web-security=false',
+					'--ignore-ssl-errors=true'	
+				],
+				debug: false
+			}
+		},
 		
 		//Files
 		files: [ { pattern: './karma.shim.js' } ],

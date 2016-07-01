@@ -76,6 +76,7 @@ gulp.task('client.build.webpack', function(done) {
 			new webpack.DefinePlugin({
 				'process.env': {
 					'ENV': JSON.stringify(process.env.NODE_ENV),
+					'CONFIG': JSON.stringify(config)
 				}
 			})
 		]
