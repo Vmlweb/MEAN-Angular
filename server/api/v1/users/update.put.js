@@ -1,11 +1,11 @@
 //Modules
-var async = require("async");
-var router = require("express").Router();
+var async = require('async');
+var router = require('express').Router();
 
 //Models
-var User = require(__models + "/user.js");
+var User = require(__models + '/user.js');
 
-router.put("/v1/users", function (req, res, next){	
+router.put('/v1/users', function (req, res, next){	
 	
 	//Check for all required parameters
 	var userId = req.body.userId || null;
@@ -13,9 +13,9 @@ router.put("/v1/users", function (req, res, next){
 	var email = req.body.email || null;
 	
 	//Validate parameter fields
-	if (userId === "" || userId === null){ return next("User identifier must be given"); } 
-	if (username === "" || username === null){ return next("Username must be given"); }
-	if (email === "" || email === null){ return next("E-mail address must be given"); }
+	if (userId === '' || userId === null){ return next('User identifier must be given'); } 
+	if (username === '' || username === null){ return next('Username must be given'); }
+	if (email === '' || email === null){ return next('E-mail address must be given'); }
 	
 	//Start async operations	
 	async.waterfall([

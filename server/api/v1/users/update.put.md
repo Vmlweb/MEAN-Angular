@@ -14,9 +14,9 @@ Update a specific users details.
 
 ```
 {
-	userId: "607f1f77bcf86cd799439013",
-	username: "NewUsername",
-	email: "NewEmail@NewEmail.com"
+	userId: '607f1f77bcf86cd799439013',
+	username: 'NewUsername',
+	email: 'NewEmail@NewEmail.com'
 }
 ```
 

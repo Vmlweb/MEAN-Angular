@@ -1,5 +1,5 @@
 //Modules
-var mongoose = require("mongoose");
+var mongoose = require('mongoose');
 
 //Schema
 var schema = new mongoose.Schema({
@@ -8,4 +8,4 @@ var schema = new mongoose.Schema({
 });
 
 //Model
-module.exports = mongoose.model("Users", schema);
+module.exports = mongoose.model('Users', schema);

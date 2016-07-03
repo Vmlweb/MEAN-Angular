@@ -1,18 +1,18 @@
 //Modules
-var url = require("url");
-var request = require("request");
+var url = require('url');
+var request = require('request');
 
 //Includes
 var config = require(__config);
 
 //Models
-var User = require(__models + "/user.js");
+var User = require(__models + '/user.js');
 
 //Request prototype
 var startRequest = function(params, checks){
 	request({
-		url: url.resolve("http://" + config.http.url + ":" + config.http.port.internal, "/api/v1/users"),
-		method: "POST",
+		url: url.resolve('http://' + config.http.url + ':' + config.http.port.internal, '/api/v1/users'),
+		method: 'POST',
 		json: true,
 		body: params
 	}, function (err, res, body) {
@@ -26,20 +26,20 @@ var startRequest = function(params, checks){
 	});
 };
 
-describe("Insert Users", function(){
+describe('Insert Users', function(){
 	
 	//! Positive Tests
 	
-	describe("Positive Tests", function(){
+	describe('Positive Tests', function(){
 		
-		it("should insert details for user", function(done){
+		it('should insert details for user', function(done){
 			startRequest({
-				username: "NewUsername",
-				email: "NewEmail@NewEmail.com"
+				username: 'NewUsername',
+				email: 'NewEmail@NewEmail.com'
 			}, function(body){
 				
 				//Check that user was inserted to database
-				User.find({ username: "NewUsername", email: "NewEmail@NewEmail.com" }, function(err){
+				User.find({ username: 'NewUsername', email: 'NewEmail@NewEmail.com' }, function(err){
 					done();
 				});
 			});
@@ -50,15 +50,15 @@ describe("Insert Users", function(){
 	
 	//! Negative Tests
 	
-	describe("Negative Tests", function(){
+	describe('Negative Tests', function(){
 		
-		it("should return error if no username is given", function(done){
+		it('should return error if no username is given', function(done){
 			startRequest({
-				email: "NewEmail@NewEmail.com"
+				email: 'NewEmail@NewEmail.com'
 			}, function(body){
 				
 				//Check error was correct
-				expect(body.error).toBe("Username must be given");
+				expect(body.error).toBe('Username must be given');
 				
 				done();
 			});

@@ -13,8 +13,8 @@ Insert a new user into the database.
 
 ```
 {
-	username: "MyUsername",
-	email: "MyEmail@MyEmail.com"	
+	username: 'MyUsername',
+	email: 'MyEmail@MyEmail.com'	
 }
 ```
 

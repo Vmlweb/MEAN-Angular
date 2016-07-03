@@ -1,19 +1,19 @@
 //Modules
-var url = require("url");
-var request = require("request");
-var querystring = require("querystring");
+var url = require('url');
+var request = require('request');
+var querystring = require('querystring');
 
 //Includes
 var config = require(__config);
 
 //Models
-var User = require(__models + "/user.js");
+var User = require(__models + '/user.js');
 
 //Request prototype
 var startRequest = function(params, checks){
 	request({
-		url: url.resolve("http://" + config.http.url + ":" + config.http.port.internal, "/api/v1/users?") + querystring.stringify(params),
-		method: "DELETE",
+		url: url.resolve('http://' + config.http.url + ':' + config.http.port.internal, '/api/v1/users?') + querystring.stringify(params),
+		method: 'DELETE',
 		json: true
 	}, function (err, res, body) {
 		
@@ -26,19 +26,19 @@ var startRequest = function(params, checks){
 	});
 };
 
-describe("Delete User", function(){
+describe('Delete User', function(){
 	
 	//! Positive Tests
 	
-	describe("Positive Tests", function(){
+	describe('Positive Tests', function(){
 		
-		it("should delete user", function(done){
+		it('should delete user', function(done){
 			startRequest({
-				userId: "607f1f77bcf86cd799439013",
+				userId: '607f1f77bcf86cd799439013',
 			}, function(body){
 				
 				//Check that user was removed from database
-				User.findById("607f1f77bcf86cd799439013", function(err, user){
+				User.findById('607f1f77bcf86cd799439013', function(err, user){
 					
 					//Check user doesnt exist
 					expect(user).toBe(null);
@@ -53,13 +53,13 @@ describe("Delete User", function(){
 	
 	//! Negative Tests
 	
-	describe("Negative Tests", function(){
+	describe('Negative Tests', function(){
 		
-		it("should return error if no user id is given", function(done){
+		it('should return error if no user id is given', function(done){
 			startRequest({}, function(body){
 				
 				//Check error was correct
-				expect(body.error).toBe("User identifier must be given");
+				expect(body.error).toBe('User identifier must be given');
 				
 				done();
 			});

@@ -1,11 +1,11 @@
 //Modules
-var moment = require("moment");
+var moment = require('moment');
 
 //Constructor
 function Time(){
 	
 	//Properties
-	this.format = "ddd, hA";
+	this.format = 'ddd, hA';
 }
 
 //Methods

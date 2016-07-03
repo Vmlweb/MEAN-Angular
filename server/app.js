@@ -1,39 +1,39 @@
 //Modules
-var path = require("path");
-var async = require("async");
+var path = require('path');
+var async = require('async');
 
 //Config
-var dirs = require("./dirs.js");
+var dirs = require('./dirs.js');
 var config = require(__config);
 
 //Setup
 module.exports = {
-	logger: require(__app + "/logger.js"),
-	mongo: require(__app + "/mongo.js"),
-	express: require(__app + "/express.js")
+	logger: require(__app + '/logger.js'),
+	mongo: require(__app + '/mongo.js'),
+	express: require(__app + '/express.js')
 };
 
 //Setup mocks
-if (process.env.NODE_ENV === "testing"){
-	require(__app + "/time.test.js");
+if (process.env.NODE_ENV === 'testing'){
+	require(__app + '/time.test.js');
 	
-	log.info("Setup test mocks and stubs");
+	log.info('Setup test mocks and stubs');
 }
 
 //Shutdown services
 var shutdown = function(callback){
-	log.info("Shutting down gracefully...");
+	log.info('Shutting down gracefully...');
 	
 	//Run all shutdown tasks in series
 	async.series([
 		function(done){
 		    
 			//HTTP
-		    if (module.exports.express.hasOwnProperty("http")){
+		    if (module.exports.express.hasOwnProperty('http')){
 			    
 			    //Destroy existing keep-alive connections
 				setTimeout(function(){
-					log.info("HTTP connections killed");
+					log.info('HTTP connections killed');
 					for (var i in module.exports.express.connections.http){
 						module.exports.express.connections.http[i].destroy();
 					}
@@ -49,11 +49,11 @@ var shutdown = function(callback){
 		}, function(done){
 
 			//HTTPS
-			if (module.exports.express.hasOwnProperty("https")){
+			if (module.exports.express.hasOwnProperty('https')){
 			
 				//Destroy existing keep-alive connections
 				setTimeout(function(){
-					log.info("HTTPS connections killed");
+					log.info('HTTPS connections killed');
 					for (var i in module.exports.express.connections.https){
 						module.exports.express.connections.https[i].destroy();
 					}
@@ -98,12 +98,12 @@ var force = function(error) {
 	
 	//Shutdown timeout after 4 seconds
 	setTimeout(function() {
-		log.error("Shutdown timed out, force quitting");
+		log.error('Shutdown timed out, force quitting');
 		process.exit();
 	}, 2000);
 };
 module.exports.force = force;
 
 //Intercept kill and end signals
-process.on("SIGTERM", function(){ shutdown(force); });
-process.on("SIGINT", function(){ shutdown(force); });
+process.on('SIGTERM', function(){ shutdown(force); });
+process.on('SIGINT', function(){ shutdown(force); });
