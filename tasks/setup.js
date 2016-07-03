@@ -102,7 +102,7 @@ gulp.task('setup.docker.nodejs', function(done){
 //! Certificates
 
 //Certificate subject string
-var subj = ''/C=' + config.certs.details.country + '/ST=' + config.certs.details.state + '/L=' + config.certs.details.city + '/O=' + config.certs.details.organisation + '/CN=' + config.certs.details.hostname + ''';
+var subj = '"/C=' + config.certs.details.country + '/ST=' + config.certs.details.state + '/L=' + config.certs.details.city + '/O=' + config.certs.details.organisation + '/CN=' + config.certs.details.hostname + '"';
 
 //Generate certificates and key files
 gulp.task('setup.certs', shell.task([
@@ -120,9 +120,9 @@ gulp.task('setup.certs', shell.task([
 
 //Clean docker volumes
 gulp.task('setup.clean', shell.task([
-	'docker stop $(docker ps -a -q)',
-	'docker rm $(docker ps -a -q)',
-	'docker rmi $(docker images -q)',
+	'docker stop $(docker ps -a -q) || true',
+	'docker rm $(docker ps -a -q) || true',
+	'docker rmi $(docker images -q) || true',
 	'docker run -v /var/run/docker.sock:/var/run/docker.sock -v /var/lib/docker:/var/lib/docker --rm martin/docker-cleanup-volumes'
 ],{
 	verbose: true,

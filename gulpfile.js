@@ -80,7 +80,8 @@ gulp.task('reload', gulp.series('app.stop', 'app.start'));
 gulp.task('reset', gulp.series('database.reset'));
  
 //! Setup Convenience
-gulp.task('clean', gulp.parallel('build.reset', 'dist.reset', 'setup.clean'));
+gulp.task('clean', gulp.parallel('build.reset', 'dist.reset'));
+gulp.task('purge', gulp.parallel('setup.clean'));
 gulp.task('certs', gulp.parallel('setup.certs'));
 gulp.task('docker', gulp.parallel('setup.docker'));
 
