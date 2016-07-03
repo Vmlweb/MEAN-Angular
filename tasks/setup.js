@@ -38,7 +38,6 @@ gulp.task("setup.dependant.npm", shell.task([
 //Install semantic dependancies
 gulp.task("setup.dependant.semantic", shell.task([
 	"npm install --production",
-	"rm -r node_modules/gulp-header",
 	"gulp install"
 ],{
 	verbose: true,
@@ -109,7 +108,7 @@ gulp.task("setup.certs", shell.task([
 	"openssl req -new -newkey rsa:2048 -days 1825 -nodes -x509 -subj " + subj + " -keyout " + config.database.ssl.key + " -out " + config.database.ssl.cert,
 	"openssl rand -base64 741 > " + config.database.repl.key + " && chmod 600 " + config.database.repl.key,
 	"cat " + config.database.ssl.key + " " + config.database.ssl.cert + " > " + config.database.ssl.pem,
-	"chown 999:999 " + config.https.ssl.cert + " " + config.database.ssl.cert + " " + config.database.repl.key + " " + config.database.ssl.pem + " || true"
+	"sudo chown 999:999 " + config.https.ssl.cert + " " + config.database.ssl.cert + " " + config.database.repl.key + " " + config.database.ssl.pem + " || true"
 ],{
 	verbose: true,
 	cwd: "certs"
