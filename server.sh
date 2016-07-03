@@ -56,31 +56,6 @@ elif [ "$1" == "reset" ]; then
 	docker stop @@NAME_db
 	docker rm @@NAME_db
 	
-elif [ "$1" == "install" ]; then
-	
-	# Install NodeJS and Docker on Ubuntu 15.10
-	
-	sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-	sudo echo "deb https://apt.dockerproject.org/repo ubuntu-wily main" > /etc/apt/sources.list.d/docker.list
-	sudo curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
-	
-	sudo apt-get -y update && apt-get -y upgrade
-	sudo apt-get -y purge lxc-docker
-	sudo apt-cache policy docker-engine
-	sudo apt-get install -y nodejs linux-image-extra-$(uname -r) docker-engine libfontconfig libjpeg8
-	sudo service docker start
-	
-	# Install Docker Compose on Ubuntu 15.10
-	
-	sudo curl -L https://github.com/docker/compose/releases/download/1.5.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-	sudo chmod +x /usr/local/bin/docker-compose
-	
-	# Install missing lib issue with Gulp 4 for Ubuntu 15.10
-	
-	wget http://security.ubuntu.com/ubuntu/pool/main/i/icu/libicu52_52.1-8ubuntu0.2_amd64.deb
-	sudo dpkg -i libicu52_52.1-8ubuntu0.2_amd64.deb
-	rm libicu52_52.1-8ubuntu0.2_amd64.deb
-	
 elif [ "$1" == "clean" ]; then
 	
 	# Clean temporary Docker files and images
@@ -92,6 +67,6 @@ elif [ "$1" == "clean" ]; then
 	
 else
 
-	echo "Commands are reset, start, stop, install and clean"
+	echo "Commands are start, stop, app, app_stop, db, db_stop, reset and clean"
 	
 fi

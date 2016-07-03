@@ -36,7 +36,7 @@ gulp.task('client.test.karma', function(done){
 	for (var item in config.libraries){
 		libs.push({
 			included: path.extname(config.libraries[item]) === '.js',
-			pattern: path.join("./builds/client/libs/", path.basename(config.libraries[item]))
+			pattern: path.join('./builds/client/libs/', path.basename(config.libraries[item]))
 		});
 	}
 	
@@ -125,7 +125,7 @@ gulp.task('client.test.remap', function(done){
 			clover: 'logs/coverage/client/clover.xml'
 		}
 	}))
-	.on("end", () => {
+	.on('end', () => {
 		global.shutdown(done);
     });
 });

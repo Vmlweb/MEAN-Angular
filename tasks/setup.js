@@ -1,8 +1,8 @@
 //Modules
-var gulp = require("gulp");
-var shell = require("gulp-shell");
-var docker = require("dockerode")();
-var config = require("../config.js");
+var gulp = require('gulp');
+var shell = require('gulp-shell');
+var docker = require('dockerode')();
+var config = require('../config.js');
 
 /*! Tasks 
 - setup.dependant
@@ -19,59 +19,61 @@ var config = require("../config.js");
 - setup.docker.mongodb
 
 - setup.certs
+
+- setup.clean
 */
 
 //! Dependancies
-gulp.task("setup.dependant", gulp.series(
-	gulp.series("setup.dependant.npm"),
-	gulp.parallel("setup.dependant.semantic", "setup.dependant.bower")
+gulp.task('setup.dependant', gulp.series(
+	gulp.series('setup.dependant.npm'),
+	gulp.parallel('setup.dependant.semantic', 'setup.dependant.bower')
 ));
 
 //Install npm dependancies
-gulp.task("setup.dependant.npm", shell.task([
-	"npm install --save-dev --ignore-scripts semantic-ui",
+gulp.task('setup.dependant.npm', shell.task([
+	'npm install --save-dev --ignore-scripts semantic-ui',
 ],{
 	verbose: true
 }));
 
 
 //Install semantic dependancies
-gulp.task("setup.dependant.semantic", shell.task([
-	"npm install --production",
-	"gulp install"
+gulp.task('setup.dependant.semantic', shell.task([
+	'npm install --production',
+	'gulp install'
 ],{
 	verbose: true,
-	cwd: "node_modules/semantic-ui"
+	cwd: 'node_modules/semantic-ui'
 }));
 
 //Install bower dependancies
-gulp.task("setup.dependant.bower", shell.task([
-	"bower install --config.analytics=false --allow-root"
+gulp.task('setup.dependant.bower', shell.task([
+	'bower install --config.analytics=false --allow-root'
 ]));
 
 //! Typings Typings
-gulp.task("setup.typings", gulp.parallel("setup.typings.server", "setup.typings.client"));
+gulp.task('setup.typings', gulp.parallel('setup.typings.server', 'setup.typings.client'));
 
 //Install typings server typings
-gulp.task("setup.typings.server", shell.task([
-	"typings install"
+gulp.task('setup.typings.server', shell.task([
+	'typings install'
 ],{
-	cwd: "server"
+	cwd: 'server'
 }));
 
 //Install typings client typings
-gulp.task("setup.typings.client", shell.task([
-	"typings install"
+gulp.task('setup.typings.client', shell.task([
+	'typings install'
 ],{
-	cwd: "client"
+	cwd: 'client'
 }));
 
 //! Docker Dependancies
-gulp.task("setup.docker", gulp.series("setup.docker.mongodb", "setup.docker.nodejs"));
+gulp.task('setup.docker', gulp.series('setup.docker.mongodb', 'setup.docker.nodejs'));
 
 //Pull required mongodb docker images
-gulp.task("setup.docker.mongodb", function(done){
-	docker.pull("mongo:latest", function (err, stream) {
+gulp.task('setup.docker.mongodb', function(done){
+	docker.pull('mongo:latest', function (err, stream) {
 		if (err){ throw err; }
 		
 		//Track progress
@@ -84,8 +86,8 @@ gulp.task("setup.docker.mongodb", function(done){
 });
 
 //Pull required nodejs docker images
-gulp.task("setup.docker.nodejs", function(done){
-	docker.pull("node:slim", {Privileged: true}, function (err, stream) {
+gulp.task('setup.docker.nodejs', function(done){
+	docker.pull('node:slim', {Privileged: true}, function (err, stream) {
 		if (err){ throw err; }
 		
 		//Track progress
@@ -100,16 +102,28 @@ gulp.task("setup.docker.nodejs", function(done){
 //! Certificates
 
 //Certificate subject string
-var subj = "'/C=" + config.certs.details.country + "/ST=" + config.certs.details.state + "/L=" + config.certs.details.city + "/O=" + config.certs.details.organisation + "/CN=" + config.certs.details.hostname + "'";
+var subj = ''/C=' + config.certs.details.country + '/ST=' + config.certs.details.state + '/L=' + config.certs.details.city + '/O=' + config.certs.details.organisation + '/CN=' + config.certs.details.hostname + ''';
 
 //Generate certificates and key files
-gulp.task("setup.certs", shell.task([
-	"openssl req -new -newkey rsa:2048 -days 1825 -nodes -x509 -subj " + subj + " -keyout " + config.https.ssl.key + " -out " + config.https.ssl.cert,
-	"openssl req -new -newkey rsa:2048 -days 1825 -nodes -x509 -subj " + subj + " -keyout " + config.database.ssl.key + " -out " + config.database.ssl.cert,
-	"openssl rand -base64 741 > " + config.database.repl.key + " && chmod 600 " + config.database.repl.key,
-	"cat " + config.database.ssl.key + " " + config.database.ssl.cert + " > " + config.database.ssl.pem,
-	"sudo chown 999:999 " + config.https.ssl.cert + " " + config.database.ssl.cert + " " + config.database.repl.key + " " + config.database.ssl.pem + " || true"
+gulp.task('setup.certs', shell.task([
+	'openssl req -new -newkey rsa:2048 -days 1825 -nodes -x509 -subj ' + subj + ' -keyout ' + config.https.ssl.key + ' -out ' + config.https.ssl.cert,
+	'openssl req -new -newkey rsa:2048 -days 1825 -nodes -x509 -subj ' + subj + ' -keyout ' + config.database.ssl.key + ' -out ' + config.database.ssl.cert,
+	'openssl rand -base64 741 > ' + config.database.repl.key + ' && chmod 600 ' + config.database.repl.key,
+	'cat ' + config.database.ssl.key + ' ' + config.database.ssl.cert + ' > ' + config.database.ssl.pem,
+	'sudo chown 999:999 ' + config.https.ssl.cert + ' ' + config.database.ssl.cert + ' ' + config.database.repl.key + ' ' + config.database.ssl.pem + ' || true'
 ],{
 	verbose: true,
-	cwd: "certs"
+	cwd: 'certs'
+}));
+
+//! Clean
+
+//Clean docker volumes
+gulp.task('setup.clean', shell.task([
+	'docker stop $(docker ps -a -q)',
+	'docker rm $(docker ps -a -q)',
+	'docker rmi $(docker images -q)',
+	'docker run -v /var/run/docker.sock:/var/run/docker.sock -v /var/lib/docker:/var/lib/docker --rm martin/docker-cleanup-volumes'
+],{
+	verbose: true,
 }));

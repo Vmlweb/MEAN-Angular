@@ -85,7 +85,7 @@ gulp.task('server.test.jasmine', function(done){
 			})
 		]
 	}))
-	.on("error", (err) => {
+	.on('error', (err) => {
 		beep(2);
 		setTimeout(() => {
 			done(err);
@@ -95,7 +95,7 @@ gulp.task('server.test.jasmine', function(done){
 		dir: 'logs/coverage/server',
 		reporters: ['html', 'text-summary', 'clover', 'json']
 	}))
-	.on("end", () => {
+	.on('end', () => {
 		beep();
 		done();
     });
