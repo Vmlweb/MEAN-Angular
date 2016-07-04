@@ -13,15 +13,17 @@ router.delete('/v1/users', function (req, res, next){
 	if (userId === '' || userId === null){ return next('User identifier must be given'); } 
 	
 	//Find user in database
-	User.findById(userId).remove(function (err, user){
-		if (user){
-			
-			//Send response
-			res.json({});
-			
-		}else{
-			return next(err);
-		}
+	User.findById(userId).exec(function(err, user){
+		user.remove(function (err, user){
+			if (user){
+				
+				//Send response
+				res.json({});
+				
+			}else{
+				return next(err);
+			}
+		});
 	});
 });
 

@@ -68,8 +68,8 @@ module.exports = {
 	
 	//! Server Test Plans
 	tests: {
-		v1: [ '/tests/', '/api/v1/**/' ],
-		users: [ '/tests/', '/api/v1/users/**/' ]
+		v1: [ '/api/v1/**/' ],
+		users: [ '/api/v1/users/**/' ]
 	},
 	
 	//! API Documentation

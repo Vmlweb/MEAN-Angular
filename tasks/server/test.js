@@ -72,7 +72,8 @@ gulp.task('server.test.jasmine', function(done){
 	
 	//Execute tests and generate coverage reports
 	gulp.src([
-		'builds/server/tests/setup.test.js'
+		'builds/server/tests/setup.test.js',
+		'builds/server/tests/**/*.test.js'
 	].concat(includes))
 	.pipe(jasmine({
 		reporter: [
