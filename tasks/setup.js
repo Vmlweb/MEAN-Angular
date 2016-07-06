@@ -1,8 +1,8 @@
 //Modules
-var gulp = require('gulp');
-var shell = require('gulp-shell');
-var docker = require('dockerode')();
-var config = require('../config.js');
+const gulp = require('gulp');
+const shell = require('gulp-shell');
+const docker = require('dockerode')();
+const config = require('../config.js');
 
 /*! Tasks 
 - setup.dependant
@@ -102,7 +102,7 @@ gulp.task('setup.docker.nodejs', function(done){
 //! Certificates
 
 //Certificate subject string
-var subj = '"/C=' + config.certs.details.country + '/ST=' + config.certs.details.state + '/L=' + config.certs.details.city + '/O=' + config.certs.details.organisation + '/CN=' + config.certs.details.hostname + '"';
+let subj = '"/C=' + config.certs.details.country + '/ST=' + config.certs.details.state + '/L=' + config.certs.details.city + '/O=' + config.certs.details.organisation + '/CN=' + config.certs.details.hostname + '"';
 
 //Generate certificates and key files
 gulp.task('setup.certs', shell.task([
@@ -123,7 +123,7 @@ gulp.task('setup.clean', shell.task([
 	'docker stop $(docker ps -a -q) || true',
 	'docker rm $(docker ps -a -q) || true',
 	'docker rmi $(docker images -q) || true',
-	'docker run -v /var/run/docker.sock:/var/run/docker.sock -v /var/lib/docker:/var/lib/docker --rm martin/docker-cleanup-volumes'
+	'docker run -v /let/run/docker.sock:/let/run/docker.sock -v /let/lib/docker:/let/lib/docker --rm martin/docker-cleanup-volumes'
 ],{
 	verbose: true,
 }));

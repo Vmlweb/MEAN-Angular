@@ -1,10 +1,10 @@
 //Modules
-var gulp = require('gulp');
-var reference = require('undertaker-forward-reference');
-var docker = require('dockerode')();
+const gulp = require('gulp');
+const reference = require('undertaker-forward-reference');
+const docker = require('dockerode')();
 
 //Config
-var config = require('./config.js');
+const config = require('./config.js');
 gulp.registry(reference());
 
 //! Tasks
@@ -97,7 +97,7 @@ gulp.task('env.test', function(done) { process.env.NODE_ENV = 'test'; done(); })
 gulp.task('env.dist', function(done) { process.env.NODE_ENV = 'dist'; done(); });
 
 //! Test Plans
-for (var i in config.tests){
+for (let i in config.tests){
 	(function(i) {
 		gulp.task(i + '.test', gulp.series(function (done){
 			process.env.test = i;
@@ -107,9 +107,9 @@ for (var i in config.tests){
 }
 
 //Stop database and app containers on exit
-var shutdown = function(){
-	var app = docker.getContainer(config.name + '_app');
-	var db = docker.getContainer(config.name + '_db');
+let shutdown = function(){
+	let app = docker.getContainer(config.name + '_app');
+	let db = docker.getContainer(config.name + '_db');
 	app.stop({ t: 5 }, function(err, data){
 		app.remove({ force: true }, function(err, data){
 			db.stop({ t: 5 }, function(err, data){

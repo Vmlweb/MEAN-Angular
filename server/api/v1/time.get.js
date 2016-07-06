@@ -1,16 +1,16 @@
 //Modules
-var router = require('express').Router();
-var moment = require('moment');
+const router = require('express').Router();
+const moment = require('moment');
 
 //Includes
-var Time = require(__time);
+const Time = require(__time);
 
 router.get('/v1/time', function (req, res, next){	
 	
 	//Create new time object, set format and retrieve value
-	var time = new Time();
+	let time = new Time();
 	time.format = 'dddd, MMMM Do YYYY, h:mm:ss a';
-	var currentTime = time.getTime();
+	let currentTime = time.getTime();
 	
 	//Send time response
 	res.json({ time: currentTime });

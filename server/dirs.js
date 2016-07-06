@@ -1,5 +1,5 @@
 //Modules
-var path = require('path');
+const path = require('path');
 
 //Directories
 global.__api = path.join(__dirname, 'api');

@@ -1,14 +1,14 @@
 //Modules
-var fs = require('fs');
-var path = require('path');
-var moment = require('moment');
-var winston = require('winston');
-var winstonRotate = require('winston-daily-rotate-file');
+const fs = require('fs');
+const path = require('path');
+const moment = require('moment');
+const winston = require('winston');
+const winstonRotate = require('winston-daily-rotate-file');
 
 //Create log paths
-var errorPath = path.join(__logs, 'errors');
-var infoPath = path.join(__logs, 'info');
-var accessPath = path.join(__logs, 'access');
+let errorPath = path.join(__logs, 'errors');
+let infoPath = path.join(__logs, 'info');
+let accessPath = path.join(__logs, 'access');
 
 //Check if directories exist and create
 try { fs.statSync(errorPath); } catch(e) { fs.mkdirSync(errorPath); }
@@ -16,8 +16,8 @@ try { fs.statSync(infoPath); } catch(e) { fs.mkdirSync(infoPath); }
 try { fs.statSync(accessPath); } catch(e) { fs.mkdirSync(accessPath); }
 
 //Logging output formatter
-var formatter = function(options){
-	var format = '(' + moment().format('YYYY-MM-DD_HH-mm-ss') + ') ';
+let formatter = function(options){
+	let format = '(' + moment().format('YYYY-MM-DD_HH-mm-ss') + ') ';
     format += '[' + winston.config.colorize(options.level,options.level.toUpperCase()) + '] ';
     format += options.message;
     if (options.meta.length > 0){
@@ -27,7 +27,7 @@ var formatter = function(options){
 };
 
 //Setup log file transports
-var transports = [
+let transports = [
 	new winstonRotate({
 	    name: 'error',
 	    level: 'error',
@@ -75,7 +75,7 @@ if (process.env.NODE_ENV != 'silent'){
 }
 
 //Setup winston logger and stream transports
-var logger = new winston.Logger({
+let logger = new winston.Logger({
     transports: transports,
     exitOnError: false
 });

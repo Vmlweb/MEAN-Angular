@@ -1,20 +1,20 @@
 //Modules
-var gulp = require('gulp');
-var del = require('del');
-var fs = require('fs');
-var async = require('async');
-var path = require('path');
-var docker = require('dockerode')()
-var recursive = require('recursive-readdir');
+const gulp = require('gulp');
+const del = require('del');
+const fs = require('fs');
+const async = require('async');
+const path = require('path');
+const docker = require('dockerode')()
+const recursive = require('recursive-readdir');
 
 //Config
-var config = require('../config.js');
+const config = require('../config.js');
 
 /*! Tasks 
 - database.start
 - database.test
 - database.mock
-- database.stop
+- database.stopconst
 
 - database.reset
 - database.reset.clean
@@ -24,7 +24,7 @@ var config = require('../config.js');
 //! Database Server
 
 //Prepare command
-var cmd = ['mongod', '--auth', '--keyFile', path.join('/home/certs/', config.database.repl.key), '--replSet', config.database.repl.name];
+let cmd = ['mongod', '--auth', '--keyFile', path.join('/home/certs/', config.database.repl.key), '--replSet', config.database.repl.name];
 
 //Prepare SSL
 if (config.database.ssl.enabled){
@@ -104,9 +104,9 @@ gulp.task('database.mock', function(done){
 	recursive(path.join(__dirname, '../builds/server/tests'), ['!*.test.js', 'setup.test.js'], function (err, files) {
 		
 		//Define testing capture functions
-		var beforeAlls = [];
-		var beforeEachs = [];
-		var afterAlls = [];
+		let beforeAlls = [];
+		let beforeEachs = [];
+		let afterAlls = [];
 		beforeAll = function(func){
 			beforeAlls.push(func);
 		};
@@ -147,7 +147,7 @@ gulp.task('database.mock', function(done){
 
 //Stop database server
 gulp.task('database.stop', function(done){
-	var container = docker.getContainer(config.name + '_db');
+	let container = docker.getContainer(config.name + '_db');
 	container.stop({ t: 5 }, function(err, data){
 		container.remove({ force: true }, function(err, data){
 			done();
@@ -170,10 +170,10 @@ gulp.task('database.reset.clean', function(done){
 
 //Reconfigure database with mongodb.js
 gulp.task('database.reset.config', function(done){
-	var container = docker.getContainer(config.name + '_db');
+	let container = docker.getContainer(config.name + '_db');
 	
 	//Prepare command
-	var cmd = ['mongo'];
+	let cmd = ['mongo'];
 	
 	//Prepare SSL
 	if (config.database.ssl.enabled){

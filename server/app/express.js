@@ -1,21 +1,21 @@
 //Modules
-var https = require('https');
-var http = require('http');
-var fs = require('fs');
-var path = require('path');
-var morgan = require('morgan');
-var recursive = require('recursive-readdir');
-var async = require('async');
-var bodyParser = require('body-parser');
-var helmet = require('helmet');
-var compression = require('compression');
-var filter = require('content-filter');
-var express = require('express');
-var app = express();
+const https = require('https');
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+const morgan = require('morgan');
+const recursive = require('recursive-readdir');
+const async = require('async');
+const bodyParser = require('body-parser');
+const helmet = require('helmet');
+const compression = require('compression');
+const filter = require('content-filter');
+const express = require('express');
+const app = express();
 module.exports = { app: app, connections: { http: {}, https: {} } };
 
 //Includes
-var config = require(__config);
+const config = require(__config);
 
 log.info('Express initialized');
 
@@ -39,7 +39,7 @@ if (config.http.hostname !== ''){
 	
 	//New connections
 	module.exports.http.on('connection', function(conn){
-		var key = conn.remoteAddress + ':' + conn.remotePort;
+		let key = conn.remoteAddress + ':' + conn.remotePort;
 	    module.exports.connections.http[key] = conn;
 	    conn.on('close', function() {
 		    delete module.exports.connections.http[key];
@@ -64,7 +64,7 @@ if (config.https.hostname !== '' && config.https.ssl.key !== '' && config.https.
 	
 	//New connections
 	module.exports.https.on('connection', function(conn){
-		var key = conn.remoteAddress + ':' + conn.remotePort;
+		let key = conn.remoteAddress + ':' + conn.remotePort;
 	    module.exports.connections.https[key] = conn;
 	    conn.on('close', function() {
 		    delete module.exports.connections.https[key];
@@ -87,8 +87,8 @@ log.info('Setup client static routes');
 recursive(__api, function (err, files) {
 	
 	//Remove all non router files
-	var includeFiles = [];
-	for (var i=0; i<files.length; i++){
+	let includeFiles = [];
+	for (let i=0; i<files.length; i++){
 		if (files[i].indexOf('.get.js') >= 0 ||
 			files[i].indexOf('.post.js') >= 0 ||
 			files[i].indexOf('.put.js') >= 0 ||
@@ -106,8 +106,8 @@ recursive(__api, function (err, files) {
 		log.info('Loaded ' + includeFiles.length + ' api endpoints');
 		
 		//Import individual api routers
-		for (var a=0; a<includeFiles.length; a++){
-			var route = require(includeFiles[a]);
+		for (let a=0; a<includeFiles.length; a++){
+			let route = require(includeFiles[a]);
 			app.use('/api', route);
 		}
 	}

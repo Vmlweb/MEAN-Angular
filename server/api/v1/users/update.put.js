@@ -1,16 +1,16 @@
 //Modules
-var async = require('async');
-var router = require('express').Router();
+const async = require('async');
+const router = require('express').Router();
 
 //Models
-var User = require(__models + '/user.js');
+const User = require(__models + '/user.js');
 
 router.put('/v1/users', function (req, res, next){	
 	
 	//Check for all required parameters
-	var userId = req.body.userId || null;
-	var username = req.body.username || null;
-	var email = req.body.email || null;
+	let userId = req.body.userId || null;
+	let username = req.body.username || null;
+	let email = req.body.email || null;
 	
 	//Validate parameter fields
 	if (userId === '' || userId === null){ return next('User identifier must be given'); } 

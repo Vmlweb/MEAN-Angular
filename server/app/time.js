@@ -1,5 +1,5 @@
 //Modules
-var moment = require('moment');
+const moment = require('moment');
 
 //Constructor
 function Time(){

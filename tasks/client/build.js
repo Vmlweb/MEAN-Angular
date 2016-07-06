@@ -1,14 +1,14 @@
 //Modules
-var gulp = require('gulp');
-var beep = require('beepbeep');
-var path = require('path');
-var webpack = require('webpack');
-var obfuscatorPlugin = require('webpack-js-obfuscator');
-var htmlPlugin = require('html-webpack-plugin');
-var typeCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
+const gulp = require('gulp');
+const beep = require('beepbeep');
+const path = require('path');
+const webpack = require('webpack');
+const obfuscatorPlugin = require('webpack-js-obfuscator');
+const htmlPlugin = require('html-webpack-plugin');
+const typeCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
 
 //Config
-var config = require('../../config.js');
+let config = require('../../config.js');
 
 /*! Tasks 
 - client.build
@@ -46,7 +46,7 @@ gulp.task('client.build.source', function(){
 
 //Compile source into a webpack
 gulp.task('client.build.webpack', function(done) {
-	var options = {
+	let options = {
 		
 		//File types
 		resolve: {
@@ -160,7 +160,7 @@ gulp.task('client.build.webpack', function(done) {
 	}
 	
 	//Setup callback for completion
-	var callback = function(err, stats) {
+	let callback = function(err, stats) {
 		
 		//Log output of build
 		console.log(stats.toString({
@@ -182,7 +182,7 @@ gulp.task('client.build.webpack', function(done) {
 	
 	//Compile and watch for changes if needed
 	global.webpack = options;
-	var pack = webpack(options);
+	let pack = webpack(options);
 	if (process.env.NODE_ENV === 'dev'){
 		pack.watch({
 			aggregateTimeout: 200,

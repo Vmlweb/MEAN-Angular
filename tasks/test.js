@@ -1,10 +1,10 @@
 //Modules
-var gulp = require('gulp');
-var path = require('path');
-var istanbul = require('istanbul')
+const gulp = require('gulp');
+const path = require('path');
+const istanbul = require('istanbul')
 
 //Config
-var config = require('../config.js');
+const config = require('../config.js');
 
 /*! Tasks 
 - test.merge
@@ -12,8 +12,8 @@ var config = require('../config.js');
 
 //Merge coverage reports
 gulp.task('test.merge', function(done){
-	var collector = new istanbul.Collector();
-	var reporter = new istanbul.Reporter(undefined, 'logs/coverage/merged');
+	let collector = new istanbul.Collector();
+	let reporter = new istanbul.Reporter(undefined, 'logs/coverage/merged');
     
     //Add coverage json files
     collector.add(require(path.join(__dirname, '../logs/coverage/client/coverage-final.json')));

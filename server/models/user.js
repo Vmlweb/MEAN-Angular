@@ -1,8 +1,8 @@
 //Modules
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 //Schema
-var schema = new mongoose.Schema({
+let schema = new mongoose.Schema({
 	username: String,
 	email: String,
 });

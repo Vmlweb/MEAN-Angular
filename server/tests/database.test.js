@@ -1,9 +1,9 @@
 //Modules
-var async = require('async');
-var path = require('path');
+const async = require('async');
+const path = require('path');
 
 //Includes
-var mongo = require(__app + '/mongo.js');
+const mongo = require(__app + '/mongo.js');
 
 //Setup data
 let data = [
@@ -11,7 +11,7 @@ let data = [
 ];
 
 //Mark a table index as pending reset
-var markModified = function(i, next){
+let markModified = function(i, next){
 	if (modified.indexOf(i) < 0){
 		modified.push(i);
 	}

@@ -1,10 +1,10 @@
 //Modules
-var path = require('path');
-var async = require('async');
+const path = require('path');
+const async = require('async');
 
 //Config
-var dirs = require('./dirs.js');
-var config = require(__config);
+const dirs = require('./dirs.js');
+const config = require(__config);
 
 //Setup
 module.exports = {
@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'testing'){
 }
 
 //Shutdown services
-var shutdown = function(callback){
+let shutdown = function(callback){
 	log.info('Shutting down gracefully...');
 	
 	//Run all shutdown tasks in series
@@ -34,7 +34,7 @@ var shutdown = function(callback){
 			    //Destroy existing keep-alive connections
 				setTimeout(function(){
 					log.info('HTTP connections killed');
-					for (var i in module.exports.express.connections.http){
+					for (let i in module.exports.express.connections.http){
 						module.exports.express.connections.http[i].destroy();
 					}
 				}, 3000).unref();
@@ -54,7 +54,7 @@ var shutdown = function(callback){
 				//Destroy existing keep-alive connections
 				setTimeout(function(){
 					log.info('HTTPS connections killed');
-					for (var i in module.exports.express.connections.https){
+					for (let i in module.exports.express.connections.https){
 						module.exports.express.connections.https[i].destroy();
 					}
 				}, 3000).unref();
@@ -86,7 +86,7 @@ var shutdown = function(callback){
 module.exports.shutdown = shutdown;
 
 //Graceful shutdown
-var force = function(error) {
+let force = function(error) {
 	
 	//Exit with or without error
 	if (error){

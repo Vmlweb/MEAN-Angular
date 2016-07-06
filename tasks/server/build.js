@@ -1,6 +1,6 @@
 //Modules
-var gulp = require('gulp');
-var ts = require('gulp-typescript');
+const gulp = require('gulp');
+const ts = require('gulp-typescript');
 
 /*! Tasks 
 - server.build
@@ -26,7 +26,7 @@ gulp.task('server.build.source', function(){
 });
 
 //Create typescript project
-var tsProject = ts.createProject({
+let tsProject = ts.createProject({
 	typescript: require('typescript'),
 	target: 'es5',
 	module: 'commonjs',

@@ -1,13 +1,13 @@
 //Modules
-var router = require('express').Router();
+const router = require('express').Router();
 
 //Models
-var User = require(__models + '/user.js');
+const User = require(__models + '/user.js');
 
 router.get('/v1/users', function (req, res, next){	
 	
 	//Check for all required parameters
-	var limit = req.query.limit ? parseInt(req.query.limit) : -1;
+	let limit = req.query.limit ? parseInt(req.query.limit) : -1;
 	
 	//Validate parameter fields
 	if (limit < 0){ return next('Limit must be an integer'); } 
@@ -19,8 +19,8 @@ router.get('/v1/users', function (req, res, next){
 		}else{
 		
 			//Compile list of response users
-			var responseUsers = [];
-			for (var i=0; i<users.length; i++){
+			let responseUsers = [];
+			for (let i=0; i<users.length; i++){
 				responseUsers.push({
 					userId: users[i].id.toString(),
 					username: users[i].username,

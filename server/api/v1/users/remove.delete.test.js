@@ -1,16 +1,16 @@
 //Modules
-var url = require('url');
-var request = require('request');
-var querystring = require('querystring');
+const url = require('url');
+const request = require('request');
+const querystring = require('querystring');
 
 //Includes
-var config = require(__config);
+const config = require(__config);
 
 //Models
-var User = require(__models + '/user.js');
+const User = require(__models + '/user.js');
 
 //Request prototype
-var startRequest = function(params, checks){
+let startRequest = function(params, checks){
 	request({
 		url: url.resolve('http://' + config.http.url + ':' + config.http.port.internal, '/api/v1/users?') + querystring.stringify(params),
 		method: 'DELETE',

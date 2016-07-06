@@ -1,11 +1,11 @@
 //Modules
-var gulp = require('gulp');
-var shell = require('gulp-shell');
-var del = require('del');
-var docker = require('dockerode')();
+const gulp = require('gulp');
+const shell = require('gulp-shell');
+const del = require('del');
+const docker = require('dockerode')();
 
 //Config
-var config = require('../config.js');
+let config = require('../config.js');
 
 /*! Tasks 
 - dist.reset

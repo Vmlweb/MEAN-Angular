@@ -1,12 +1,12 @@
 //Modules
-var gulp = require('gulp');
-var path = require('path');
-var beep = require('beepbeep');
-var Karma = require('karma').Server;
-var remap = require('remap-istanbul/lib/gulpRemapIstanbul');
+const gulp = require('gulp');
+const path = require('path');
+const beep = require('beepbeep');
+const Karma = require('karma').Server;
+const remap = require('remap-istanbul/lib/gulpRemapIstanbul');
 
 //Config
-var config = require('../../config.js');
+const config = require('../../config.js');
 
 /*! Tasks 
 - client.test
@@ -32,8 +32,8 @@ gulp.task('client.test', gulp.series(
 gulp.task('client.test.karma', function(done){
 	
 	//Compile library includes
-	var libs = [];
-	for (var item in config.libraries){
+	let libs = [];
+	for (let item in config.libraries){
 		libs.push({
 			included: path.extname(config.libraries[item]) === '.js',
 			pattern: path.join('./builds/client/libs/', path.basename(config.libraries[item]))
@@ -41,7 +41,7 @@ gulp.task('client.test.karma', function(done){
 	}
 	
 	//Setup karma configuration
-	var server = new Karma({
+	let server = new Karma({
 		basePath: '',
 		
 		//Frameworks and plugins

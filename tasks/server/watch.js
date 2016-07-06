@@ -1,5 +1,5 @@
 //Modules
-var gulp = require('gulp');
+const gulp = require('gulp');
 
 /*! Tasks 
 - server.watch

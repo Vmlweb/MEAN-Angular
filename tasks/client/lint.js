@@ -1,7 +1,7 @@
 //Modules
-var gulp = require('gulp');
-var tslint = require('gulp-tslint');
-var jshint = require('gulp-jshint');
+const gulp = require('gulp');
+const tslint = require('gulp-tslint');
+const jshint = require('gulp-jshint');
 
 /*! Tasks 
 - client.lint
@@ -36,7 +36,7 @@ gulp.task('client.lint.typescript', function(){
         configuration: {
 	        rules: {
 				'no-duplicate-key': true,
-				'no-duplicate-variable': true,
+				'no-duplicate-letiable': true,
 				'semicolon': true
 	        }
         }

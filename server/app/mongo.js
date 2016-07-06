@@ -1,22 +1,22 @@
 //Modules
-var path = require('path');
-var mongoose = require('mongoose');
-var fs = require('fs');
+const path = require('path');
+const mongoose = require('mongoose');
+const fs = require('fs');
 
 //Includes
-var config = require(__config);
+const config = require(__config);
 
 //Prepare connection string
-var auth = config.database.auth.username + ':' + config.database.auth.password;
-var nodes = [];
-for (var i=0; i<config.database.repl.nodes.length; i++){
+let auth = config.database.auth.username + ':' + config.database.auth.password;
+let nodes = [];
+for (let i=0; i<config.database.repl.nodes.length; i++){
 	nodes.push(config.database.repl.nodes[i].hostname + ':' + config.database.repl.nodes[i].port);
 }
-var database = config.database.auth.database;
-var repl = 'replicaSet=' + config.database.repl.name + '&ssl=' + config.database.ssl.enabled;
+let database = config.database.auth.database;
+let repl = 'replicaSet=' + config.database.repl.name + '&ssl=' + config.database.ssl.enabled;
 
 //Prepare connection options
-var options = { 
+let options = { 
 	replset: {
 		sslValidate: config.database.ssl.validate,
 		sslKey: config.database.ssl.validate ? fs.readFileSync(path.join(__certs, config.database.ssl.key)) : null,
@@ -27,7 +27,7 @@ var options = {
 };
 
 //Connect to database
-var url = 'mongodb://' + auth + '@' + nodes.join(',') + '/' + database + '?' + repl;
+let url = 'mongodb://' + auth + '@' + nodes.join(',') + '/' + database + '?' + repl;
 mongoose.connect(url, options);
 
 //Database events

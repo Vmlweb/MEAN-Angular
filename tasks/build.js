@@ -1,10 +1,10 @@
 //Modules
-var gulp = require('gulp');
-var del = require('del');
-var shell = require('gulp-shell');
-var path = require('path');
-var replace = require('gulp-replace');
-var config = require('../config.js');
+const gulp = require('gulp');
+const del = require('del');
+const shell = require('gulp-shell');
+const path = require('path');
+const replace = require('gulp-replace');
+const config = require('../config.js');
 
 /*! Tasks 
 - build.reset
@@ -63,8 +63,8 @@ gulp.task('build.config.mongodb', function(){
 gulp.task('build.config.docker', function(){
 	
 	//Prepare port dumps
-	var exposedPorts = [];
-	var mappedPorts = [];
+	let exposedPorts = [];
+	let mappedPorts = [];
 	
 	//HTTP port mappings
 	if (config.http.port.internal.length > 0){
@@ -93,25 +93,25 @@ gulp.task('build.config.docker', function(){
 	}
 	
 	//Dockerfile expose config
-	var exposeConfig = '';
+	let exposeConfig = '';
 	if (exposedPorts.length > 0){
 		exposeConfig = 'EXPOSE ' + exposedPorts.join(' ');
 	}
 	
 	//Docker run commands
-	var dockerConfig = '';
+	let dockerConfig = '';
 	if (mappedPorts.length > 0){
 		dockerConfig = '-p ' + mappedPorts.join(' -p ');
 	}
 	
 	//Compose port cofig
-	var composeConfig = '';
+	let composeConfig = '';
 	if (mappedPorts.length > 0){
 		composeConfig = '    - ' + mappedPorts.join('\r\n    - ');
 	}
 	
 	//MongoDB ssl config
-	var mongoConfig = '';
+	let mongoConfig = '';
 	if (config.database.ssl.enabled){
 		mongoConfig = '--sslMode requireSSL --sslPEMKeyFile ' + path.join('/home/certs/', config.database.ssl.pem);
 	}

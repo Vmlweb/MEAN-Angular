@@ -1,12 +1,12 @@
 //Modules
-var url = require('url');
-var request = require('request');
+const url = require('url');
+const request = require('request');
 
 //Includes
-var config = require(__config);
+const config = require(__config);
 
 //Request prototype
-var startRequest = function(params, checks){
+let startRequest = function(params, checks){
 	request({
 		url: url.resolve('http://' + config.http.url + ':' + config.http.port.internal, '/api/v1/time'),
 		method: 'GET',
