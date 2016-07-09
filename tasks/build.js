@@ -49,7 +49,13 @@ gulp.task('build.config.nodejs', function(){
 
 //Build mongodb.js file
 gulp.task('build.config.mongodb', function(){
+	
+	//Generate random password
+	let chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+	let password = Array.apply(null, Array(70)).map(function() { return chars.charAt(Math.floor(Math.random() * chars.length)); }).join('');
+	
 	return gulp.src('mongodb.js')
+		.pipe(replace('@@DATABASE_ADMIN_PASSWORD', password))
 		.pipe(replace('@@DATABASE_REPL_NAME', config.database.repl.name))
 		.pipe(replace('@@DATABASE_REPL_NODES_HOSTNAME', config.database.repl.nodes[0].hostname))
 		.pipe(replace('@@DATABASE_REPL_NODES_PORT', config.database.repl.nodes[0].port))
@@ -63,7 +69,6 @@ gulp.task('build.config.mongodb', function(){
 gulp.task('build.config.docker', function(){
 	
 	//Prepare port dumps
-	let exposedPorts = [];
 	let mappedPorts = [];
 	
 	//HTTP port mappings
@@ -75,8 +80,6 @@ gulp.task('build.config.docker', function(){
 			//Only internal port mappings
 			mappedPorts.push(config.http.port.external.toString() + ':' + config.http.port.internal.toString());
 		}
-		//Internal or external port mappings
-		exposedPorts.push(config.http.port.internal.toString());
 	}
 	
 	//HTTPS port mappings
@@ -88,14 +91,6 @@ gulp.task('build.config.docker', function(){
 			//Only internal port mappings
 			mappedPorts.push(config.https.port.external.toString() + ':' + config.https.port.internal.toString());
 		}
-		//Internal or external port mappings
-		exposedPorts.push(config.https.port.internal.toString());
-	}
-	
-	//Dockerfile expose config
-	let exposeConfig = '';
-	if (exposedPorts.length > 0){
-		exposeConfig = 'EXPOSE ' + exposedPorts.join(' ');
 	}
 	
 	//Docker run commands
@@ -120,11 +115,11 @@ gulp.task('build.config.docker', function(){
 	return gulp.src([
 		'Dockerfile',
 		'docker-compose.yml',
+		'database.sh',
 		'server.sh'
 	])
 	.pipe(replace('@@NAME', config.name))
 	.pipe(replace('@@MONGO_CONFIG', mongoConfig))
-	.pipe(replace('@@EXPOSE_CONFIG', exposeConfig))
 	.pipe(replace('@@DOCKER_CONFIG', dockerConfig))
 	.pipe(replace('@@COMPOSE_CONFIG', composeConfig))
 	.pipe(replace('@@CONFIG', config.config))

@@ -14,6 +14,4 @@ WORKDIR /home
 RUN apt-get update && apt-get upgrade; exit 0
 RUN npm install -g pm2 && npm install --production && rm /home/package.json; exit 0
 
-@@EXPOSE_CONFIG
-
 CMD ["pm2", "start", "/home/server/app.js", "-i", "$(nproc)", "--no-daemon"]

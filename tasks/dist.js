@@ -48,7 +48,8 @@ gulp.task('dist.copy.config', function(){
 		'builds/Dockerfile',
 		'builds/docker-compose.yml',
 		'builds/mongodb.js',
-		'builds/server.sh'
+		'builds/server.sh',
+		'builds/database.sh'
 	])
 	.pipe(gulp.dest('dist'));
 });
