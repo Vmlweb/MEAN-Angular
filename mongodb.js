@@ -10,7 +10,7 @@ rs.initiate({
 
 //Wait for replica set to finish instantiating
 while (!rs.isMaster().ismaster){
-	sleep(200);
+	sleep(500);
 };
 
 //Create administrator account

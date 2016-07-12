@@ -14,7 +14,7 @@ const config = require('../config.js');
 - database.start
 - database.test
 - database.mock
-- database.stopconst
+- database.stop
 
 - database.reset
 - database.reset.clean
