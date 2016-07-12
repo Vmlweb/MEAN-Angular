@@ -213,7 +213,7 @@ chown -R 999:999 /opt/mean/certs
 Then setup and wipe your production database using the following command.
 
 ```bash
-./server.sh reset
+./database.sh reset
 ```
 
 Use can then use `server.sh` or `docker-compose.yml` to start and stop your production app using Docker.
@@ -222,15 +222,8 @@ Use can then use `server.sh` or `docker-compose.yml` to start and stop your prod
 ./server.sh start
 ./server.sh stop
 
+./database.sh start
+./database.sh stop
+
 docker-compose up
-```
-
-You can start the app or database individually using the following commands.
-
-```bash
-./server.sh app
-./server.sh db
-
-./server.sh app_stop
-./server.sh db_stop
 ```
