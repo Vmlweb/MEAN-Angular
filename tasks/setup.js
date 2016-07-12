@@ -120,9 +120,7 @@ gulp.task('setup.certs', shell.task([
 
 //Clean docker volumes
 gulp.task('setup.clean', shell.task([
-	'docker stop $(docker ps -a -q) || true',
-	'docker rm $(docker ps -a -q) || true',
-	'docker rmi $(docker images -q) || true',
+	'docker images -q | xargs docker rmi',
 	'docker run -v /let/run/docker.sock:/let/run/docker.sock -v /let/lib/docker:/let/lib/docker --rm martin/docker-cleanup-volumes'
 ],{
 	verbose: true,
