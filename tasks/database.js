@@ -122,11 +122,11 @@ gulp.task('database.mock', function(done){
 		for (i in files){ require(files[i]); }
 		
 		//Run before all functions
-		async.each(beforeAlls, function (item, back){ item(back); }, function(){
+		async.eachSeries(beforeAlls, function (item, back){ item(back); }, function(){
 			
 			//Define reset database api endpoint route
 			global.app.express.app.delete('/reset', function (req, res){
-				async.each(beforeEachs, function (item, back){ item(back); }, function (){
+				async.eachSeries(beforeEachs, function (item, back){ item(back); }, function (){
 					res.json({});
 				});
 			});
@@ -135,7 +135,7 @@ gulp.task('database.mock', function(done){
 			
 			//Run after all functions
 			global.shutdown = function(callback){
-				async.each(afterAlls, function (item, back){ item(back); }, function (){
+				async.eachSeries(afterAlls, function (item, back){ item(back); }, function (){
 					callback();
 				});
 			};

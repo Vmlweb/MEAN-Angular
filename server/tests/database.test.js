@@ -11,6 +11,7 @@ let data = [
 ];
 
 //Mark a table index as pending reset
+let modified = [];
 let markModified = function(i, next){
 	if (modified.indexOf(i) < 0){
 		modified.push(i);
@@ -18,12 +19,6 @@ let markModified = function(i, next){
 	if (next){
 		next();
 	}
-}
-
-//Mark all tables as modified to populate first execution
-let modified = [];
-for (let i in data){
-	markModified(i);
 }
 
 //Add schema hooks to detect database changes
@@ -42,8 +37,26 @@ global.reset = function(name){
 	}
 }
 
+//Populate all collections before all tests start
+beforeAll(function(callback){
+	async.eachSeries(data, function (item, done){
+		
+	    //Repopulate table for each modified item
+	    console.log('Repopulating collection ' + item.name);
+	    mongo.connection.db.dropCollection(item.name, function(err, result){
+			item.model.insertMany(item.data, function(err){
+				done(err);
+			});
+		});
+			
+    }, function(err){
+	    callback(err);
+	});
+});
+
+//Populate selected collections before each test
 beforeEach(function(callback){
-	async.each(modified, function (i, done){
+	async.eachSeries(modified, function (i, done){
 		
 	    //Repopulate table for each modified item
 	    console.log('Repopulating collection ' + data[i].name);
