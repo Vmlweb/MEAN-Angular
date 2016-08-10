@@ -57,12 +57,8 @@ gulp.task('app.start', function(done){
 		ExposedPorts: internalPorts,
 		Env: [
 			'NODE_ENV=development'
-		]
-	}, function(err, container) {
-		if (err){ throw err; }
-		
-		//Start container
-		container.start({
+		],
+		HostConfig: {
 			Privileged: true,
 			Binds: [
 				path.join(process.cwd(), 'builds', 'server') + ':/home/server',
@@ -73,7 +69,12 @@ gulp.task('app.start', function(done){
 				path.join(process.cwd(), 'config.js') + ':/home/config.js'
 			],
 			PortBindings: externalPorts
-		}, function(err, data){
+		}
+	}, function(err, container) {
+		if (err){ throw err; }
+		
+		//Start container
+		container.start(function(err, data){
 			if (err){ throw err; }
 			done();
 		});

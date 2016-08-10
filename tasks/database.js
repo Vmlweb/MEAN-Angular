@@ -45,12 +45,8 @@ gulp.task('database.start', function(done){
 		name: config.name + '_db',
 		Volumes: {
 			'/home/certs': {}
-		}
-	}, function(err, container) {
-		if (err){ throw err; }
-		
-		//Start container
-		container.start({
+		},
+		HostConfig: {
 			Privileged: true,
 			Binds: [
 				path.join(process.cwd(), 'data') + ':/data/db',
@@ -59,7 +55,12 @@ gulp.task('database.start', function(done){
 			PortBindings: {
 				['27017/tcp']: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
 			}
-		}, function(err, data){
+		}
+	}, function(err, container) {
+		if (err){ throw err; }
+		
+		//Start container
+		container.start(function(err, data){
 			if (err){ throw err; }
 			setTimeout(done, 500);
 		});
@@ -77,12 +78,8 @@ gulp.task('database.test', function(done){
 		name: config.name + '_db',
 		Volumes: {
 			'/home/certs': {}
-		}
-	}, function(err, container) {
-		if (err){ throw err; }
-		
-		//Start container
-		container.start({
+		},
+		HostConfig: {
 			Privileged: true,
 			Binds: [
 				path.join(process.cwd(), 'certs') + ':/home/certs'
@@ -90,7 +87,12 @@ gulp.task('database.test', function(done){
 			PortBindings: {
 				['27017/tcp']: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
 			}
-		}, function(err, data){
+		}
+	}, function(err, container) {
+		if (err){ throw err; }
+		
+		//Start container
+		container.start(function(err, data){
 			if (err){ throw err; }
 			setTimeout(done, 500);
 		});

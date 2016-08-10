@@ -119,6 +119,8 @@ gulp.task('build.config.docker', function(){
 		'server.sh'
 	])
 	.pipe(replace('@@NAME', config.name))
+	.pipe(replace('@@VERSION', config.version))
+	.pipe(replace('@@BUILD', config.build))
 	.pipe(replace('@@MONGO_CONFIG', mongoConfig))
 	.pipe(replace('@@DOCKER_CONFIG', dockerConfig))
 	.pipe(replace('@@COMPOSE_CONFIG', composeConfig))
