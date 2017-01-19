@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="/">
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+		<title><%= htmlWebpackPlugin.options.title %></title>
+		<% for (key in htmlWebpackPlugin.options.css) { %>
+			<link rel="stylesheet" type="text/css" href="<%= htmlWebpackPlugin.options.css[key] %>">
+		<% } %>
+	</head>
+	<body>
+		<app></app>
+		<% for (key in htmlWebpackPlugin.options.js) { %>
+			<script type="text/javascript" src="<%= htmlWebpackPlugin.options.js[key] %>"></script>
+		<% } %>
+	</body>
+</html>

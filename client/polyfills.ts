@@ -1,10 +1,10 @@
-//Includes
-import 'core-js/es6';
-import 'reflect-metadata';
-require('zone.js/dist/zone');
+//Modules
+import 'core-js/es6'
+import 'core-js/es7/reflect'
+require('zone.js/dist/zone')
 
-//Debugging
-if (process.env.ENV === 'dist') {
-	Error['stackTraceLimit'] = Infinity;
-	require('zone.js/dist/long-stack-trace-zone');
+//Debug
+if (process.env.ENV === 'development') {
+	Error['stackTraceLimit'] = Infinity
+	require('zone.js/dist/long-stack-trace-zone')
 }
