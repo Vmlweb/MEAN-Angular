@@ -3,7 +3,7 @@ const url = require('url');
 const request = require('request');
 
 //Includes
-const config = require(__config);
+const config = require_config();
 
 //Models
 const User = require(__models + '/user.js');
