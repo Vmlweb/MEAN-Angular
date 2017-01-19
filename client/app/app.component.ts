@@ -1,11 +1,29 @@
 //Modules
-import {Component} from '@angular/core';
-import {ROUTER_DIRECTIVES} from '@angular/router';
+import { Component, ElementRef, AfterViewInit } from '@angular/core'
+import { Router } from '@angular/router'
 
 @Component({
-	selector: 'my-app',
-	template: '<router-outlet></router-outlet>',
-	directives: [ROUTER_DIRECTIVES]
+	selector: 'app',
+	styles: [require('./app.style.css')],
+	template: require('./app.template.html')
 })
 
-export class AppComponent {}
+export class AppComponent implements AfterViewInit {
+	
+	modal: any
+	
+	constructor(private element: ElementRef, private router: Router){}
+	
+	ngAfterViewInit(){
+		this.modal = $(this.element.nativeElement).find('.ui.modal')
+	}
+	
+	showModal(){
+		this.modal.modal('show')
+	}
+	
+	test(){
+		console.log(1)
+		return 'test'
+	}
+}
