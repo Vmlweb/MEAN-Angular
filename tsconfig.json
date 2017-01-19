@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+	"module": "commonjs",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "strictNullChecks": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
+  },
+  "exclude": [
+    "node_modules",
+    "bower_components"
+  ],
+  "files": [
+    "node_modules/typescript/lib/typescriptServices.d.ts"
+  ]
+}
