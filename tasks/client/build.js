@@ -1,194 +1,215 @@
 //Modules
-const gulp = require('gulp');
-const beep = require('beepbeep');
-const path = require('path');
-const webpack = require('webpack');
-const obfuscatorPlugin = require('webpack-js-obfuscator');
-const htmlPlugin = require('html-webpack-plugin');
-const typeCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
+const gulp = require('gulp')
+const path = require('path')
+const beep = require('beepbeep')
+const fs = require('fs')
+const webpack = require('webpack')
+const WebpackObfuscator = require('webpack-obfuscator')
+const WebpackHTML = require('html-webpack-plugin')
+const WebpackFavicons = require('favicons-webpack-plugin')
+const PathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin
+const { CheckerPlugin } = require('awesome-typescript-loader')
 
 //Config
-let config = require('../../config.js');
+const config = require('../../config.js')
+module.exports = { setup: false, watch: undefined, webpack: undefined }
 
-/*! Tasks 
+/*! Tasks
 - client.build
 
 - client.build.libs
-- client.build.source
-- client.build.typescript
+- client.build.compile
+- client.build.recompile
 */
 
 //! Build
-gulp.task('client.build', gulp.parallel(
+gulp.task('client.build', gulp.series(
 	'client.build.libs',
-	'client.build.source',
-	'client.build.webpack'
-));
+	'client.build.compile'
+))
 
-//Copy over library dependancies
+//Copy client library files
 gulp.task('client.build.libs', function(){
-	return gulp.src(config.libraries)
-	.pipe(gulp.dest('builds/client/libs'));
-});
+	return gulp.src(config.libs)
+		.pipe(gulp.dest('builds/client/libs'))
+})
 
-//Copy over client source files
-gulp.task('client.build.source', function(){
-	return gulp.src([
-		'client/**/*',
-		'!client/**/*.ts',
-		'!client/app/**/*',
-		'!client/typings.json',
-		'!client/typings',
-		'!client/typings/**/*'
-	])
-	.pipe(gulp.dest('builds/client'));
-});
-
-//Compile source into a webpack
-gulp.task('client.build.webpack', function(done) {
-	let options = {
-		
-		//File types
-		resolve: {
-			extensions: ['', '.js', '.ts', '.html', '.jade', '.css', '.styl'],
-			alias: {
-				app: 'client/app',
-				common: 'client/common'
-			}
-		},
-		module: {
-			noParse: [/.+zone\.js\/dist\/.+/, /.+angular2\/bundles\/.+/, /angular2-polyfills\.js/],
-			preLoaders: [
-				{ test: /\.js$/, loader: 'source-map-loader', exclude: ['node_modules/rxjs', 'node_modules/@angular'] }
-			],
-			loaders: [
-				{ test: /\.ts$/, loader: 'awesome-typescript-loader', query: {
-					tsconfig: 'tsconfig.' + process.env.NODE_ENV + '.json'
-				} },
-				{ test: /\.html$/, loader: 'html' },
-				{ test: /\.css$/, loader: 'css' },
-				{ test: /\.(png|jpg|gif)$/, loader: 'url-loader?limit=8192' }
-			]
-		},
-		
-		//Plugins
-		plugins: [
-			new webpack.DefinePlugin({
-				'process.env': {
-					'ENV': JSON.stringify(process.env.NODE_ENV),
-					'CONFIG': JSON.stringify(config)
-				}
-			})
-		]
-	}
+//Setup webpack for compilation
+gulp.task('client.build.compile', function(done){
 	
-	//Shared development and distribution options
-	if (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'dist'){
-	
-		//Input and outputs
-		options.entry = {
+	//Create options
+	module.exports.webpack = {
+		entry: {
 			polyfills: './client/polyfills.ts',
-			vendors: './client/vendors.ts',
-			app: './client/bootstrap.ts'
-		};
-		options.output = {
+			vendor: './client/vendor.ts',
+			libs: './client/libs.ts',
+			main: './client/main.ts',
+		},
+		target: 'web',
+		plugins: [
+		    new webpack.NoEmitOnErrorsPlugin(),
+		    new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/, './client'),
+			new CheckerPlugin({
+				fork: true,
+				useWebpackText: true
+			}),
+			new webpack.DefinePlugin({
+				'process.env.ENV': JSON.stringify(process.env.NODE_ENV),
+				'process.env.CONFIG': JSON.stringify(config)
+			}),
+			new WebpackHTML({
+				title: config.name,
+				template: './client/index.ejs',
+				minify: {
+					removeComments: true,
+					collapseWhitespace: true,
+					removeRedundantAttributes: true,
+					useShortDoctype: true,
+					removeEmptyAttributes: true,
+					removeStyleLinkTypeAttributes: true,
+					keepClosingSlash: true,
+					minifyJS: true,
+					minifyCSS: true,
+					minifyURLs: true
+				},
+				js: config.libs.filter((lib) => {
+						return lib.endsWith('.js')
+					}).map((lib) => {
+						return '/libs/' + path.basename(lib)
+					}),
+				css: config.libs.filter((lib) => {
+						return lib.endsWith('.css')
+					}).map((lib) => {
+						return '/libs/' + path.basename(lib)
+					})
+			})
+		],
+		performance: {
+			hints: false
+		},
+		output: {
 			path: './builds/client',
 			filename: '[name].js'
-		};
-	
-		//Generate landing html page
-		options.plugins.push(new htmlPlugin({
-			template: 'client/index.html'
-		}));
-		
-		//Split into common chunks
-		options.plugins.push(new webpack.optimize.CommonsChunkPlugin({
-			name: ['app', 'vendors', 'polyfills']
-		}));
-	}
-	
-	//Distribution options
-	if (process.env.NODE_ENV === 'dist'){	
-	
-		//Minify
-		options.plugins.push(new webpack.optimize.UglifyJsPlugin({
-			mangle: false,
-			compress: {
-				warnings: false
-			}
-		}));
-		
-		//Obsfucate
-		options.plugins.push(new obfuscatorPlugin({}, [
-			'vendors.js',
-			'polyfills.js',
-			'**.html'
-		]));
-		
-	//Testing options 
-	}else if (process.env.NODE_ENV === 'test'){
-		
-		//Source maps
-		options.devtool = 'inline-source-map';
-		
-		//Modify typescript compilation
-		options.ts = {
-			compilerOptions: {
-				sourceMap: false,
-		        sourceRoot: './client',
-		        inlineSourceMap: true
-			}
+		},
+		resolve: {
+			modules: [ './client', './bower_components', './node_modules' ],
+			extensions: [ '.js', '.ts', '.json', '.png', '.jpg', '.jpeg', '.gif' ],
+			alias: {
+				jquery: process.env.NODE_ENV === 'production' ? 'jquery/dist/jquery.min' : 'jquery/src/jquery',
+				semantic: process.env.NODE_ENV === 'production' ? '../semantic/dist/semantic.min' : '../semantic/dist/semantic'
+			},
+			plugins: [
+				new PathsPlugin()
+			]
+		},
+		module: {
+			rules: [{
+				test: /\.(png|jpg|jpeg|gif)$/,
+				loader: 'file-loader?name=images/[hash].[ext]&publicPath=&outputPath='
+			},{ 
+				test: /\.(html|css)$/, 
+				loader: 'html-loader',
+				exclude: /\.async\.(html|css)$/
+			},{
+				test: /\.async\.(html|css)$/, 
+				loaders: [ 'file-loader?name=[name].[hash].[ext]', 'extract' ]
+			},{
+				test: /\.ts$/,
+				exclude: /(node_modules|bower_components|.test.ts)/,
+				use: [
+					{
+						loader: 'awesome-typescript-loader',
+						query: {
+							instance: 'client',
+							lib: ['dom', 'es6'],
+							target: 'es5',
+							types: config.types.client.concat([ 'webpack', 'node' ]),
+							baseUrl: './client',
+							cacheDirectory: './builds/.client',
+							useCache: true
+						}
+					},
+					'angular2-template-loader?keepUrl=true',
+					'angular2-router-loader'
+				]
+			}]
 		}
-		
-		//Insert coverage instruments
-		options.module.postLoaders = [{
-	        test: /\.ts$/,
-	        loader: 'istanbul-instrumenter-loader',
-	        include: path.resolve('client'),
-	        exclude: [/\.test\.ts$/, /node_modules/]
-	    }];
-	    
-	//Development options
-	}else if (process.env.NODE_ENV === 'dev'){
-		
-		//Source maps
-		options.devtool = 'eval-source-map';
-		
-		//Add forked type checker for quicker builds
-		options.plugins.push(new typeCheckerPlugin());
-		options.plugins.push(new webpack.NoErrorsPlugin());
 	}
 	
-	//Setup callback for completion
-	let callback = function(err, stats) {
+	//Add plugins for distribution
+	if (process.env.NODE_ENV === 'production'){
+		module.exports.webpack.plugins.push(
+			new webpack.optimize.UglifyJsPlugin(),
+			new WebpackObfuscator({}, [
+				'vendor.js',
+				'polyfills.js',
+				'libs.js'
+			]),
+			new WebpackFavicons({
+				title: config.name,
+				logo: './client/favicon.png',
+				prefix: 'favicons/',
+				icons: {
+					appleStartup: false
+				}
+			})
+		)
+	}
+	
+	//Add plugins for browser optimization
+	if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production'){
+		module.exports.webpack.plugins.push(
+			new webpack.optimize.CommonsChunkPlugin({
+				name: [ 'index', 'vendor', 'libs', 'polyfills' ]
+			})
+		)
+	}
+	
+	//Create source maps for development or testing
+	if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing'){
+		module.exports.webpack.plugins.push(
+			new webpack.SourceMapDevToolPlugin({
+				exclude: [ 'vendor', 'libs', 'polyfills' ]
+			})
+		)
+	}
+	
+	//Prepare callback for compilation completion
+	let callback = function(err, stats){
 		
-		//Log output of build
+		//Log stats from build
 		console.log(stats.toString({
 			chunkModules: false,
 			assets: false
-		}));
+		}))
 		
 		//Beep for success or errors
-		if (process.env.NODE_ENV === 'dev'){
+		if (process.env.NODE_ENV === 'development' && module.exports.setup){
 			if (stats.hasErrors()){
-				beep(2);
+				beep(2)
 			}else{
-				beep();
+				beep()
 			}
 		}
 		
-		done();
-	};
-	
-	//Compile and watch for changes if needed
-	global.webpack = options;
-	let pack = webpack(options);
-	if (process.env.NODE_ENV === 'dev'){
-		pack.watch({
-			aggregateTimeout: 200,
-			poll: false
-		}, callback);
-	}else{
-		pack.run(callback);
+		//Reset build status variables
+		module.exports.setup = true
+		
+		done(err)
 	}
-});
+	
+	//Compile webpack and watch if developing
+	if (process.env.NODE_ENV === 'development'){
+		module.exports.watch = webpack(module.exports.webpack).watch({
+			ignored: /(node_modules|bower_components)/
+		}, callback)
+	}else{
+		webpack(module.exports.webpack).run(callback)
+	}
+})
+
+//Expires the current webpack watch and recompiles
+gulp.task('client.build.recompile', function(done){
+	module.exports.watch.invalidate()
+	done()
+})

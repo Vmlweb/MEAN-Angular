@@ -7,6 +7,7 @@ const remap = require('remap-istanbul/lib/gulpRemapIstanbul');
 
 //Config
 const config = require('../../config.js');
+const build = require('./build.js')
 
 /*! Tasks 
 - client.test
@@ -33,10 +34,10 @@ gulp.task('client.test.karma', function(done){
 	
 	//Compile library includes
 	let libs = [];
-	for (let item in config.libraries){
+	for (let item in config.libs){
 		libs.push({
-			included: path.extname(config.libraries[item]) === '.js',
-			pattern: path.join('./builds/client/libs/', path.basename(config.libraries[item]))
+			included: path.extname(config.libs[item]) === '.js',
+			pattern: path.join('./builds/client/libs/', path.basename(config.libs[item]))
 		});
 	}
 	
@@ -83,10 +84,12 @@ gulp.task('client.test.karma', function(done){
 		files: [
 			{ pattern: './karma.shim.js' }
 		].concat(libs),
-		preprocessors: { './karma.shim.js': ['webpack', 'sourcemap'] },
+		preprocessors: {
+			'./karma.shim.js': ['webpack', 'sourcemap']
+		},
 		
 		//Webpack
-		webpack: global.webpack,
+		webpack: build.webpack,
 	    webpackMiddleware: { stats: 'errors-only' },
 		
 		//Reporting
@@ -126,6 +129,6 @@ gulp.task('client.test.remap', function(done){
 		}
 	}))
 	.on('end', () => {
-		global.shutdown(done);
+		//global.shutdown(done);
     });
 });
