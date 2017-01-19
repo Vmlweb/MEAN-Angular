@@ -6,7 +6,7 @@ module.exports = {
 	
 	//! HTTP
 	http: {
-		hostname: '0.0.0.0',
+		hostname: '::',
 		url: '127.0.0.1',
 		port: {
 			internal: '8080',
@@ -16,7 +16,7 @@ module.exports = {
 	
 	//! HTTPS
 	https: {
-		hostname: '0.0.0.0',
+		hostname: '::',
 		url: '127.0.0.1',
 		port: {
 			internal: '4434',
@@ -49,27 +49,31 @@ module.exports = {
 			read: 'nearest',
 			key: 'repl.key',
 			nodes: [{
-				hostname: '127.0.0.1',
+				hostname: '192.168.0.18',
 				port: 27017 
 			}]
 		}
 	},
 	
 	//! Client Libraries
-	libraries: [
-		//Dependancies
-		'bower_components/jquery/dist/jquery.min.js',
-		'bower_components/jquery/dist/jquery.min.map',
-		//Interface
-		'semantic/dist/semantic.min.js',
+	libs: [
+		
+		//Semantic UI
 		'semantic/dist/semantic.min.css',
-		'semantic/dist/*/**/*'
+		'semantic/dist/*/**/*',
+		'!semantic/dist/components/**/*'
 	],
+	
+	//! Typescript Types
+	types: {
+		server: [ 'async', 'body-parser', 'compression', 'express', 'helmet', 'moment', 'mongoose', 'morgan', 'winston' ],
+		client: [ 'jquery', 'jasmine' ]
+	},
 	
 	//! Server Test Plans
 	tests: {
-		v1: [ '/api/v1/**/' ],
-		users: [ '/api/v1/users/**/' ]
+		v1: [ './*.test.ts' ],
+		users: [ '/api_v1/users/' ]
 	},
 	
 	//! API Documentation

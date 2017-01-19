@@ -1,14 +1,13 @@
 //Modules
-const gulp = require('gulp');
-const shell = require('gulp-shell');
-const del = require('del');
-const docker = require('dockerode')();
+const gulp = require('gulp')
+const shell = require('gulp-shell')
+const del = require('del')
 
-//Config
-let config = require('../config.js');
+//Includes
+const config = require('../config.js')
 
 /*! Tasks 
-- dist.reset
+- dist.clean
 - dist.build
 
 - dist.copy
@@ -18,14 +17,12 @@ let config = require('../config.js');
 - dist.copy.client
 */
 
-//Remove all dist files
-gulp.task('dist.reset', function(){
-	return del([
-		'dist/**/*'
-	]);
-});
+//Remove all distribution files
+gulp.task('dist.clean', function(){
+	return del('dist/**/*')
+})
 
-//Build the docker images and app
+//Build and compress docker image for app
 gulp.task('dist.build', shell.task([
 	'docker build -t ' + config.name + '_app $PWD',
 	'docker save ' + config.name + '_app > ' + config.name + '_app.tar',
@@ -35,12 +32,12 @@ gulp.task('dist.build', shell.task([
 ],{
 	verbose: true,
 	cwd: 'dist'
-}));
+}))
 
 //! Copy
-gulp.task('dist.copy', gulp.parallel('dist.copy.config', 'dist.copy.server', 'dist.copy.client'));
+gulp.task('dist.copy', gulp.parallel('dist.copy.config', 'dist.copy.server', 'dist.copy.client'))
 
-//Copy over config files
+//Copy config files
 gulp.task('dist.copy.config', function(){
 	return gulp.src([
 		'builds/config.js',
@@ -51,31 +48,17 @@ gulp.task('dist.copy.config', function(){
 		'builds/server.sh',
 		'builds/database.sh'
 	])
-	.pipe(gulp.dest('dist'));
-});
+	.pipe(gulp.dest('dist'))
+})
 
-//Copy over server source files
+//Copy server executable files
 gulp.task('dist.copy.server', function(){
-	return gulp.src([
-		'builds/server/**/*',
-		'!builds/server/tests/*',
-		'!builds/server/**/*.js.map',
-		'!builds/server/**/*.min.map',
-		'!builds/server/**/*.test.js',
-		'!builds/server/**/*.test.json'
-	])
-	.pipe(gulp.dest('dist/server'));
-});
+	return gulp.src('builds/server/**/*')
+		.pipe(gulp.dest('dist/server'))
+})
 
-//Copy over client source files
+//Copy client executable files
 gulp.task('dist.copy.client', function(){
-	return gulp.src([
-		'builds/client/**/*',
-		'!builds/client/tests/*',
-		'!builds/client/**/*.js.map',
-		'!builds/client/**/*.min.map',
-		'!builds/client/**/*.test.js',
-		'!builds/client/**/*.test.json'
-	])
-	.pipe(gulp.dest('dist/client'));
-});
+	return gulp.src('builds/client/**/*')
+		.pipe(gulp.dest('dist/client'))
+})

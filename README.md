@@ -6,13 +6,12 @@ Quick and simple template to get up and running with a MEAN stack web app inside
 
 ## Features
 
-  * NodeJS 5.x
+  * NodeJS 6.x
   * Docker & Compose
   * MongoDB & Mongoose
-  * Webpack Module Loader
-  * AngularJS 2 & Typescript
+  * Browserify & Babel
+  * EmberJS 2 & Typescript
   * Semantic UI & jQuery
-  * Jade & Stylus Templates
   * JS Minification & Obfuscation
   * Jasmin & Karma Unit Tests (Test Plans)
   * Istanbul Code Coverage (HTML & Clover)
@@ -40,7 +39,7 @@ chmod +x server.sh
 Next install the Gulp 4, Bower and Typings command line tools if you have not already.
 
 ```bash
-sudo npm install -g gulpjs/gulp.git#4.0 bower typings
+sudo npm install -g gulpjs/gulp.git#4.0 bower
 ```
 
 ## Installation
@@ -60,7 +59,7 @@ chown -R 999:999 certs
 
 ## Directory Structure
 
-- `builds` - Temporary built and compiled files.
+- `build` - Temporary builds and compiled files.
 - `certs` - Security certificates and key files.
 - `client` - Client side website source.
 - `client/app` - Angular bootstrap and app component.

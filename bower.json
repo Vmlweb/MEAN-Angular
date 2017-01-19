@@ -1,12 +1,12 @@
 {
-  "name": "MEAN",
-  "description": "MEAN Stack",
-  "main": "server/app.js",
+  "name": "mean",
+  "description": "MEAN Stack Template for EmberJS 2 and Docker",
+  "main": "server/main.js",
   "authors": [
     "Victor Leach <admin@vmlweb.co.uk>"
   ],
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/Vmlweb/MEEN-Stack",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -15,6 +15,6 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "^2.2.4"
+    "jquery": "^3.1.1"
   }
 }
