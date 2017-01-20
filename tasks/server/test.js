@@ -16,10 +16,10 @@ const config = require('../../config.js')
 - server.test
 
 - server.test.execute
-- server.test.report
+- server.test.coverage
 */
 
-//! Test
+//! Server Test
 gulp.task('server.test', gulp.series(
 	'env.test',
 	'stop',
@@ -29,13 +29,12 @@ gulp.task('server.test', gulp.series(
 	'database.test',
 	'database.setup',
 	'server.test.execute',
-	'server.test.report'
+	'server.test.coverage'
 ))
 
-//Execute server tests with reports
+//Execute tests and collect coverage
 gulp.task('server.test.execute', function(){
 	decache(path.resolve('builds/server/main.js'))
-	decache('jasmine')
 	let fail = false
 	return gulp.src('builds/server/main.js')
 		.pipe(jasmine({
@@ -68,8 +67,8 @@ gulp.task('server.test.execute', function(){
 	    })
 })
 
-//Create server tests coverage reports
-gulp.task('server.test.report', function(){
+//Remap and log coverage reports 
+gulp.task('server.test.coverage', function(){
 	return gulp.src('logs/server/coverage.json')
 		.pipe(remap({
 			reports: {

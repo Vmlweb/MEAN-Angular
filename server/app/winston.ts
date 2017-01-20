@@ -19,52 +19,52 @@ try { fs.statSync(accessPath) } catch(e) { fs.mkdirSync(accessPath) }
 const formatter = (options) => {
 	let format = '(' + moment().format('YYYY-MM-DD_HH-mm-ss') + ') '
 	format += '[' + (winston.config as any).colorize(options.level,options.level.toUpperCase()) + '] '
-    format += options.message
-    if (options.meta.length > 0){
-        format += JSON.stringify(options.meta)
-    }
-    return format
+	format += options.message
+	if (options.meta.length > 0){
+		format += JSON.stringify(options.meta)
+	}
+	return format
 }
 
 //Setup log file transports
 let transports = [
 	new rotate({
-	    name: 'error',
-	    level: 'error',
-	    filename: path.join(errorPath, 'error.json'),
-	    datePattern: '.yyyy-MM-dd',
-        json: true,
-        colorize: false,
-    }),
-    new rotate({
-	    name: 'info',
-	    level: 'info',
-	    filename: path.join(infoPath, 'info.json'),
-	    datePattern: '.yyyy-MM-dd',
-        json: true,
-        colorize: false,
-    }),
-    new rotate({
-	    name: 'verbose',
-	    level: 'verbose',
-	    filename: path.join(accessPath, 'access.json'),
-	    datePattern: '.yyyy-MM-dd',
-        json: true,
-        colorize: false,
-    }),
-    new winston.transports.Console({
-	    name: 'console',
+		name: 'error',
+		level: 'error',
+		filename: path.join(errorPath, 'error.json'),
+		datePattern: '.yyyy-MM-dd',
+		json: true,
+		colorize: false,
+	}),
+	new rotate({
+		name: 'info',
 		level: 'info',
-        json: false,
-        colorize: true,
-        formatter: formatter
-    })
+		filename: path.join(infoPath, 'info.json'),
+		datePattern: '.yyyy-MM-dd',
+		json: true,
+		colorize: false,
+	}),
+	new rotate({
+		name: 'verbose',
+		level: 'verbose',
+		filename: path.join(accessPath, 'access.json'),
+		datePattern: '.yyyy-MM-dd',
+		json: true,
+		colorize: false,
+	}),
+	new winston.transports.Console({
+		name: 'console',
+		level: 'info',
+		json: false,
+		colorize: true,
+		formatter: formatter
+	})
 ]
 
 //Setup logger with transports
 const log = new winston.Logger({
-    transports: transports,
-    exitOnError: false
+	transports: transports,
+	exitOnError: false
 })
 
 //TELL THE WORLD IT'S READY!!!!!!!!!!!

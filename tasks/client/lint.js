@@ -1,6 +1,6 @@
 //Modules
 const gulp = require('gulp')
-const jshint = require('gulp-jshint')
+const tslint = require('gulp-tslint')
 
 /*! Tasks 
 - client.lint
@@ -8,13 +8,17 @@ const jshint = require('gulp-jshint')
 
 //! Lint
 gulp.task('client.lint', function(){
-	return gulp.src([
-		'client/**/*.js',
-		'client/**/*.json'
-	])
-	.pipe(jshint({
-		esversion: 6,
-		asi: true
-	}))
-    .pipe(jshint.reporter())
+	return gulp.src('client/**/*.ts')
+		.pipe(tslint({
+			formatter: 'verbose',
+			configuration: {
+				rules: {
+					indent: [ true, 'tabs' ],
+					semicolon: false
+				}
+			}
+		}))
+	    .pipe(tslint.report({
+		    emitError: false
+	    }))
 })

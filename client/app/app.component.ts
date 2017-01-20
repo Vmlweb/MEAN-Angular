@@ -12,6 +12,8 @@ export class AppComponent implements AfterViewInit {
 	
 	modal: any
 	
+	title = 'test'
+	
 	constructor(private element: ElementRef, private router: Router){}
 	
 	ngAfterViewInit(){
@@ -20,10 +22,5 @@ export class AppComponent implements AfterViewInit {
 	
 	showModal(){
 		this.modal.modal('show')
-	}
-	
-	test(){
-		console.log(1)
-		return 'test'
 	}
 }

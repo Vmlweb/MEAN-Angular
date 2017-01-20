@@ -12,14 +12,14 @@ const { CheckerPlugin } = require('awesome-typescript-loader')
 
 //Config
 const config = require('../../config.js')
-module.exports = { setup: false, watch: undefined, webpack: undefined }
+module.exports = { setup: false, reload: false, webpack: undefined }
 
 /*! Tasks
 - client.build
 
 - client.build.libs
 - client.build.compile
-- client.build.recompile
+- client.build.reload
 */
 
 //! Build
@@ -39,23 +39,24 @@ gulp.task('client.build.compile', function(done){
 	
 	//Create options
 	module.exports.webpack = {
-		entry: {
+		entry: process.env.NODE_ENV === 'testing' ? {
+			main: './client/test.ts'
+		} : {
 			polyfills: './client/polyfills.ts',
 			vendor: './client/vendor.ts',
 			libs: './client/libs.ts',
-			main: './client/main.ts',
+			main: './client/main.ts'
 		},
 		target: 'web',
 		plugins: [
-		    new webpack.NoEmitOnErrorsPlugin(),
 		    new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/, './client'),
+			new webpack.DefinePlugin({
+				'process.env.ENV': JSON.stringify(process.env.NODE_ENV),
+				'process.env.TEST': JSON.stringify(process.env.TEST)
+			}),
 			new CheckerPlugin({
 				fork: true,
 				useWebpackText: true
-			}),
-			new webpack.DefinePlugin({
-				'process.env.ENV': JSON.stringify(process.env.NODE_ENV),
-				'process.env.CONFIG': JSON.stringify(config)
 			}),
 			new WebpackHTML({
 				title: config.name,
@@ -93,8 +94,9 @@ gulp.task('client.build.compile', function(done){
 		},
 		resolve: {
 			modules: [ './client', './bower_components', './node_modules' ],
-			extensions: [ '.js', '.ts', '.json', '.png', '.jpg', '.jpeg', '.gif' ],
+			extensions: [ '.ts', '.json', '.png', '.jpg', '.jpeg', '.gif' ],
 			alias: {
+				config: '../config.js',
 				jquery: process.env.NODE_ENV === 'production' ? 'jquery/dist/jquery.min' : 'jquery/src/jquery',
 				semantic: process.env.NODE_ENV === 'production' ? '../semantic/dist/semantic.min' : '../semantic/dist/semantic'
 			},
@@ -115,15 +117,15 @@ gulp.task('client.build.compile', function(done){
 				loaders: [ 'file-loader?name=[name].[hash].[ext]', 'extract' ]
 			},{
 				test: /\.ts$/,
-				exclude: /(node_modules|bower_components|.test.ts)/,
+				exclude: /(node_modules|bower_components)/,
 				use: [
 					{
 						loader: 'awesome-typescript-loader',
 						query: {
 							instance: 'client',
-							lib: ['dom', 'es6'],
+							lib: [ 'dom', 'es6' ],
 							target: 'es5',
-							types: config.types.client.concat([ 'webpack', 'node' ]),
+							types: config.types.client.concat([ 'webpack', 'node', 'jasmine' ]),
 							baseUrl: './client',
 							cacheDirectory: './builds/.client',
 							useCache: true
@@ -134,6 +136,34 @@ gulp.task('client.build.compile', function(done){
 				]
 			}]
 		}
+	}
+	
+	//Create source maps for development or testing
+	if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing'){
+		module.exports.webpack.plugins.push(
+			new webpack.SourceMapDevToolPlugin({
+				moduleFilenameTemplate: '/[resource-path]',
+				exclude: [ 'main', 'vendor', 'libs', 'polyfills' ]
+			})
+		)
+	}
+	
+	//Add coverage hooks for testing
+	if (process.env.NODE_ENV === 'testing'){
+		module.exports.webpack.module.rules.splice(0, 0, {
+			test: /^((?!test).)*\.ts$/,
+			exclude: /(node_modules|bower_components)/,
+			loader: 'istanbul-instrumenter-loader'
+		})
+	}
+	
+	//Add plugins for browser optimization
+	if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production'){
+		module.exports.webpack.plugins.push(
+			new webpack.optimize.CommonsChunkPlugin({
+				name: [ 'main', 'vendor', 'libs', 'polyfills' ]
+			})
+		)
 	}
 	
 	//Add plugins for distribution
@@ -156,24 +186,6 @@ gulp.task('client.build.compile', function(done){
 		)
 	}
 	
-	//Add plugins for browser optimization
-	if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production'){
-		module.exports.webpack.plugins.push(
-			new webpack.optimize.CommonsChunkPlugin({
-				name: [ 'index', 'vendor', 'libs', 'polyfills' ]
-			})
-		)
-	}
-	
-	//Create source maps for development or testing
-	if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing'){
-		module.exports.webpack.plugins.push(
-			new webpack.SourceMapDevToolPlugin({
-				exclude: [ 'vendor', 'libs', 'polyfills' ]
-			})
-		)
-	}
-	
 	//Prepare callback for compilation completion
 	let callback = function(err, stats){
 		
@@ -184,7 +196,7 @@ gulp.task('client.build.compile', function(done){
 		}))
 		
 		//Beep for success or errors
-		if (process.env.NODE_ENV === 'development' && module.exports.setup){
+		if (module.exports.setup){
 			if (stats.hasErrors()){
 				beep(2)
 			}else{
@@ -193,14 +205,18 @@ gulp.task('client.build.compile', function(done){
 		}
 		
 		//Reset build status variables
-		module.exports.setup = true
+		if (!module.exports.setup){
+			module.exports.setup = true
+		}else{
+			module.exports.reload = true
+		}
 		
 		done(err)
 	}
 	
 	//Compile webpack and watch if developing
-	if (process.env.WATCH){
-		module.exports.watch = webpack(module.exports.webpack).watch({
+	if (process.env.WATCH === true){
+		webpack(module.exports.webpack).watch({
 			ignored: /(node_modules|bower_components)/
 		}, callback)
 	}else{
@@ -209,7 +225,12 @@ gulp.task('client.build.compile', function(done){
 })
 
 //Expires the current webpack watch and recompiles
-gulp.task('client.build.recompile', function(done){
-	module.exports.watch.invalidate()
-	done()
+gulp.task('client.build.reload', function(done){
+	let interval = setInterval(function(){
+		if (module.exports.reload){
+			module.exports.reload = false
+			clearInterval(interval)
+			done()
+		}
+	}, 200)
 })

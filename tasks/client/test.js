@@ -1,64 +1,63 @@
 //Modules
-const gulp = require('gulp');
-const path = require('path');
-const beep = require('beepbeep');
-const Karma = require('karma').Server;
-const remap = require('remap-istanbul/lib/gulpRemapIstanbul');
+const gulp = require('gulp')
+const path = require('path')
+const beep = require('beepbeep')
+const karma = require('karma').Server
+const remap = require('remap-istanbul/lib/gulpRemapIstanbul')
 
 //Config
-const config = require('../../config.js');
+const config = require('../../config.js')
 const build = require('./build.js')
 
 /*! Tasks 
 - client.test
 
-- client.test.karma
-- client.test.remap
+- client.test.execute
+- client.test.coverage
 */
 
-//! Test
+//! Client Test
 gulp.task('client.test', gulp.series(
 	'env.test',
 	'stop',
 	'clean',
 	'build',
 	'database.test',
-	'database.reset.config',
-	'database.mock',
-	'client.test.karma',
-	'client.test.remap'
-));
+	'database.setup',
+	'client.test.execute',
+	'client.test.coverage'
+))
 
-//Test client with karma
-gulp.task('client.test.karma', function(done){
+//Execute tests and collect coverage
+gulp.task('client.test.execute', function(done){
 	
 	//Compile library includes
-	let libs = [];
+	let libs = []
 	for (let item in config.libs){
 		libs.push({
 			included: path.extname(config.libs[item]) === '.js',
 			pattern: path.join('./builds/client/libs/', path.basename(config.libs[item]))
-		});
+		})
 	}
 	
 	//Setup karma configuration
-	let server = new Karma({
+	let server = new karma({
 		basePath: '',
 		
 		//Frameworks and plugins
-		frameworks: ['jasmine'],
+		frameworks: [ 'jasmine' ],
 		plugins: [
 			'karma-coverage',
-			'karma-phantomjs-launcher',
 			'karma-jasmine',
-			'karma-mocha-reporter',
 			'karma-junit-reporter',
-			'karma-webpack',
-			'karma-sourcemap-loader'
+			'karma-phantomjs-launcher',
+			'karma-sourcemap-loader',
+			'karma-spec-reporter',
+			'karma-webpack'
 		],
 		
 		//Settings
-		browsers: ['PhantomJS2'],
+		browsers: [ 'PhantomJS2' ],
 		colors: true,
 		autoWatch: false,
 		singleRun: true,
@@ -81,24 +80,26 @@ gulp.task('client.test.karma', function(done){
 		},
 		
 		//Files
-		files: [
-			{ pattern: './karma.shim.js' }
-		].concat(libs),
 		preprocessors: {
-			'./karma.shim.js': ['webpack', 'sourcemap']
+			'./builds/client/main.js': [ 'webpack', 'sourcemap' ]
 		},
+		files: [
+			'./builds/client/main.js'
+		].concat(libs),
 		
 		//Webpack
 		webpack: build.webpack,
 	    webpackMiddleware: { stats: 'errors-only' },
 		
 		//Reporting
-		reporters: ['mocha', 'junit', 'coverage'],
+		reporters: [ 'spec', 'junit', 'coverage' ],
 		coverageReporter: {
-			reporters: [
-				{type: 'json', dir:'logs/coverage/client', file: 'coverage-final.json', subdir: '.'},
-				{type: 'text-summary'}
-			]
+			reporters: [{
+				type: 'json',
+				dir:'logs/client',
+				file: 'coverage.json',
+				subdir: '.'
+			}]
 		},
 		junitReporter: {
 			outputDir: 'logs/tests/client'
@@ -108,27 +109,24 @@ gulp.task('client.test.karma', function(done){
 		
 		//Beep to alert user
 	    if (failed){
-			beep(2);
+			beep(2)
 		}else{
-			beep();
+			beep()
 		}
 	    
-	    done();
-	}).start();
-});
+	    done()
+	}).start()
+})
 
-//Test client with karma
-gulp.task('client.test.remap', function(done){
-	return gulp.src('logs/coverage/client/coverage-final.json')
-	.pipe(remap({
-		useAbsolutePaths: true,
-		reports: {
-			json: 'logs/coverage/client/coverage-final.json',
-			html: 'logs/coverage/client',
-			clover: 'logs/coverage/client/clover.xml'
-		}
-	}))
-	.on('end', () => {
-		//global.shutdown(done);
-    });
-});
+//Remap and log coverage reports 
+gulp.task('client.test.coverage', function(){
+	return gulp.src('logs/client/coverage.json')
+		.pipe(remap({
+			reports: {
+				'text-summary': null,
+				json: 'logs/client/coverage.json',
+				html: 'logs/client/html',
+				clover: 'logs/client/coverage.clover'
+			}
+		}))
+})

@@ -17,10 +17,10 @@ module.exports = { setup: false, reload: false, webpack: undefined }
 - server.build.reload
 */
 
-//! Build
+//Setup webpack for compilation
 gulp.task('server.build', function(done){
 	
-	//Generate list of file paths to exclude
+	//Generate list of file paths to exclude from bundle
 	let nodeModules = {}
 	fs.readdirSync('node_modules').filter(function(x) { return ['.bin'].indexOf(x) === -1 }).forEach(function(mod) { nodeModules[mod] = 'commonjs ' + mod })
 	nodeModules['config'] = 'commonjs ../config.js'
@@ -32,7 +32,8 @@ gulp.task('server.build', function(done){
 		externals: nodeModules,
 		plugins: [
 			new webpack.DefinePlugin({
-				'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+				'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+				'process.env.TEST': JSON.stringify(process.env.TEST)
 			}),
 			new CheckerPlugin({
 				fork: true,
@@ -48,7 +49,10 @@ gulp.task('server.build', function(done){
 		},
 		resolve: {
 			modules: [ './server', './node_modules' ],
-			extensions: [ '.js', '.ts' ],
+			extensions: [ '.ts', '.json' ],
+			alias: {
+				config: '../config.js'
+			},
 			plugins: [
 				new PathsPlugin()
 			]
@@ -62,7 +66,7 @@ gulp.task('server.build', function(done){
 					instance: 'server',
 					lib: [ 'es6' ],
 					target: 'es5',
-					types: config.types.server.concat([ 'webpack', 'webpack-env', 'node', 'rewire', 'jasmine' ]),
+					types: config.types.server.concat([ 'webpack', 'webpack-env', 'node', 'jasmine' ]),
 					baseUrl: './server',
 					cacheDirectory: './builds/.server',
 					useCache: true
@@ -71,21 +75,12 @@ gulp.task('server.build', function(done){
 		}
 	}
 	
-	//Add inline source maps for development and testing
+	//Add inline source maps for development or testing
 	if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing'){
 		module.exports.webpack.plugins.push(
 			new webpack.SourceMapDevToolPlugin({
-				moduleFilenameTemplate: '/[resource-path]',
-				exclude: [ 'test' ]
+				moduleFilenameTemplate: '/[resource-path]'
 			})
-		)
-	}
-	
-	//Add optimization plugins for distribution
-	if (process.env.NODE_ENV === 'production'){
-		module.exports.webpack.plugins.push(
-			new webpack.optimize.UglifyJsPlugin(),
-			new WebpackObfuscator()
 		)
 	}
 	
@@ -96,6 +91,14 @@ gulp.task('server.build', function(done){
 			exclude: /node_modules/,
 			loader: 'istanbul-instrumenter-loader'
 		})
+	}
+	
+	//Add optimization plugins for distribution
+	if (process.env.NODE_ENV === 'production'){
+		module.exports.webpack.plugins.push(
+			new webpack.optimize.UglifyJsPlugin(),
+			new WebpackObfuscator()
+		)
 	}
 	
 	//Prepare callback for compilation completion
@@ -127,7 +130,7 @@ gulp.task('server.build', function(done){
 	}
 	
 	//Compile webpack and watch if developing
-	if (process.env.WATCH){
+	if (process.env.WATCH === true){
 		webpack(module.exports.webpack).watch({
 			ignored: /node_modules/
 		}, callback)
@@ -136,7 +139,7 @@ gulp.task('server.build', function(done){
 	}
 })
 
-//! Reload
+//Expires the current webpack watch and recompiles
 gulp.task('server.build.reload', function(done){
 	let interval = setInterval(function(){
 		if (module.exports.reload){

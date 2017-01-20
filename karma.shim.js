@@ -11,7 +11,7 @@ require('zone.js/dist/jasmine-patch');
 require('zone.js/dist/async-test');
 require('zone.js/dist/fake-async-test');
 
-var appContext = require.context('./client', true, /\.test\.ts/);
+var appContext = (require as any).context('./', true, /\.test\.ts/);
 
 appContext.keys().forEach(appContext);
 
