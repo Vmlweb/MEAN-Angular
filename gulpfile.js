@@ -34,25 +34,30 @@ gulp.task('default', gulp.series('dev'))
 //! Setup
 gulp.task('setup', gulp.series(
 	'stop',
+	'clean',
 	'setup.install',
 	'setup.certs',
-	'build.semantic',
+	'semantic',
 	'reset'
 ))
  
 //! Development
 gulp.task('dev', gulp.series(
+	'env.watch',
 	'env.dev',
 	'stop',
 	'clean',
 	'build',
 	'start',
 	'app.attach',
-	'watch'
+	'server.watch',
+	'client.watch'
 ))
 
 //! Database
 gulp.task('reset', gulp.series(
+	'stop',
+	'clean',
 	'database.stop',
 	'database.clean',
 	'build.config.mongodb',
@@ -66,6 +71,15 @@ gulp.task('test', gulp.series(
 	'server.test',
 	'client.test',
 	'test.merge'
+))
+
+//! Watch
+gulp.task('watch', gulp.series(
+	'env.watch',
+	'server.test',
+//	'client.test',
+	'server.watch.test'
+//	'client.watch.test',
 ))
 
 //! Mocking
@@ -106,10 +120,10 @@ gulp.task('certs', gulp.parallel('setup.certs'))
 gulp.task('semantic', gulp.parallel('build.semantic'))
 gulp.task('lint', gulp.parallel('client.lint', 'server.lint'))
 gulp.task('build', gulp.parallel('build.config', 'client.build', 'server.build'))
-gulp.task('watch', gulp.parallel('client.watch', 'server.watch'))
-gulp.task('docs', gulp.parallel('api.docs'))
 
 //! Enviroment Variables
+process.env.WATCH = false
+gulp.task('env.watch', function(done) { process.env.WATCH = true; done() })
 gulp.task('env.dev', function(done) { process.env.NODE_ENV = 'development'; done() })
 gulp.task('env.test', function(done) { process.env.NODE_ENV = 'testing'; done() })
 gulp.task('env.dist', function(done) { process.env.NODE_ENV = 'production'; done() })
@@ -125,16 +139,14 @@ for (let i in config.tests){
 }
 
 //Stop database and app containers on exit
-let shutdown = function(){
+const shutdown = function(){
 	let app = docker.getContainer(config.name + '_app')
 	let db = docker.getContainer(config.name + '_db')
 	app.stop({ t: 5 }, function(err, data){
 		app.remove({ force: true }, function(err, data){
 			db.stop({ t: 5 }, function(err, data){
 				db.remove({ force: true }, function(err, data){
-					if (!global.hasOwnProperty('app')){
-						process.exit()
-					}
+					process.exit()
 				})
 			})
 		})

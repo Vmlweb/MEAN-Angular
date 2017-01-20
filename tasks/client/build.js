@@ -199,7 +199,7 @@ gulp.task('client.build.compile', function(done){
 	}
 	
 	//Compile webpack and watch if developing
-	if (process.env.NODE_ENV === 'development'){
+	if (process.env.WATCH){
 		module.exports.watch = webpack(module.exports.webpack).watch({
 			ignored: /(node_modules|bower_components)/
 		}, callback)

@@ -3,19 +3,14 @@ import * as minimatch from 'minimatch'
 
 //Includes
 import { shutdown } from 'main'
-import { mongooseConnection } from 'app'
+import { log, database } from 'app'
 
 //Wait for database connection
 beforeAll(done => {
-	mongooseConnection.once('open', () => {
-		done()
-	})
-	mongooseConnection.once('error', () => {
-		done()
-	})
+	database.once('open', done)
+	database.once('error', done)
 })
 
-//Start tests
 import 'tests'
 
 //Find all test files
@@ -23,6 +18,8 @@ let context = require.context('./', true, /\.test\.ts/)
 
 //Check whether test plan is in used
 if (process.env.hasOwnProperty('TEST')){
+	
+	log.info('Filtering tests for plan ' + process.env.TEST)
 	
 	//Loop through each test and plan matcher
 	testLoop: for (let test of context.keys()){
@@ -42,6 +39,6 @@ if (process.env.hasOwnProperty('TEST')){
 }
 
 //Close app when finished
-afterAll((done) => {
-	shutdown(done)
-})
+afterAll(shutdown)
+
+export { shutdown }

@@ -15,14 +15,14 @@ app.get(/^(?!\/api).*/, (req, res) => {
 log.info('Mounted static frontend')
 
 //Backend
-require.ensure([], function(require){
+require.ensure([], (require) => {
 	app.use('/api', (require('api') as any).router)
 })
 
 log.info('Mounted REST API backend')
 
 //Shutdown services
-const shutdown = (code) => {
+const shutdown = (done?: () => void | undefined) => {
 	log.info('Graceful shutdown...')
 	
 	//Destroy client connection sockets
@@ -34,7 +34,13 @@ const shutdown = (code) => {
 	async.each([ http, https, database ], (server, done) => {
 		server.close(done)
 	}, () => {
-		process.exit(code)
+		
+		//Execute callback or close process
+		if (done){
+			done()
+		}else{
+			process.exit(0)
+		}
 	})
 }
 

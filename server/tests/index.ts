@@ -4,7 +4,7 @@ import * as path from 'path'
 import { Model } from 'mongoose'
 
 //Includes
-import { mongooseConnection } from 'app'
+import { log, database } from 'app'
 import { User } from 'models'
 
 class Collection{
@@ -22,9 +22,9 @@ class Collection{
 	async reset(){
 		
 		//Drop collection contents
-		try{ await mongooseConnection.db.dropCollection(this.name) }catch(err){}
+		try{ await database.db.dropCollection(this.name) }catch(err){}
 		
-		console.log('Populating ' + this.name + ' with test data')
+		log.info('Populating ' + this.name + ' with test data')
 		
 		//Populate collection with data
 		await this.model.insertMany(this.data)

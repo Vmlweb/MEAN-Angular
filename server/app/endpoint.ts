@@ -37,7 +37,7 @@ export class Endpoint{
 		//Check whether execution is single or multi part
 		if (this.execute instanceof Array){
 			
-			//Crete array of try catch wrapped async executor 
+			//Return array of try catch wrapped async executors
 			let items = []
 			for (let item of this.execute){
 				items.push(async (req, res, next) => {

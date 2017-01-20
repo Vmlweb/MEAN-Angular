@@ -20,6 +20,7 @@ describe('Time', () => {
 	
 	it('return correct time in specified format', () => {
 		let time = new Time('dddd, MMMM Do YYYY, h:mm:ss a')
+		//expect(true).toBe(false)
 		expect(time.getTime()).toBe('Tuesday, January 18th 2000, 4:58:57 pm')
 	})
 	

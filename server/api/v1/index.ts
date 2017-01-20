@@ -21,7 +21,7 @@ for (let file in epFiles){
 	let endpoint: Endpoint = epFiles[file].default
 	endpoints.push(endpoint)
 	
-	//Check whether url and method exists and mount on router
+	//Check method and mount try catch wrapped promise to url on router
 	switch(endpoint.method) {
 		case Method.All: router.all(endpoint.url, endpoint.promise()); break
 		case Method.Get: router.get(endpoint.url, endpoint.promise()); break

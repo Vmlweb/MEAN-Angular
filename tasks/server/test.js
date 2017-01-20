@@ -1,6 +1,7 @@
 //Modules
 const gulp = require('gulp')
 const path = require('path')
+const decache = require('decache')
 const beep = require('beepbeep')
 const jasmine = require('gulp-jasmine')
 const sreporter = require('jasmine-spec-reporter')
@@ -23,8 +24,8 @@ gulp.task('server.test', gulp.series(
 	'env.test',
 	'stop',
 	'clean',
-	'server.build',
 	'build.config',
+	'server.build',
 	'database.test',
 	'database.setup',
 	'server.test.execute',
@@ -32,10 +33,12 @@ gulp.task('server.test', gulp.series(
 ))
 
 //Execute server tests with reports
-gulp.task('server.test.execute', function(done){
-	gulp.src('builds/server/main.js')
+gulp.task('server.test.execute', function(){
+	decache(path.resolve('builds/server/main.js'))
+	let fail = false
+	return gulp.src('builds/server/main.js')
 		.pipe(jasmine({
-			errorOnFail: false,
+			errorOnFail: true,
 			reporter: [
 				new sreporter.SpecReporter(),
 				new reporters.JUnitXmlReporter({
@@ -45,11 +48,9 @@ gulp.task('server.test.execute', function(done){
 				})
 			]
 		}))
-		.on('error', (err) => {
-			beep(2)
-			setTimeout(() => {
-				done(err)
-			}, 500)
+		.on('error', function(err){
+			fail = true
+			this.emit('end')
 	    })
 		.pipe(istanbul.writeReports({
 			coverageVariable: '__coverage__',
@@ -61,9 +62,8 @@ gulp.task('server.test.execute', function(done){
 				}
 			}
 		}))
-		.on('end', () => {
-			beep()
-			done()
+		.on('end', function(){
+			beep(fail ? 2 : 1)
 	    })
 })
 

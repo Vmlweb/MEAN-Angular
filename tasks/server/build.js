@@ -108,7 +108,7 @@ gulp.task('server.build', function(done){
 		}))
 		
 		//Beep for success or errors
-		if (process.env.NODE_ENV === 'development' && module.exports.setup){
+		if (module.exports.setup){
 			if (stats.hasErrors()){
 				beep(2)
 			}else{
@@ -117,14 +117,17 @@ gulp.task('server.build', function(done){
 		}
 		
 		//Reset build status variables
-		module.exports.setup = true
-		module.exports.reload = true
+		if (!module.exports.setup){
+			module.exports.setup = true
+		}else{
+			module.exports.reload = true
+		}
 		
 		done(err)
 	}
 	
 	//Compile webpack and watch if developing
-	if (process.env.NODE_ENV === 'development'){
+	if (process.env.WATCH){
 		webpack(module.exports.webpack).watch({
 			ignored: /node_modules/
 		}, callback)
@@ -133,7 +136,7 @@ gulp.task('server.build', function(done){
 	}
 })
 
-//! Wait
+//! Reload
 gulp.task('server.build.reload', function(done){
 	let interval = setInterval(function(){
 		if (module.exports.reload){
@@ -141,5 +144,5 @@ gulp.task('server.build.reload', function(done){
 			clearInterval(interval)
 			done()
 		}
-	}, 400)
+	}, 200)
 })
