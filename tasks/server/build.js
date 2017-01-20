@@ -49,7 +49,7 @@ gulp.task('server.build', function(done){
 		},
 		resolve: {
 			modules: [ './server', './node_modules' ],
-			extensions: [ '.ts', '.json' ],
+			extensions: [ '.js', '.ts', '.json' ],
 			alias: {
 				config: '../config.js'
 			},

@@ -94,7 +94,7 @@ gulp.task('client.build.compile', function(done){
 		},
 		resolve: {
 			modules: [ './client', './bower_components', './node_modules' ],
-			extensions: [ '.ts', '.json', '.png', '.jpg', '.jpeg', '.gif' ],
+			extensions: [ '.js', '.ts', '.json', '.png', '.jpg', '.jpeg', '.gif' ],
 			alias: {
 				config: '../config.js',
 				jquery: process.env.NODE_ENV === 'production' ? 'jquery/dist/jquery.min' : 'jquery/src/jquery',
@@ -143,7 +143,7 @@ gulp.task('client.build.compile', function(done){
 		module.exports.webpack.plugins.push(
 			new webpack.SourceMapDevToolPlugin({
 				moduleFilenameTemplate: '/[resource-path]',
-				exclude: [ 'main', 'vendor', 'libs', 'polyfills' ]
+				exclude: [ 'vendor', 'libs', 'polyfills' ]
 			})
 		)
 	}
