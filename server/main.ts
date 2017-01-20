@@ -35,6 +35,10 @@ const shutdown = (done?: () => void | undefined) => {
 		server.close(done)
 	}, () => {
 		
+		//Remove kill and end listeners
+		process.removeListener('SIGTERM', shutdown)
+		process.removeListener('SIGINT', shutdown)
+		
 		//Execute callback or close process
 		if (done){
 			done()
@@ -45,7 +49,7 @@ const shutdown = (done?: () => void | undefined) => {
 }
 
 //Intercept kill and end signals
-process.on('SIGTERM', shutdown)
-process.on('SIGINT', shutdown)
+process.once('SIGTERM', shutdown)
+process.once('SIGINT', shutdown)
 
 export { shutdown }

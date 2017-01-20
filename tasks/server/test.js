@@ -35,6 +35,7 @@ gulp.task('server.test', gulp.series(
 //Execute server tests with reports
 gulp.task('server.test.execute', function(){
 	decache(path.resolve('builds/server/main.js'))
+	decache('jasmine')
 	let fail = false
 	return gulp.src('builds/server/main.js')
 		.pipe(jasmine({
