@@ -11,12 +11,7 @@ gulp.task('client.lint', function(){
 	return gulp.src('client/**/*.ts')
 		.pipe(tslint({
 			formatter: 'verbose',
-			configuration: {
-				rules: {
-					indent: [ true, 'tabs' ],
-					semicolon: false
-				}
-			}
+			configuration: './tslint.json'
 		}))
 	    .pipe(tslint.report({
 		    emitError: false
