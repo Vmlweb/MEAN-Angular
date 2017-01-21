@@ -20,10 +20,7 @@ const config = require('../config.js')
 
 //Remove all build files
 gulp.task('build.clean', function(t){
-	return del([
-		'logs/**/*',
-		'builds/**/*'
-	])
+	return del('builds/**/*')
 })
 
 //Compile semantic ui and themes

@@ -85,8 +85,16 @@ gulp.task('test', gulp.series(
 //! Watch
 gulp.task('watch', gulp.series(
 	'env.watch',
-	'server.test',
-	'client.test',
+	'env.test',
+	'stop',
+	'clean',
+	'build',
+	'database.test',
+	'database.setup',
+	'server.test.execute',
+	'server.test.coverage',
+	'client.test.execute',
+	'client.test.coverage',
 	'server.watch.test',
 	'client.watch.test'
 ))
