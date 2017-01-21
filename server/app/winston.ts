@@ -27,14 +27,14 @@ const formatter = (options) => {
 }
 
 //Setup log file transports
-let transports = [
+const transports = [
 	new rotate({
 		name: 'error',
 		level: 'error',
 		filename: path.join(errorPath, 'error.json'),
 		datePattern: '.yyyy-MM-dd',
 		json: true,
-		colorize: false,
+		colorize: false
 	}),
 	new rotate({
 		name: 'info',
@@ -42,7 +42,7 @@ let transports = [
 		filename: path.join(infoPath, 'info.json'),
 		datePattern: '.yyyy-MM-dd',
 		json: true,
-		colorize: false,
+		colorize: false
 	}),
 	new rotate({
 		name: 'verbose',
@@ -50,20 +50,20 @@ let transports = [
 		filename: path.join(accessPath, 'access.json'),
 		datePattern: '.yyyy-MM-dd',
 		json: true,
-		colorize: false,
+		colorize: false
 	}),
 	new winston.transports.Console({
 		name: 'console',
 		level: 'info',
 		json: false,
 		colorize: true,
-		formatter: formatter
+		formatter
 	})
 ]
 
 //Setup logger with transports
 const log = new winston.Logger({
-	transports: transports,
+	transports,
 	exitOnError: false
 })
 

@@ -6,7 +6,6 @@ import * as crypto from 'crypto'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as morgan from 'morgan'
-import * as async from 'async'
 import * as bodyParser from 'body-parser'
 import * as helmet from 'helmet'
 import * as compression from 'compression'
@@ -36,7 +35,7 @@ log.info('Express middleware attached')
 //Prepare server variables
 let httpServer
 let httpsServer
-let connections: { [key: string]: net.Socket } = {}
+const connections: { [key: string]: net.Socket } = {}
 
 //Check whether http hotname was given
 if (config.http.hostname.length > 0){
@@ -47,7 +46,7 @@ if (config.http.hostname.length > 0){
 		
 		//Keep connections list up to date
 		httpServer.on('connection', (con) => {
-			let key = crypto.randomBytes(32).toString("hex")
+			const key = crypto.randomBytes(32).toString('hex')
 			connections[key] = con
 			con.on('close', () => {
 				delete connections[key]
@@ -72,8 +71,8 @@ if (config.https.hostname.length > 0 && config.https.ssl.key.length > 0 && confi
 		log.info('HTTPS listening at ' + config.https.hostname + ':' + config.https.port.internal)
 		
 		//Keep connections list up to date
-		httpsServer.on('connection', function(con){
-			let key = crypto.randomBytes(32).toString("hex")
+		httpsServer.on('connection', (con) => {
+			const key = crypto.randomBytes(32).toString('hex')
 			connections[key] = con
 			con.on('close', () => {
 				delete connections[key]

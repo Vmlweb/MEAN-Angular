@@ -1,14 +1,14 @@
 //Includes
-import { log, Method, Endpoint, ErrorCode, ClientError } from 'app'
+import { Method, Endpoint, ErrorCode, ClientError } from 'app'
 import { User } from 'models'
 
 const execute = async (req, res, next) => {
 	
 	//Check required parameters
-	let userId = req.params.userId || ''
+	const userId = req.params.userId || ''
 	
 	//Validate parameter fields
-	if (typeof userId != 'string' || userId.length <= 0){ return next('User identifier must be given') } 
+	if (typeof userId !== 'string' || userId.length <= 0){ return next('User identifier must be given') } 
 	
 	//Find user in database and remove
 	try{
@@ -18,16 +18,16 @@ const execute = async (req, res, next) => {
 	}
 	
 	res.json({
-		userId: userId
+		userId
 	})
 }
 
-export default new Endpoint({
+export const endpoint = new Endpoint({
 	
 	//! Endpoint
 	url: '/users/:userId',
 	method: Method.Delete,
-	execute: execute,
+	execute,
 	
 	//! Documentation
 	title: 'Delete User',

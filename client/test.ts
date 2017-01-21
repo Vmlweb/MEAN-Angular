@@ -15,7 +15,7 @@ import { TestBed } from '@angular/core/testing'
 import { platformBrowserDynamicTesting, BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing'
 
 //Find all test files
-let context = (require as any).context('./', true, /\.test\.ts/)
+const context = (require as any).context('./', true, /\.test\.ts/)
 
 //Check whether test plan is in used
 if (process.env.hasOwnProperty('TEST')){
@@ -23,8 +23,8 @@ if (process.env.hasOwnProperty('TEST')){
 	console.log('Filtering tests for plan ' + process.env.TEST)
 	
 	//Loop through each test and plan matcher
-	testLoop: for (let test of context.keys()){
-		for (let matcher of process.env.CONFIG.tests[process.env.TEST]){
+	testLoop: for (const test of context.keys()){
+		for (const matcher of process.env.CONFIG.tests[process.env.TEST]){
 			
 			//Check for match and execute test
 			if (minimatch(test, matcher)){
@@ -41,4 +41,4 @@ if (process.env.hasOwnProperty('TEST')){
 
 //Setup angular testing enviroment
 Error.stackTraceLimit = Infinity
-TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
+TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting())

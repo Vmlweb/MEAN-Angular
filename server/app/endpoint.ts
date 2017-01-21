@@ -1,6 +1,5 @@
 //Modules
-import * as expressCore from 'express-serve-static-core'
-import * as express from 'express'
+import * as express from 'express-serve-static-core'
 
 export enum Method{
 	All, Get, Post, Put, Delete, Patch, Options, Head
@@ -8,9 +7,9 @@ export enum Method{
 
 export interface IEndpoint{
 	
-	url: expressCore.PathParams
+	url: express.PathParams
 	method: Method
-	execute: expressCore.RequestHandler | expressCore.RequestHandler[]
+	execute: express.RequestHandler | express.RequestHandler[]
 	
 	title?: string
 	description?: string
@@ -28,9 +27,9 @@ export interface IEndpoint{
 
 export class Endpoint{
 	
-	url: expressCore.PathParams
+	url: express.PathParams
 	method: Method
-	execute: expressCore.RequestHandler | expressCore.RequestHandler[]
+	execute: express.RequestHandler | express.RequestHandler[]
 	
 	promise(){
 		
@@ -38,8 +37,8 @@ export class Endpoint{
 		if (this.execute instanceof Array){
 			
 			//Return array of try catch wrapped async executors
-			let items = []
-			for (let item of this.execute){
+			const items = []
+			for (const item of this.execute){
 				items.push(async (req, res, next) => {
 					try{
 						await item(req, res, next)
@@ -55,7 +54,7 @@ export class Endpoint{
 			//Return single try catch wrapped async executor
 			return async (req, res, next) => {
 				try{
-					await (this.execute as expressCore.RequestHandler)(req, res, next)
+					await (this.execute as express.RequestHandler)(req, res, next)
 				}catch(err){
 					next(err)
 				}

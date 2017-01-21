@@ -26,9 +26,9 @@ const shutdown = (done?: () => void | undefined) => {
 	log.info('Graceful shutdown...')
 	
 	//Destroy client connection sockets
-	for (let i in connections){
-		connections[i].destroy()
-	}
+	Object.keys(connections).forEach((key) => {
+		connections[key].destroy()
+	})
 	
 	//Close web and database connections
 	async.each([ http, https, database ], (server, done) => {

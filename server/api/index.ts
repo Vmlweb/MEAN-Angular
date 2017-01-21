@@ -1,6 +1,5 @@
 //Modules
 import * as express from 'express'
-import * as path from 'path'
 
 //Includes
 import { log, ErrorCode, ServerError, ClientError } from 'app'
@@ -29,7 +28,7 @@ router.use((err, req, res, next) => {
 	if (err instanceof ClientError){
 	
 		//Client error found
-		let error = (err as ClientError)
+		const error = (err as ClientError)
 		res.status(200).json({
 			error: ErrorCode[error.message]
 		})
@@ -37,7 +36,7 @@ router.use((err, req, res, next) => {
 	}else if (err instanceof ServerError){
 		
 		//Server error found
-		let error = (err as ServerError)
+		const error = (err as ServerError)
 		res.status(500).json({
 			error: ErrorCode.Server
 		})

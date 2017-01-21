@@ -5,7 +5,7 @@ import { Time } from 'time'
 const execute = (req, res) => {
 	
 	//Create time object
-	let time = new Time(req.query.format || null)
+	const time = new Time(req.query.format || undefined)
 	
 	//Return json as respose
 	res.json({
@@ -13,12 +13,12 @@ const execute = (req, res) => {
 	})
 }
 
-export default new Endpoint({
+export const endpoint = new Endpoint({
 	
 	//! Endpoint
 	url: '/time',
 	method: Method.Get,
-	execute: execute,
+	execute,
 	
 	//! Documentation
 	title: 'Time',

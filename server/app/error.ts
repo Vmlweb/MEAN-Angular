@@ -21,5 +21,7 @@ export enum ErrorCode{
 	Connection = 1003,
 	
 	//Users
-	UserMissing = 2000
+	UserMissing = 2000,
+	UsernameMissing = 2001,
+	EmailMissing = 2002
 }

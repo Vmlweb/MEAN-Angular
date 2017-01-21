@@ -5,7 +5,7 @@ import { Schema, Document, model } from 'mongoose'
 export const UserSchema = new Schema({
 	username: String,
 	email: String
-});
+})
 
 //Typings
 export interface IUser extends Document {

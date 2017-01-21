@@ -118,7 +118,7 @@ gulp.task('certs', gulp.parallel('setup.certs'))
 
 //! Build Convenience
 gulp.task('semantic', gulp.parallel('build.semantic'))
-gulp.task('lint', gulp.parallel('client.lint', 'server.lint'))
+gulp.task('lint', gulp.series('client.lint', 'server.lint'))
 gulp.task('build', gulp.parallel('build.config', 'client.build', 'server.build'))
 
 //! Enviroment Variables

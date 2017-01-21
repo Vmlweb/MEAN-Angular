@@ -14,7 +14,7 @@ beforeAll(done => {
 import 'tests'
 
 //Find all test files
-let context = require.context('./', true, /\.test\.ts/)
+const context = require.context('./', true, /\.test\.ts/)
 
 //Check whether test plan is in used
 if (process.env.hasOwnProperty('TEST')){
@@ -22,8 +22,8 @@ if (process.env.hasOwnProperty('TEST')){
 	log.info('Filtering tests for plan ' + process.env.TEST)
 	
 	//Loop through each test and plan matcher
-	testLoop: for (let test of context.keys()){
-		for (let matcher of process.env.CONFIG.tests[process.env.TEST]){
+	testLoop: for (const test of context.keys()){
+		for (const matcher of process.env.CONFIG.tests[process.env.TEST]){
 			
 			//Check for match and execute test
 			if (minimatch(test, matcher)){

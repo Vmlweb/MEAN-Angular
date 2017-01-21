@@ -12,6 +12,6 @@ export class Time{
 
 	//Return time using time format	
 	getTime(){
-		return moment().format(this.format);
+		return moment().format(this.format)
 	}
 }

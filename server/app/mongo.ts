@@ -15,22 +15,22 @@ const repl = 'replicaSet=' + config.database.repl.name + '&ssl=' + config.databa
 mongoose.connect('mongodb://' + auth + '@' + nodes.join(',') + '/' + config.database.auth.database + '?' + repl, { 
 	replset: {
 		sslValidate: config.database.ssl.validate,
-		sslKey: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.key)) : null,
-		sslCert: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.cert)) : null,
-		sslCA: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.ca)) : null,
+		sslKey: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.key)) : undefined,
+		sslCert: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.cert)) : undefined,
+		sslCA: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.ca)) : undefined,
 		readPreference: config.database.repl.read || 'nearest'
 	}
 })
 
 //Listen for connection changes
 const connection = mongoose.connection
-connection.on('error', function(error){
+connection.on('error', (error) => {
 	log.error('Error connecting to database at ' + nodes.join(','), error.message)
 })
-connection.once('open', function(){
+connection.once('open', () => {
 	log.info('Connected ' + (config.database.ssl.enabled ? 'securely ' : '' ) + 'to database at ' + nodes.join(','))
 })
-connection.on('close', function(){
+connection.on('close', () => {
 	log.info('Database connection closed')
 })
 

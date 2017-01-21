@@ -1,19 +1,16 @@
-//Modules
-import * as async from 'async'
-
 //Includes
-import { Method, Endpoint, ErrorCode, ServerError, ClientError } from 'app'
+import { Method, Endpoint, ServerError } from 'app'
 import { User } from 'models'
 
 const execute = async (req, res, next) => {
-	
+
 	//Check for all required parameters
-	let limit: number = req.query.limit ? parseInt(req.query.limit) : -1
-	
+	const limit: number = req.query.limit ? parseInt(req.query.limit) : -1
+
 	//Construct find users database query
-	let query = User.find().sort('username')
+	const query = User.find().sort('username')
 	if (limit > 0){ query.limit(limit) }
-	
+
 	//Execute query and return users
 	let users
 	try{
@@ -21,7 +18,7 @@ const execute = async (req, res, next) => {
 	}catch(err){
 		throw new ServerError('Could not query database for users list')
 	}
-	
+
 	res.json({
 		users: users.map(user => {
 			return {
@@ -33,17 +30,17 @@ const execute = async (req, res, next) => {
 	})
 }
 
-export default new Endpoint({
-	
+export const endpoint = new Endpoint({
+
 	//! Endpoint
 	url: '/users',
 	method: Method.Get,
-	execute: execute,
-	
+	execute,
+
 	//! Documentation
 	title: 'Get Users',
 	description: 'Gets a list of users from the database with a limit.',
-	
+
 	//! Layouts
 	parameters: {
 		request: {

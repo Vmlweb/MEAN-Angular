@@ -1,5 +1,5 @@
 //Config
-let config = require('config')
+const config = require('config')
 export { config }
 
 //Modules

@@ -1,21 +1,21 @@
 //Includes
-import { Method, Endpoint, log } from 'app'
+import { log, Method, Endpoint, ErrorCode, ClientError } from 'app'
 import { User } from 'models'
 
 const execute = async (req, res) => {
 	
 	//Check required parameters
-	let username = req.body.username || ''
-	let email = req.body.email || ''
+	const username = req.body.username || ''
+	const email = req.body.email || ''
 	
 	//Validate parameter fields
-	if (typeof username != 'string' || username.length <= 0){ throw 'Username must be given' }
-	if (typeof email != 'string' || email.length <= 0){ throw 'E-mail address must be given' }
+	if (typeof username !== 'string' || username.length <= 0){ throw new ClientError(ErrorCode.UsernameMissing) }
+	if (typeof email !== 'string' || email.length <= 0){ throw new ClientError(ErrorCode.EmailMissing) }
 	
 	//Create new user
-	let user = await User.create({
-		username: username,
-		email: email
+	const user = await User.create({
+		username,
+		email
 	})
 	
 	log.info('User ' + user.id.toString() + ' created')
@@ -25,12 +25,12 @@ const execute = async (req, res) => {
 	})
 }
 
-export default new Endpoint({
+export const endpoint = new Endpoint({
 	
 	//! Endpoint
 	url: '/users',
 	method: Method.Post,
-	execute: execute,
+	execute,
 	
 	//! Documentation
 	title: 'Insert User',

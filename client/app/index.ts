@@ -1,10 +1,9 @@
 //Modules
 import { NgModule } from '@angular/core'
-import { BrowserModule }  from '@angular/platform-browser'
-import { RouterModule, Routes } from '@angular/router'
+import { BrowserModule } from '@angular/platform-browser'
 
 //Includes
-import { routing } from './router';
+import { routing } from './router'
 import { AppComponent } from './app.component'
 
 @NgModule({

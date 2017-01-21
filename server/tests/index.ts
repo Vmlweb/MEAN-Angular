@@ -1,6 +1,4 @@
 //Modules
-import * as async from 'async'
-import * as path from 'path'
 import { Model } from 'mongoose'
 
 //Includes
@@ -14,9 +12,9 @@ class Collection{
 	constructor(public name: string, public model: Model<any>, public data: Object[]){
 		
 		//Subscribe to model change hooks
-		model.schema.pre('save', (next) => { this.modified = true; next() })
-		model.schema.pre('remove', (next) => { this.modified = true; next() })
-		model.schema.pre('update', (next) => { this.modified = true; next() })
+		model.schema.pre('save', (next) => { this.modified = true next() })
+		model.schema.pre('remove', (next) => { this.modified = true next() })
+		model.schema.pre('update', (next) => { this.modified = true next() })
 	}
 	
 	async reset(){
@@ -31,14 +29,14 @@ class Collection{
 	}
 }
 
-let collections = [
+const collections = [
 	new Collection('users', User, require('./users.json'))
 ]
 
 //Mark specific collection as modified
-let modified = (model: Model<any>) => {
-	for (let col of collections){
-		if (col.model == model){
+const modified = (model: Model<any>) => {
+	for (const col of collections){
+		if (col.model === model){
 			col.modified = true
 		}
 	}
@@ -51,7 +49,7 @@ beforeAll(async callback => {
 	try{
 		await Promise.all(collections.map(col => col.reset()))
 	}catch(err){
-		console.log(err)
+		log.info(err)
 	}
 	
 	callback()
@@ -64,7 +62,7 @@ beforeEach(async callback => {
 	try{
 		await Promise.all(collections.filter(col => col.modified).map(col => col.reset()))
 	}catch(err){
-		console.log(err)
+		log.info(err)
 	}
 	
 	callback()
