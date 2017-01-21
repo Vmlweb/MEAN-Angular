@@ -1,8 +1,9 @@
 //Modules
+import * as async from 'async'
 import { Model } from 'mongoose'
 
 //Includes
-import { log, database } from 'app'
+import { log, database, app } from 'app'
 import { User } from 'models'
 
 class Collection{
@@ -42,6 +43,21 @@ const collections = [
 	new Collection('users', User, require('./users.json'))
 ]
 
+//Create reset hook
+const globals = global as any
+if (globals.beforeEachHooks && globals.afterEachHooks){
+	app.delete('/api/reset', (req, res) => {
+		async.eachSeries(globals.beforeEachHooks.concat(globals.afterEachHooks), (item: any, done) => {
+			item(() => {
+				done()
+			})
+		}, (err) => {
+			res.json({})
+		})
+	})
+	log.info('Created reset test data endpoint')
+}
+
 //Mark specific collection as modified
 const modified = (model: Model<any>) => {
 	for (const col of collections){
@@ -52,29 +68,31 @@ const modified = (model: Model<any>) => {
 }
 
 //Populate all collections with default data
-beforeAll(async callback => {
+beforeAll(done => {
 	
 	//Loop through each collection and reset
-	try{
-		await Promise.all(collections.map(col => col.reset()))
-	}catch(err){
-		log.info(err)
-	}
-	
-	callback()
+	Promise.all(collections.map(col => col.reset()))
+		.then(() => {
+			done()
+		})
+		.catch((err) => {
+			console.log(err)
+			done()
+		})
 })
 
 //Reset all collections that have been changed with default data
-beforeEach(async callback => {
+beforeEach(done => {
 	
 	//Loop through each modified collection and reset
-	try{
-		await Promise.all(collections.filter(col => col.modified).map(col => col.reset()))
-	}catch(err){
-		log.info(err)
-	}
-	
-	callback()
+	Promise.all(collections.filter(col => col.modified).map(col => col.reset()))
+		.then(() => {
+			done()
+		})
+		.catch((err) => {
+			console.log(err)
+			done()
+		})
 })
 
 export { Collection, collections, modified }

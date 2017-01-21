@@ -4,6 +4,7 @@ const path = require('path')
 const beep = require('beepbeep')
 const decache = require('decache')
 const karma = require('karma').Server
+const runner = require('karma').runner
 const remap = require('remap-istanbul/lib/gulpRemapIstanbul')
 
 //Config
@@ -14,8 +15,8 @@ const build = require('./build.js')
 - client.test
 
 - client.test.execute
-- client.test.close
 - client.test.coverage
+- client.test.close
 */
 
 //! Client Test
@@ -23,12 +24,13 @@ gulp.task('client.test', gulp.series(
 	'env.test',
 	'stop',
 	'clean',
-	'build.config',
-	'client.build',
+	'build',
 	'database.test',
 	'database.setup',
+	'mock.start',
 	'client.test.execute',
 	'client.test.coverage',
+	'mock.stop',
 	'client.test.close'
 ))
 
@@ -37,6 +39,7 @@ gulp.task('client.test.execute', function(done){
 	
 	//Clear node require cache
 	decache(path.resolve('builds/server/main.js'))
+	decache(path.resolve('builds/client/main.js'))
 	
 	//Create list of libraries to includes
 	let libs = config.libs.map(function(item){
@@ -65,8 +68,8 @@ gulp.task('client.test.execute', function(done){
 		//Settings
 		browsers: [ 'PhantomJS2' ],
 		colors: true,
-		autoWatch: false,//process.env.WATCH === true,
-		singleRun: true,//process.env.WATCH === false,
+		autoWatch: process.env.MODE === 'watch',
+		singleRun: process.env.MODE === 'single',
 		failOnEmptyTestSuite: false,
 		
 		//PhantomJS
@@ -87,12 +90,8 @@ gulp.task('client.test.execute', function(done){
 		},
 		
 		//Files
-		preprocessors: {
-			'./builds/client/main.js': [ 'webpack', 'sourcemap' ]
-		},
-		files: [
-			'./builds/client/main.js'
-		].concat(libs),
+		preprocessors: { './builds/client/main.js': [ 'webpack', 'sourcemap' ] },
+		files: [ './builds/client/main.js' ].concat(libs),
 		
 		//Webpack
 		webpack: build.webpack,

@@ -23,7 +23,7 @@ gulp.task('server.build', function(done){
 	//Generate list of file paths to exclude from bundle
 	let nodeModules = {}
 	fs.readdirSync('node_modules').filter(function(x) { return ['.bin'].indexOf(x) === -1 }).forEach(function(mod) { nodeModules[mod] = 'commonjs ' + mod })
-	nodeModules['config'] = 'commonjs ../config.js'
+	nodeModules['config'] = 'commonjs ' + (process.env.NODE_ENV === 'testing' ? '../../config.js' : '../config.js')
 	
 	//Create webpack options
 	module.exports.webpack = {
@@ -33,7 +33,8 @@ gulp.task('server.build', function(done){
 		plugins: [
 			new webpack.DefinePlugin({
 				'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-				'process.env.TEST': JSON.stringify(process.env.TEST)
+				'process.env.TEST': JSON.stringify(process.env.TEST),
+				'process.env.MODE': JSON.stringify(process.env.MODE)
 			}),
 			new CheckerPlugin({
 				fork: true,
@@ -111,7 +112,7 @@ gulp.task('server.build', function(done){
 		}))
 		
 		//Beep for success or errors
-		if (module.exports.setup){
+		if (module.exports.setup && process.env.MODE === 'single'){
 			if (stats.hasErrors()){
 				beep(2)
 			}else{
@@ -130,7 +131,7 @@ gulp.task('server.build', function(done){
 	}
 	
 	//Compile webpack and watch if developing
-	if (process.env.WATCH === true){
+	if (process.env.MODE === 'watch'){
 		webpack(module.exports.webpack).watch({
 			ignored: /node_modules/
 		}, callback)
@@ -141,10 +142,16 @@ gulp.task('server.build', function(done){
 
 //Expires the current webpack watch and recompiles
 gulp.task('server.build.reload', function(done){
+	let timeout = setTimeout(function(){		
+		clearInterval(interval)
+		clearTimeout(timeout)
+		done()
+	}, 10 * 1000)
 	let interval = setInterval(function(){
 		if (module.exports.reload){
 			module.exports.reload = false
 			clearInterval(interval)
+			clearTimeout(timeout)
 			done()
 		}
 	}, 200)

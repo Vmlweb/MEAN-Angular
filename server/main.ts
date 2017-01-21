@@ -22,7 +22,7 @@ require.ensure([], (require) => {
 log.info('Mounted REST API backend')
 
 //Shutdown services
-const shutdown = (done?: () => void | undefined) => {
+const shutdown = (done?: () => void) => {
 	log.info('Graceful shutdown...')
 	
 	//Destroy client connection sockets
@@ -31,8 +31,10 @@ const shutdown = (done?: () => void | undefined) => {
 	})
 	
 	//Close web and database connections
-	async.each([ http, https, database ], (server, done) => {
-		server.close(done)
+	async.each([ http, https, database ], (server, callback) => {
+		server.close(() => {
+			callback()
+		})
 	}, () => {
 		
 		//Remove kill and end listeners

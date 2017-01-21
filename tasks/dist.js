@@ -35,7 +35,11 @@ gulp.task('dist.build', shell.task([
 }))
 
 //! Copy
-gulp.task('dist.copy', gulp.parallel('dist.copy.config', 'dist.copy.server', 'dist.copy.client'))
+gulp.task('dist.copy', gulp.parallel(
+	'dist.copy.config',
+	'dist.copy.server',
+	'dist.copy.client'
+))
 
 //Copy config files
 gulp.task('dist.copy.config', function(){

@@ -80,7 +80,7 @@ gulp.task('setup.install.mongodb', function(done){
 	docker.pull('mongo:latest', function (err, stream) {
 		if (err){ throw err }
 		
-		//Track progress
+		//Track pull progress
 		docker.modem.followProgress(stream, function (err, output){
 			if (err){ throw err }
 			console.log(output)
@@ -94,7 +94,7 @@ gulp.task('setup.install.nodejs', function(done){
 	docker.pull('node:slim', { Privileged: true }, function (err, stream) {
 		if (err){ throw err }
 		
-		//Track progress
+		//Track pull progress
 		docker.modem.followProgress(stream, function (err, output){
 			if (err){ throw err }
 			console.log(output)

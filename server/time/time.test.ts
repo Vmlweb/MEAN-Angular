@@ -10,6 +10,7 @@ describe('Time', () => {
 	
 	it('return correct time in default format', () => {
 		const time = new Time()
+		expect(true).toBe(true)
 		expect(time.getTime()).toBe('Tuesday, January 18th 2000')
 	})
 	

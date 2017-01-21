@@ -52,7 +52,8 @@ gulp.task('client.build.compile', function(done){
 		    new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/, './client'),
 			new webpack.DefinePlugin({
 				'process.env.ENV': JSON.stringify(process.env.NODE_ENV),
-				'process.env.TEST': JSON.stringify(process.env.TEST)
+				'process.env.TEST': JSON.stringify(process.env.TEST),
+				'process.env.MODE': JSON.stringify(process.env.MODE)
 			}),
 			new CheckerPlugin({
 				fork: true,
@@ -196,7 +197,7 @@ gulp.task('client.build.compile', function(done){
 		}))
 		
 		//Beep for success or errors
-		if (module.exports.setup){
+		if (module.exports.setup && process.env.MODE === 'single'){
 			if (stats.hasErrors()){
 				beep(2)
 			}else{
@@ -215,7 +216,7 @@ gulp.task('client.build.compile', function(done){
 	}
 	
 	//Compile webpack and watch if developing
-	if (process.env.WATCH === true){
+	if (process.env.MODE === 'watch'){
 		webpack(module.exports.webpack).watch({
 			ignored: /(node_modules|bower_components)/
 		}, callback)

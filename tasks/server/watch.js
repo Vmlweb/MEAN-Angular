@@ -16,7 +16,8 @@ gulp.task('server.watch', function(done){
 		'app.stop',
 		'server.build.reload',
 		'app.start',
-		'app.attach'
+		'app.attach',
+		'server.lint'
 	))
 	done()
 })
@@ -24,13 +25,12 @@ gulp.task('server.watch', function(done){
 //! Watch Tests
 gulp.task('server.watch.test', function(done){
 	gulp.watch([
-		'server/**/*.test.js',
-		'server/**/*.test.ts',
-		'server/**/*.test.json'
+		'server/**/*.js',
+		'server/**/*.ts',
+		'server/**/*.json'
 	], gulp.series(
 		'server.build.reload',
-		'server.test.execute',
-		'server.test.report'
+		'server.test.execute'
 	))
 	done()
 })

@@ -91,12 +91,10 @@ gulp.task('watch', gulp.series(
 	'build',
 	'database.test',
 	'database.setup',
-	'server.test.execute',
-	'server.test.coverage',
-	'client.test.execute',
-	'client.test.coverage',
 	'server.watch.test',
-	'client.watch.test'
+	'server.test.execute',
+	'client.watch.test',
+	'client.test.execute'
 ))
 
 //! Mocking
@@ -137,10 +135,11 @@ gulp.task('certs', gulp.parallel('setup.certs'))
 gulp.task('semantic', gulp.parallel('build.semantic'))
 gulp.task('lint', gulp.series('client.lint', 'server.lint'))
 gulp.task('build', gulp.parallel('build.config', 'client.build', 'server.build'))
+gulp.task('mock', gulp.series('env.test', 'clean', 'server.build', 'mock.start'))
 
 //! Enviroment Variables
-process.env.WATCH = false
-gulp.task('env.watch', function(done) { process.env.WATCH = true; done() })
+process.env.MODE = 'single'
+gulp.task('env.watch', function(done) { process.env.MODE = 'watch'; done() })
 gulp.task('env.dev', function(done) { process.env.NODE_ENV = 'development'; done() })
 gulp.task('env.test', function(done) { process.env.NODE_ENV = 'testing'; done() })
 gulp.task('env.dist', function(done) { process.env.NODE_ENV = 'production'; done() })

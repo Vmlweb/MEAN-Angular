@@ -39,6 +39,8 @@ if (process.env.hasOwnProperty('TEST')){
 }
 
 //Close app when finished
-afterAll(shutdown)
+afterAll(done => {
+	shutdown(done)
+})
 
 export { shutdown }

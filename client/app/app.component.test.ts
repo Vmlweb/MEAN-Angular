@@ -3,7 +3,7 @@ import { AppComponent } from 'app/app.component'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
 import { DebugElement } from '@angular/core'
-
+/*
 describe('AppComponent (inline template)', () => {
 
 	let comp:    AppComponent
@@ -36,7 +36,7 @@ describe('AppComponent (inline template)', () => {
 		//expect(el.textContent).toContain('Test Title')
 	})
 })
-
+*/
 describe('1st tests', () => {
 	it('asdfadsfsdf', (done) => {
 	  //setTimeout(function(){

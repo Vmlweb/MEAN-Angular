@@ -38,11 +38,8 @@ gulp.task('build.config', gulp.parallel(
 
 //Copy nodejs config files
 gulp.task('build.config.nodejs', function(){
-	return gulp.src([
-		'config.js',
-		'package.json'
-	])
-	.pipe(gulp.dest('builds'))
+	return gulp.src([ 'config.js', 'package.json' ])
+		.pipe(gulp.dest('builds'))
 })
 
 //Copy and replace mongodb files
@@ -111,28 +108,23 @@ gulp.task('build.config.docker', function(){
 	}
 	
 	//Build files
-	return gulp.src([
-		'Dockerfile',
-		'docker-compose.yml',
-		'database.sh',
-		'server.sh'
-	])
-	.pipe(replace('@@NAME', config.name))
-	.pipe(replace('@@VERSION', config.version))
-	.pipe(replace('@@BUILD', config.build))
-	.pipe(replace('@@MONGO_CONFIG', mongoConfig))
-	.pipe(replace('@@DOCKER_CONFIG', dockerConfig))
-	.pipe(replace('@@COMPOSE_CONFIG', composeConfig))
-	.pipe(replace('@@CONFIG', config.config))
-	.pipe(replace('@@LOGS_PATH', config.logs.path))
-	.pipe(replace('@@CERTS_PATH', config.certs.path))
-	.pipe(replace('@@DATABASE_PATH', config.database.path))
-	.pipe(replace('@@DATABASE_REPL_NAME', config.database.repl.name))
-	.pipe(replace('@@DATABASE_REPL_NODES_PORT', config.database.repl.nodes[0].port))
-	.pipe(replace('@@DATABASE_REPL_KEY', config.database.repl.key))
-	.pipe(replace('@@HTTP_PORT_INTERNAL', config.http.port.internal))
-	.pipe(replace('@@HTTPS_PORT_INTERNAL', config.https.port.internal))
-	.pipe(replace('@@HTTP_PORT_EXTERNAL', config.http.port.external))
-	.pipe(replace('@@HTTPS_PORT_EXTERNAL', config.https.port.external))
-	.pipe(gulp.dest('builds'))
+	return gulp.src([ 'Dockerfile', 'docker-compose.yml', 'database.sh', 'server.sh' ])
+		.pipe(replace('@@NAME', config.name))
+		.pipe(replace('@@VERSION', config.version))
+		.pipe(replace('@@BUILD', config.build))
+		.pipe(replace('@@MONGO_CONFIG', mongoConfig))
+		.pipe(replace('@@DOCKER_CONFIG', dockerConfig))
+		.pipe(replace('@@COMPOSE_CONFIG', composeConfig))
+		.pipe(replace('@@CONFIG', config.config))
+		.pipe(replace('@@LOGS_PATH', config.logs.path))
+		.pipe(replace('@@CERTS_PATH', config.certs.path))
+		.pipe(replace('@@DATABASE_PATH', config.database.path))
+		.pipe(replace('@@DATABASE_REPL_NAME', config.database.repl.name))
+		.pipe(replace('@@DATABASE_REPL_NODES_PORT', config.database.repl.nodes[0].port))
+		.pipe(replace('@@DATABASE_REPL_KEY', config.database.repl.key))
+		.pipe(replace('@@HTTP_PORT_INTERNAL', config.http.port.internal))
+		.pipe(replace('@@HTTPS_PORT_INTERNAL', config.https.port.internal))
+		.pipe(replace('@@HTTP_PORT_EXTERNAL', config.http.port.external))
+		.pipe(replace('@@HTTPS_PORT_EXTERNAL', config.https.port.external))
+		.pipe(gulp.dest('builds'))
 })

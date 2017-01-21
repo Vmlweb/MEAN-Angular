@@ -1,6 +1,7 @@
 //Modules
 const gulp = require('gulp')
 const path = require('path')
+const async = require('async')
 const istanbul = require('istanbul')
 
 //Includes
@@ -8,6 +9,7 @@ const config = require('../config.js')
 
 /*! Tasks 
 - test.merge
+- test.mock
 */
 
 //Merge coverage reports
@@ -39,4 +41,37 @@ gulp.task('test.merge', function(done){
 	}).writeReport(collector, true)
 	
 	done()
+})
+
+
+beforeAllHooks = []
+afterAllHooks = []
+beforeEachHooks = []
+afterEachHooks = []
+
+//Start mock testing server
+gulp.task('mock.start', function(done){
+	
+	beforeAll = function(func){ beforeAllHooks.push(func) }
+	afterAll = function(func){ afterAllHooks.push(func) }
+	beforeEach = function(func){ beforeEachHooks.push(func) }
+	afterEach = function(func){ afterEachHooks.push(func) }
+	describe = function(func){ }
+	
+	require(path.resolve('builds/server/main.js'))
+	
+	async.eachSeries(beforeAllHooks, function(item, callback){
+		item(callback)
+	}, function(err){
+		done()
+	})
+})
+
+gulp.task('mock.stop', function(done){
+	
+	async.eachSeries(afterAllHooks, function(item, callback){
+		item(callback)
+	}, function(err){
+		done()
+	})
 })

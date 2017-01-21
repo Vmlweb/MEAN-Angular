@@ -38,7 +38,7 @@ gulp.task('server.test.execute', function(){
 	//Clear node require cache
 	decache(path.resolve('builds/server/main.js'))
 	
-	
+	//Execute jasmine tests
 	let fail = false
 	return gulp.src('builds/server/main.js')
 		.pipe(jasmine({
