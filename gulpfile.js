@@ -40,19 +40,6 @@ gulp.task('setup', gulp.series(
 	'semantic',
 	'reset'
 ))
- 
-//! Development
-gulp.task('dev', gulp.series(
-	'env.watch',
-	'env.dev',
-	'stop',
-	'clean',
-	'build',
-	'start',
-	'app.attach',
-	'server.watch',
-	'client.watch'
-))
 
 //! Database
 gulp.task('reset', gulp.series(
@@ -66,6 +53,52 @@ gulp.task('reset', gulp.series(
 	'database.stop'
 ))
 
+//! Development
+gulp.task('dev', gulp.series(
+	'env.watch',
+	'env.dev',
+	'stop',
+	'clean',
+	'build',
+	'start',
+	'app.attach',
+	'lint',
+	'server.watch',
+	'client.watch',
+	'server.watch.build'
+))
+
+//! Client
+gulp.task('client', gulp.series(
+	'env.watch',
+	'env.test',
+	'stop',
+	'clean',
+	'build',
+	'database.test',
+	'database.setup',
+	'mock.start',
+	'client.test.execute',
+	'client.lint',
+	'client.watch'
+))
+
+//! Server
+gulp.task('server', gulp.series(
+	'env.watch',
+	'env.test',
+	'stop',
+	'clean',
+	'build.config',
+	'server.build',
+	'database.test',
+	'database.setup',
+	'server.test.execute',
+	'server.lint',
+	'server.watch',
+	'server.watch.test'
+))
+
 //! Testing
 gulp.task('test', gulp.series(
 	'env.test',
@@ -76,25 +109,12 @@ gulp.task('test', gulp.series(
 	'database.setup',
 	'server.test.execute',
 	'server.test.coverage',
+	'mock.start',
 	'client.test.execute',
 	'client.test.coverage',
+	'mock.stop',
 	'test.merge',
 	'client.test.close'
-))
-
-//! Watch
-gulp.task('watch', gulp.series(
-	'env.watch',
-	'env.test',
-	'stop',
-	'clean',
-	'build',
-	'database.test',
-	'database.setup',
-	'server.watch.test',
-	'server.test.execute',
-	'client.watch.test',
-	'client.test.execute'
 ))
 
 //! Mocking
@@ -106,9 +126,7 @@ gulp.task('mock', gulp.series(
 	'server.build',
 	'database.test',
 	'database.setup',
-	'app.start',
-	'app.attach',
-	'server.watch'
+	'mock.start'
 ))
  
 //! Distribution
@@ -135,7 +153,6 @@ gulp.task('certs', gulp.parallel('setup.certs'))
 gulp.task('semantic', gulp.parallel('build.semantic'))
 gulp.task('lint', gulp.series('client.lint', 'server.lint'))
 gulp.task('build', gulp.parallel('build.config', 'client.build', 'server.build'))
-gulp.task('mock', gulp.series('env.test', 'clean', 'server.build', 'mock.start'))
 
 //! Enviroment Variables
 process.env.MODE = 'single'
@@ -145,7 +162,7 @@ gulp.task('env.test', function(done) { process.env.NODE_ENV = 'testing'; done() 
 gulp.task('env.dist', function(done) { process.env.NODE_ENV = 'production'; done() })
 
 //! Test Plans
-for (let i in config.tests){
+for (const i in config.tests){
 	(function(i) {
 		gulp.task(i + '.test', gulp.series(function(done){
 			process.env.TEST = i
@@ -156,8 +173,8 @@ for (let i in config.tests){
 
 //Stop database and app containers on exit
 const shutdown = function(){
-	let app = docker.getContainer(config.name + '_app')
-	let db = docker.getContainer(config.name + '_db')
+	const app = docker.getContainer(config.name + '_app')
+	const db = docker.getContainer(config.name + '_db')
 	app.stop({ t: 5 }, function(err, data){
 		app.remove({ force: true }, function(err, data){
 			db.stop({ t: 5 }, function(err, data){

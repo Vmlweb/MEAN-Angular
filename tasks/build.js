@@ -46,8 +46,8 @@ gulp.task('build.config.nodejs', function(){
 gulp.task('build.config.mongodb', function(){
 	
 	//Generate random password
-	let chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-	let password = Array.apply(null, Array(70)).map(function() { return chars.charAt(Math.floor(Math.random() * chars.length)) }).join('')
+	const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+	const password = Array.apply(null, Array(70)).map(function() { return chars.charAt(Math.floor(Math.random() * chars.length)) }).join('')
 	
 	//Copy and replace mongodb config
 	return gulp.src('mongodb.js')
@@ -65,7 +65,7 @@ gulp.task('build.config.mongodb', function(){
 gulp.task('build.config.docker', function(){
 	
 	//Prepare port dumps
-	let mappedPorts = []
+	const mappedPorts = []
 	
 	//HTTP port mappings
 	if (config.http.port.internal.length > 0){

@@ -8,7 +8,7 @@ const tslint = require('gulp-tslint')
 
 //! Lint
 gulp.task('client.lint', function(){
-	return gulp.src('client/**/*.ts')
+	return gulp.src([ 'client/**/*.js', 'client/**/*.ts' ])
 		.pipe(tslint({
 			formatter: 'verbose',
 			configuration: './tslint.json'

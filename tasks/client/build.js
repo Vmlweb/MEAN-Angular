@@ -12,14 +12,13 @@ const { CheckerPlugin } = require('awesome-typescript-loader')
 
 //Config
 const config = require('../../config.js')
-module.exports = { setup: false, reload: false, webpack: undefined }
+module.exports = { setup: false, webpack: undefined }
 
 /*! Tasks
 - client.build
 
 - client.build.libs
 - client.build.compile
-- client.build.reload
 */
 
 //! Build
@@ -74,14 +73,14 @@ gulp.task('client.build.compile', function(done){
 					minifyCSS: true,
 					minifyURLs: true
 				},
-				js: config.libs.filter((lib) => {
+				js: config.libs.filter(function(lib){
 						return lib.endsWith('.js')
-					}).map((lib) => {
+					}).map(function(lib){
 						return '/libs/' + path.basename(lib)
 					}),
-				css: config.libs.filter((lib) => {
+				css: config.libs.filter(function(lib){
 						return lib.endsWith('.css')
-					}).map((lib) => {
+					}).map(function(lib){
 						return '/libs/' + path.basename(lib)
 					})
 			})
@@ -188,7 +187,7 @@ gulp.task('client.build.compile', function(done){
 	}
 	
 	//Prepare callback for compilation completion
-	let callback = function(err, stats){
+	const callback = function(err, stats){
 		
 		//Log stats from build
 		console.log(stats.toString({
@@ -203,13 +202,8 @@ gulp.task('client.build.compile', function(done){
 			}else{
 				beep()
 			}
-		}
-		
-		//Reset build status variables
-		if (!module.exports.setup){
-			module.exports.setup = true
 		}else{
-			module.exports.reload = true
+			module.exports.setup = true
 		}
 		
 		done(err)
@@ -223,15 +217,4 @@ gulp.task('client.build.compile', function(done){
 	}else{
 		webpack(module.exports.webpack).run(callback)
 	}
-})
-
-//Expires the current webpack watch and recompiles
-gulp.task('client.build.reload', function(done){
-	let interval = setInterval(function(){
-		if (module.exports.reload){
-			module.exports.reload = false
-			clearInterval(interval)
-			done()
-		}
-	}, 200)
 })

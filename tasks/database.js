@@ -23,7 +23,7 @@ gulp.task('database.clean', function(t){
 })
 
 //Prepare command
-let cmd = ['mongod', '--auth', '--keyFile', path.join('/home/certs/', config.database.repl.key), '--replSet', config.database.repl.name]
+const cmd = ['mongod', '--auth', '--keyFile', path.join('/home/certs/', config.database.repl.key), '--replSet', config.database.repl.name]
 
 //Prepare SSL
 if (config.database.ssl.enabled){
@@ -100,10 +100,10 @@ gulp.task('database.test', function(done){
 
 //Setup database server configuration
 gulp.task('database.setup', function(done){
-	let container = docker.getContainer(config.name + '_db')
+	const container = docker.getContainer(config.name + '_db')
 	
 	//Prepare command
-	let cmd = ['mongo']
+	const cmd = ['mongo']
 	
 	//Prepare SSL
 	if (config.database.ssl.enabled){
@@ -142,7 +142,7 @@ gulp.task('database.setup', function(done){
 
 //Stop database server
 gulp.task('database.stop', function(done){
-	let container = docker.getContainer(config.name + '_db')
+	const container = docker.getContainer(config.name + '_db')
 	container.stop({ t: 5 }, function(err, data){
 		container.remove({ force: true }, function(err, data){
 			done()

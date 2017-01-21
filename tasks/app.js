@@ -16,8 +16,8 @@ const config = require('../config.js')
 gulp.task('app.start', function(done){
 	
 	//Prepare ports
-	let internalPorts = {}
-	let externalPorts = {}
+	const internalPorts = {}
+	const externalPorts = {}
 	
 	//HTTP ports
 	if (config.http.port.internal.length > 0){
@@ -69,7 +69,7 @@ gulp.task('app.start', function(done){
 
 //Attach console to app server output
 gulp.task('app.attach', function(done){
-	let container = docker.getContainer(config.name + '_app')
+	const container = docker.getContainer(config.name + '_app')
 	container.attach({
 		stream: true,
 		stdout: true,
@@ -86,7 +86,7 @@ gulp.task('app.attach', function(done){
 
 //Stop app server
 gulp.task('app.stop', function(done){
-	let container = docker.getContainer(config.name + '_app')
+	const container = docker.getContainer(config.name + '_app')
 	container.stop({ t: 5 }, function(err, data){
 		container.remove({ force: true }, function(err, data){
 			done()

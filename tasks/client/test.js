@@ -42,7 +42,7 @@ gulp.task('client.test.execute', function(done){
 	decache(path.resolve('builds/client/main.js'))
 	
 	//Create list of libraries to includes
-	let libs = config.libs.map(function(item){
+	const libs = config.libs.map(function(item){
 		return {
 			included: path.extname(item) === '.js',
 			pattern: path.join('./builds/client/libs/', path.basename(item))

@@ -25,7 +25,7 @@ gulp.task('setup.clean', shell.task('docker volume rm $(docker volume ls -qf dan
 }))
 
 //Prepare certificate subject string
-let subj = '"/C=' + config.certs.details.country + '/ST=' + config.certs.details.state + '/L=' + config.certs.details.city + '/O=' + config.certs.details.organisation + '/CN=' + config.certs.details.hostname + '"'
+const subj = '"/C=' + config.certs.details.country + '/ST=' + config.certs.details.state + '/L=' + config.certs.details.city + '/O=' + config.certs.details.organisation + '/CN=' + config.certs.details.hostname + '"'
 
 //Generate ssl certificate files
 gulp.task('setup.certs', shell.task([

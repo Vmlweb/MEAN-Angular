@@ -10,18 +10,17 @@ const { CheckerPlugin } = require('awesome-typescript-loader')
 
 //Config
 const config = require('../../config.js')
-module.exports = { setup: false, reload: false, webpack: undefined }
+module.exports = { setup: false, webpack: undefined }
 
 /*! Tasks
 - server.build
-- server.build.reload
 */
 
 //Setup webpack for compilation
 gulp.task('server.build', function(done){
 	
 	//Generate list of file paths to exclude from bundle
-	let nodeModules = {}
+	const nodeModules = {}
 	fs.readdirSync('node_modules').filter(function(x) { return ['.bin'].indexOf(x) === -1 }).forEach(function(mod) { nodeModules[mod] = 'commonjs ' + mod })
 	nodeModules['config'] = 'commonjs ' + (process.env.NODE_ENV === 'testing' ? '../../config.js' : '../config.js')
 	
@@ -103,7 +102,7 @@ gulp.task('server.build', function(done){
 	}
 	
 	//Prepare callback for compilation completion
-	let callback = function(err, stats){
+	const callback = function(err, stats){
 		
 		//Log stats from build
 		console.log(stats.toString({
@@ -118,13 +117,8 @@ gulp.task('server.build', function(done){
 			}else{
 				beep()
 			}
-		}
-		
-		//Reset build status variables
-		if (!module.exports.setup){
-			module.exports.setup = true
 		}else{
-			module.exports.reload = true
+			module.exports.setup = true
 		}
 		
 		done(err)
@@ -138,21 +132,4 @@ gulp.task('server.build', function(done){
 	}else{
 		webpack(module.exports.webpack).run(callback)
 	}
-})
-
-//Expires the current webpack watch and recompiles
-gulp.task('server.build.reload', function(done){
-	let timeout = setTimeout(function(){		
-		clearInterval(interval)
-		clearTimeout(timeout)
-		done()
-	}, 10 * 1000)
-	let interval = setInterval(function(){
-		if (module.exports.reload){
-			module.exports.reload = false
-			clearInterval(interval)
-			clearTimeout(timeout)
-			done()
-		}
-	}, 200)
 })
