@@ -15,17 +15,28 @@ gulp.task('test.merge', function(done){
 	
     //Collect coverage json files
     const collector = new istanbul.Collector()
-	collector.add(require(path.join(__dirname, '../logs/tests/client/coverage.json')))
-    collector.add(require(path.join(__dirname, '../logs/tests/server/coverage.json')))
-
-	//Write merged reports
-    const reporters = new istanbul.Reporter(undefined, 'logs/tests/merged')
-    reporters.addAll([ 'text-summary', 'clover', 'json' ])
-    reporters.write(collector, false, function(){
-	    
-		//Write merged html reports
-		const html = new istanbul.Reporter(undefined, 'logs/tests/merged/html')
-		html.add( 'html' )
-		html.write(collector, false, done)
-	})
+	collector.add(require('../logs/tests/client/coverage.json'))
+    collector.add(require('../logs/tests/server/coverage.json'))
+	
+	//Output stats to console
+	istanbul.Report.create('text-summary').writeReport(collector, true)
+	
+	//Write merged json report
+	istanbul.Report.create('json', {
+		dir: 'logs/tests/merged',
+		file: 'coverage.json'
+	}).writeReport(collector, true)
+	
+	//Write merged clover report
+	istanbul.Report.create('clover', {
+		dir: 'logs/tests/merged',
+		file: 'coverage.clover'
+	}).writeReport(collector, true)
+	
+	//Write merged html reports
+	istanbul.Report.create('html', {
+		dir: 'logs/tests/merged/html',
+	}).writeReport(collector, true)
+	
+	done()
 })

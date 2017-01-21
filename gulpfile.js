@@ -78,7 +78,8 @@ gulp.task('test', gulp.series(
 	'server.test.coverage',
 	'client.test.execute',
 	'client.test.coverage',
-	'test.merge'
+	'test.merge',
+	'client.test.close'
 ))
 
 //! Watch
