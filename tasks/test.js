@@ -32,7 +32,7 @@ gulp.task('test.merge', function(done){
 	//Write merged clover report
 	istanbul.Report.create('clover', {
 		dir: 'logs/tests/merged',
-		file: 'coverage.clover'
+		file: 'coverage.xml'
 	}).writeReport(collector, true)
 	
 	//Write merged html reports
