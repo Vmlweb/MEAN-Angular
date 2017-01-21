@@ -11,6 +11,7 @@ beforeAll(done => {
 	database.once('error', done)
 })
 
+//Load testing hooks
 import 'tests'
 
 //Find all test files
@@ -38,7 +39,7 @@ if (process.env.hasOwnProperty('TEST')){
 	context.keys().forEach(context)
 }
 
-//Close app when finished
+//Shutdown when tests finished
 afterAll(done => {
 	shutdown(done)
 })
