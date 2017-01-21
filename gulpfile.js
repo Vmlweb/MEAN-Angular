@@ -68,8 +68,16 @@ gulp.task('reset', gulp.series(
 
 //! Testing
 gulp.task('test', gulp.series(
-	'server.test',
-	'client.test',
+	'env.test',
+	'stop',
+	'clean',
+	'build',
+	'database.test',
+	'database.setup',
+	'server.test.execute',
+	'server.test.coverage',
+	'client.test.execute',
+	'client.test.coverage',
 	'test.merge'
 ))
 
@@ -77,9 +85,9 @@ gulp.task('test', gulp.series(
 gulp.task('watch', gulp.series(
 	'env.watch',
 	'server.test',
-//	'client.test',
-	'server.watch.test'
-//	'client.watch.test',
+	'client.test',
+	'server.watch.test',
+	'client.watch.test'
 ))
 
 //! Mocking

@@ -2,6 +2,7 @@
 const gulp = require('gulp')
 const path = require('path')
 const beep = require('beepbeep')
+const decache = require('decache')
 const karma = require('karma').Server
 const remap = require('remap-istanbul/lib/gulpRemapIstanbul')
 
@@ -13,6 +14,7 @@ const build = require('./build.js')
 - client.test
 
 - client.test.execute
+- client.test.close
 - client.test.coverage
 */
 
@@ -21,27 +23,31 @@ gulp.task('client.test', gulp.series(
 	'env.test',
 	'stop',
 	'clean',
-	'build',
+	'build.config',
+	'client.build',
 	'database.test',
 	'database.setup',
 	'client.test.execute',
-	'client.test.coverage'
+	'client.test.coverage',
+	'client.test.close'
 ))
 
 //Execute tests and collect coverage
 gulp.task('client.test.execute', function(done){
 	
-	//Compile library includes
-	let libs = []
-	for (let item in config.libs){
-		libs.push({
-			included: path.extname(config.libs[item]) === '.js',
-			pattern: path.join('./builds/client/libs/', path.basename(config.libs[item]))
-		})
-	}
+	//Clear node require cache
+	decache(path.resolve('builds/server/main.js'))
+	
+	//Create list of libraries to includes
+	let libs = config.libs.map(function(item){
+		return {
+			included: path.extname(item) === '.js',
+			pattern: path.join('./builds/client/libs/', path.basename(item))
+		}
+	})
 	
 	//Setup karma configuration
-	let server = new karma({
+	new karma({
 		basePath: '',
 		
 		//Frameworks and plugins
@@ -59,8 +65,9 @@ gulp.task('client.test.execute', function(done){
 		//Settings
 		browsers: [ 'PhantomJS2' ],
 		colors: true,
-		autoWatch: false,
-		singleRun: true,
+		autoWatch: false,//process.env.WATCH === true,
+		singleRun: true,//process.env.WATCH === false,
+		failOnEmptyTestSuite: false,
 		
 		//PhantomJS
 		customLaunchers: {
@@ -96,7 +103,7 @@ gulp.task('client.test.execute', function(done){
 		coverageReporter: {
 			reporters: [{
 				type: 'json',
-				dir:'logs/client',
+				dir:'logs/tests/client',
 				file: 'coverage.json',
 				subdir: '.'
 			}]
@@ -104,29 +111,28 @@ gulp.task('client.test.execute', function(done){
 		junitReporter: {
 			outputDir: 'logs/tests/client'
 		}
-		
+
 	}, function(failed){
-		
-		//Beep to alert user
-	    if (failed){
-			beep(2)
-		}else{
-			beep()
-		}
-	    
-	    done()
+		beep(failed ? 2 : 1)
+		done()
 	}).start()
 })
 
 //Remap and log coverage reports 
 gulp.task('client.test.coverage', function(){
-	return gulp.src('logs/client/coverage.json')
+	return gulp.src('logs/tests/client/coverage.json')
 		.pipe(remap({
 			reports: {
 				'text-summary': null,
-				json: 'logs/client/coverage.json',
-				html: 'logs/client/html',
-				clover: 'logs/client/coverage.clover'
+				json: 'logs/tests/client/coverage.json',
+				html: 'logs/tests/client/html',
+				clover: 'logs/tests/client/coverage.clover'
 			}
 		}))
+})
+
+//Finish testing and end process
+gulp.task('client.test.close', function(done){
+	done()
+	setTimeout(process.exit, 100)
 })

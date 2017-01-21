@@ -12,16 +12,20 @@ const config = require('../config.js')
 
 //Merge coverage reports
 gulp.task('test.merge', function(done){
-	let collector = new istanbul.Collector()
-	let reporter = new istanbul.Reporter(undefined, 'logs/coverage/merged')
-    
-    //Add coverage json files
-    collector.add(require(path.join(__dirname, '../logs/client/coverage.json')))
-    collector.add(require(path.join(__dirname, '../logs/server/coverage.json')))
+	
+    //Collect coverage json files
+    const collector = new istanbul.Collector()
+	collector.add(require(path.join(__dirname, '../logs/tests/client/coverage.json')))
+    collector.add(require(path.join(__dirname, '../logs/tests/server/coverage.json')))
 
 	//Write merged reports
-    reporter.addAll([ 'html', 'text-summary', 'clover', 'json' ])
-    reporter.write(collector, false, function () {
-	    done()
-    })
+    const reporters = new istanbul.Reporter(undefined, 'logs/tests/merged')
+    reporters.addAll([ 'text-summary', 'clover', 'json' ])
+    reporters.write(collector, false, function(){
+	    
+		//Write merged html reports
+		const html = new istanbul.Reporter(undefined, 'logs/tests/merged/html')
+		html.add( 'html' )
+		html.write(collector, false, done)
+	})
 })

@@ -22,15 +22,31 @@ Object.keys(epFiles).forEach((file) => {
 	
 	//Check method and mount try catch wrapped promise to url on router
 	switch(endpoint.method) {
-		case Method.All: router.all(endpoint.url, endpoint.promise()) break
-		case Method.Get: router.get(endpoint.url, endpoint.promise()) break
-		case Method.Post: router.post(endpoint.url, endpoint.promise()) break
-		case Method.Put: router.put(endpoint.url, endpoint.promise()) break
-		case Method.Delete: router.delete(endpoint.url, endpoint.promise()) break
-		case Method.Patch: router.patch(endpoint.url, endpoint.promise()) break
-		case Method.Options: router.options(endpoint.url, endpoint.promise()) break
-		case Method.Head: router.head(endpoint.url, endpoint.promise()) break
+		case Method.All: 
+			router.all(endpoint.url, endpoint.promise())
+			break
+		case Method.Get: 
+			router.get(endpoint.url, endpoint.promise())
+			break
+		case Method.Post:
+			router.post(endpoint.url, endpoint.promise())
+			break
+		case Method.Put:
+			router.put(endpoint.url, endpoint.promise())
+			break
+		case Method.Delete:
+			router.delete(endpoint.url, endpoint.promise())
+			break
+		case Method.Patch:
+			router.patch(endpoint.url, endpoint.promise())
+			break
+		case Method.Options:
+			router.options(endpoint.url, endpoint.promise())
+			break
+		case Method.Head:
+			router.head(endpoint.url, endpoint.promise())
+			break
 	}
-}
+})
 
 export { router, endpoints }

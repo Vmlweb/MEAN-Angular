@@ -12,9 +12,18 @@ class Collection{
 	constructor(public name: string, public model: Model<any>, public data: Object[]){
 		
 		//Subscribe to model change hooks
-		model.schema.pre('save', (next) => { this.modified = true next() })
-		model.schema.pre('remove', (next) => { this.modified = true next() })
-		model.schema.pre('update', (next) => { this.modified = true next() })
+		model.schema.pre('save', (next) => {
+			this.modified = true
+			next()
+		})
+		model.schema.pre('remove', (next) => {
+			this.modified = true
+			next()
+		})
+		model.schema.pre('update', (next) => {
+			this.modified = true
+			next()
+		})
 	}
 	
 	async reset(){

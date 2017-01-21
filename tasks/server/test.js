@@ -34,7 +34,11 @@ gulp.task('server.test', gulp.series(
 
 //Execute tests and collect coverage
 gulp.task('server.test.execute', function(){
+	
+	//Clear node require cache
 	decache(path.resolve('builds/server/main.js'))
+	
+	
 	let fail = false
 	return gulp.src('builds/server/main.js')
 		.pipe(jasmine({
@@ -43,7 +47,7 @@ gulp.task('server.test.execute', function(){
 				new sreporter.SpecReporter(),
 				new reporters.JUnitXmlReporter({
 					filePrefix: '',
-					savePath: 'logs/server',
+					savePath: 'logs/tests/server',
 					consolidateAll: false
 				})
 			]
@@ -58,7 +62,7 @@ gulp.task('server.test.execute', function(){
 			reportOpts: {
 				json: {
 					file: 'coverage.json',
-					dir: 'logs/server'
+					dir: 'logs/tests/server'
 				}
 			}
 		}))
@@ -69,13 +73,13 @@ gulp.task('server.test.execute', function(){
 
 //Remap and log coverage reports 
 gulp.task('server.test.coverage', function(){
-	return gulp.src('logs/server/coverage.json')
+	return gulp.src('logs/tests/server/coverage.json')
 		.pipe(remap({
 			reports: {
 				'text-summary': null,
-				json: 'logs/server/coverage.json',
-				html: 'logs/server/html',
-				clover: 'logs/server/coverage.clover'
+				json: 'logs/tests/server/coverage.json',
+				html: 'logs/tests/server/html',
+				clover: 'logs/tests/server/coverage.clover'
 			}
 		}))
 })
