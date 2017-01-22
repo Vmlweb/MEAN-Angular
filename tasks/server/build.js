@@ -6,7 +6,7 @@ const fs = require('fs')
 const webpack = require('webpack')
 const WebpackObfuscator = require('webpack-obfuscator')
 const PathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin
-const { CheckerPlugin } = require('awesome-typescript-loader')
+const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin
 
 //Config
 const config = require('../../config.js')

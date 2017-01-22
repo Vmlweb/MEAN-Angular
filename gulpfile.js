@@ -13,7 +13,6 @@ require('./tasks/build.js')
 require('./tasks/database.js')
 require('./tasks/setup.js')
 require('./tasks/dist.js')
-require('./tasks/docs.js')
 require('./tasks/test.js')
 
 //Client

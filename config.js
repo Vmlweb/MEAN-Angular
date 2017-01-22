@@ -70,7 +70,7 @@ module.exports = {
 		client: [ 'jquery', 'jasmine' ]
 	},
 	
-	//! Server Test Plans
+	//! Test Plans
 	tests: {
 		server: {
 			v1: [ 'api/v1/**/*' ],
@@ -79,12 +79,6 @@ module.exports = {
 		client: {
 			users: [ 'api/v1/users/**/user' ]
 		}
-	},
-	
-	//! API Documentation
-	docs: {
-		v1: [ '/api/v1/**/*.md' ],
-		users: [ '/api/v1/users/**/*.md' ]
 	},
 	
 	//! Certificates
