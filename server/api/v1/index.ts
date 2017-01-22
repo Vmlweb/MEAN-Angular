@@ -1,5 +1,6 @@
 //Modules
 import * as express from 'express'
+import * as catcher from 'promise-catcher'
 
 //Includes
 import { Endpoint, Method } from 'app'
@@ -23,28 +24,28 @@ Object.keys(epFiles).forEach((file) => {
 	//Check method and mount try catch wrapped promise to url on router
 	switch(endpoint.method) {
 		case Method.All: 
-			router.all(endpoint.url, endpoint.promise())
+			router.all(endpoint.url, catcher.express(endpoint.execute))
 			break
 		case Method.Get: 
-			router.get(endpoint.url, endpoint.promise())
+			router.get(endpoint.url, catcher.express(endpoint.execute))
 			break
 		case Method.Post:
-			router.post(endpoint.url, endpoint.promise())
+			router.post(endpoint.url, catcher.express(endpoint.execute))
 			break
 		case Method.Put:
-			router.put(endpoint.url, endpoint.promise())
+			router.put(endpoint.url, catcher.express(endpoint.execute))
 			break
 		case Method.Delete:
-			router.delete(endpoint.url, endpoint.promise())
+			router.delete(endpoint.url, catcher.express(endpoint.execute))
 			break
 		case Method.Patch:
-			router.patch(endpoint.url, endpoint.promise())
+			router.patch(endpoint.url, catcher.express(endpoint.execute))
 			break
 		case Method.Options:
-			router.options(endpoint.url, endpoint.promise())
+			router.options(endpoint.url, catcher.express(endpoint.execute))
 			break
 		case Method.Head:
-			router.head(endpoint.url, endpoint.promise())
+			router.head(endpoint.url, catcher.express(endpoint.execute))
 			break
 	}
 })

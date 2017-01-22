@@ -52,7 +52,8 @@ gulp.task('client.build.compile', function(done){
 			new webpack.DefinePlugin({
 				'process.env.ENV': JSON.stringify(process.env.NODE_ENV),
 				'process.env.TEST': JSON.stringify(process.env.TEST),
-				'process.env.MODE': JSON.stringify(process.env.MODE)
+				'process.env.MODE': JSON.stringify(process.env.MODE),
+				'process.env.URL': JSON.stringify('http://' + config.http.url + ':' + config.http.port.internal)
 			}),
 			new CheckerPlugin({
 				fork: true,

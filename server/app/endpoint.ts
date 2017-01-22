@@ -39,12 +39,11 @@ export class Endpoint{
 			//Return array of try catch wrapped async executors
 			const items = []
 			for (const item of this.execute){
-				items.push(async (req, res, next) => {
-					try{
-						await item(req, res, next)
-					}catch(err){
-						next(err)
-					}
+				items.push((...args) => {
+					(item as any)(...args)
+						.catch(err => {
+							args[args.length-1](err)
+						})
 				})
 			}
 			return items
@@ -52,12 +51,11 @@ export class Endpoint{
 		}else{
 			
 			//Return single try catch wrapped async executor
-			return async (req, res, next) => {
-				try{
-					await (this.execute as express.RequestHandler)(req, res, next)
-				}catch(err){
-					next(err)
-				}
+			return (...args) => {
+				(this.execute as any)(...args)
+					.catch(err => {
+						args[args.length-1](err)
+					})
 			}
 		}
 	}

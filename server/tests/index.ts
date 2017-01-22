@@ -4,15 +4,17 @@ import { Model } from 'mongoose'
 
 //Includes
 import { log, database, app } from 'app'
+
+//Models
 import { User } from 'models'
 
-class Collection{
+export class Collection{
 	
 	modified = false
 	
 	constructor(public name: string, public model: Model<any>, public data: Object[]){
 		
-		//Subscribe to model change hooks
+		//Subscribe to mongoose model change hooks and mark collection as modified
 		model.schema.pre('save', (next) => {
 			this.modified = true
 			next()
@@ -29,25 +31,29 @@ class Collection{
 	
 	async reset(){
 		
-		//Drop collection contents
+		//Drop collection contents silently
 		try{ await database.db.dropCollection(this.name) }catch(err){}
 		
 		log.info('Populating ' + this.name + ' with test data')
 		
-		//Populate collection with data
+		//Populate collection with test data and without validation
 		await this.model.insertMany(this.data)
 	}
 }
 
-const collections = [
+export const collections = [
 	new Collection('users', User, require('./users.json'))
 ]
 
-//Create reset hook
+//Create http reset test data endpoint, check whether running in mock mode
 const globals = global as any
 if (globals.beforeEachHooks && globals.afterEachHooks){
-	app.delete('/api/reset', (req, res) => {
-		async.eachSeries(globals.beforeEachHooks.concat(globals.afterEachHooks), (item: any, done) => {
+	
+	//Add delete endpoint to express app
+	app.delete('/api', (req, res) => {
+		
+		//Execute jasmine after and before hooks
+		async.eachSeries(globals.afterEachHooks.concat(globals.beforeEachHooks), (item: any, done) => {
 			item(() => {
 				done()
 			})
@@ -55,11 +61,12 @@ if (globals.beforeEachHooks && globals.afterEachHooks){
 			res.json({})
 		})
 	})
+	
 	log.info('Created reset test data endpoint')
 }
 
 //Mark specific collection as modified
-const modified = (model: Model<any>) => {
+export const modified = (model: Model<any>) => {
 	for (const col of collections){
 		if (col.model === model){
 			col.modified = true
@@ -67,18 +74,13 @@ const modified = (model: Model<any>) => {
 	}
 }
 
-//Populate all collections with default data
+//Populate all collections with default test data
 beforeAll(done => {
 	
 	//Loop through each collection and reset
 	Promise.all(collections.map(col => col.reset()))
-		.then(() => {
-			done()
-		})
-		.catch((err) => {
-			console.log(err)
-			done()
-		})
+		.then(() => { done() })
+		.catch((err) => { done() })
 })
 
 //Reset all collections that have been changed with default data
@@ -86,13 +88,6 @@ beforeEach(done => {
 	
 	//Loop through each modified collection and reset
 	Promise.all(collections.filter(col => col.modified).map(col => col.reset()))
-		.then(() => {
-			done()
-		})
-		.catch((err) => {
-			console.log(err)
-			done()
-		})
+		.then(() => { done() })
+		.catch((err) => { done() })
 })
-
-export { Collection, collections, modified }

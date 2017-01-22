@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "MEAN Stack Template for EmberJS 2 and Docker",
   "main": "server/main.js",
-  "author": "Victor Leach <admin@vmlweb.co.uk>",
+  "author": "Victor Leach <mail@vmlweb.co.uk>",
   "license": "MIT",
   "homepage": "https://github.com/Vmlweb/MEEN-Stack#readme",
   "repository": {
@@ -74,7 +74,7 @@
     "phantomjs-prebuilt": "^2.1.7",
     "raw-loader": "^0.5.1",
     "remap-istanbul": "^0.8.4",
-    "request": "^2.72.0",
+    "request-promise-native": "^1.0.3",
     "rxjs": "5.0.1",
     "semantic-ui": "^2.2.7",
     "style-loader": "^0.13.1",
@@ -96,6 +96,7 @@
     "moment": "^2.13.0",
     "mongoose": "^4.4.14",
     "morgan": "^1.7.0",
+    "promise-catcher": "^0.1.1",
     "the-vladiator": "^1.2.2",
     "winston": "^2.2.0",
     "winston-daily-rotate-file": "^1.0.1"

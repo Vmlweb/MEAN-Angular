@@ -1,16 +1,19 @@
+//Modules
+import * as validate from 'the-vladiator'
+
 //Includes
 import { log, Method, Endpoint, ErrorCode, ClientError } from 'app'
 import { User } from 'models'
 
-const execute = async (req, res) => {
-	
+const execute = async (req, res, next) => {
+
 	//Check required parameters
-	const username = req.body.username || ''
-	const email = req.body.email || ''
+	const username = req.body.username
+	const email = req.body.email
 	
 	//Validate parameter fields
-	if (typeof username !== 'string' || username.length <= 0){ throw new ClientError(ErrorCode.UsernameMissing) }
-	if (typeof email !== 'string' || email.length <= 0){ throw new ClientError(ErrorCode.EmailMissing) }
+	validate(username).isRequired().isString().notEmpty().throws(new ClientError(ErrorCode.UsernameMissing))
+	validate(email).isRequired().isString().isEmail().notEmpty().throws(new ClientError(ErrorCode.EmailMissing))
 	
 	//Create new user
 	const user = await User.create({
