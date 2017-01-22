@@ -27,6 +27,15 @@ export class Collection{
 			this.modified = true
 			next()
 		})
+	
+		//Overide global mongoose model change hooks and mark collection as modified 
+		for (const hook of [ 'findByIdAndUpdate', 'findByIdAndRemove', 'findOneAndUpdate', 'findOneAndRemove', 'update', 'remove' ]){
+			(model as any)['___' + hook] = model[hook]
+			model[hook] = (...args) => {
+				this.modified = true
+				return (model as any)['___' + hook](...args)
+			}
+		}
 	}
 	
 	async reset(){
@@ -34,10 +43,13 @@ export class Collection{
 		//Drop collection contents silently
 		try{ await database.db.dropCollection(this.name) }catch(err){}
 		
-		log.info('Populating ' + this.name + ' with test data')
+		log.info('Clearing and populating ' + this.name + ' with test data')
 		
 		//Populate collection with test data and without validation
 		await this.model.insertMany(this.data)
+		
+		//Reset modified flag
+		this.modified = false
 	}
 }
 
