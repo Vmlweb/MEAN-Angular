@@ -53,9 +53,8 @@ export class Collection{
 	}
 }
 
-export const collections = [
-	new Collection('users', User, require('./users.json'))
-]
+//Load list of collections to process
+import { collections } from './collections'
 
 //Create http reset test data endpoint, check whether running in mock mode
 const globals = global as any

@@ -2,44 +2,43 @@
 
 [![Build Status](http://bamboo.vmlweb.co.uk:8085/plugins/servlet/wittified/build-status/OPEN-MEAN2)](http://bamboo.vmlweb.co.uk:8085/browse/OPEN-MEAN2)
 
-Quick and simple template to get up and running with a MEAN stack web app inside of Docker.
+Quick and simple template to get up and running with a productive MEAN stack web app inside of Docker.
 
-## Features
+## Technologies
 
   * NodeJS 6.x
   * Docker & Compose
-  * MongoDB & Mongoose
-  * Browserify & Babel
-  * EmberJS 2 & Typescript
-  * Semantic UI & jQuery
-  * JS Minification & Obfuscation
-  * Jasmin & Karma Unit Tests (Test Plans)
-  * Istanbul Code Coverage (HTML & Clover)
-  * Winston File & Console Logs
-  * Gulp 4 Workflow (Dev, Test & Dist)
-  * PM2 (Multi-Core, Load Balancing)
-  * Compatible with CI Tools (Bamboo)
+  * AngularJS 2 & Typescript 2
+  * Gulp 4 & Webpack 2
+  * Semantic UI 2
+  * Jasmine, Karma & Istanbul
+  * Winston & PM2
+  
+## Features
+
+  * Dev, Test & Dist Modes
+  * Linting & Type Checking
+  * Minification & Obfuscation
+  * Test Plans & Test Data Reset
+  * Coverage & Test Reporting
+  * Multi-Core & Load Balancing
+  * Compatible with CI Tools
 
 ## Prequisitions
 
-First download the repository.
+First make sure you have both NodeJS and Docker installed on your machine.
+
+Next download this repository from GitHub.
 
 ```bash
 git clone https://github.com/Vmlweb/MEAN-AngularJS-2.git
 cd MEAN-AngularJS-2
 ```
 
-Server.sh provides a quick command to install NodeJS 5, Docker and Compose onto Ubuntu 15.10.
+Then install the Gulp 4 and Bower command line tools if you have not already.
 
 ```bash
-chmod +x server.sh
-./server.sh install
-```
-
-Next install the Gulp 4, Bower and Typings command line tools if you have not already.
-
-```bash
-sudo npm install -g gulpjs/gulp.git#4.0 bower
+npm install -g gulpjs/gulp.git#4.0 bower
 ```
 
 ## Installation
@@ -59,66 +58,71 @@ chown -R 999:999 certs
 
 ## Directory Structure
 
-- `build` - Temporary builds and compiled files.
-- `certs` - Security certificates and key files.
+- `builds` - Temporary development build files.
+- `certs` - SSL certificate and key files.
 - `client` - Client side website source.
-- `client/app` - Angular bootstrap and app component.
-- `client/tests` - Unit testing setup.
-- `client/typings` - Typescript library type mappings.
+- `client/app` - Angular app source.
 - `data` - Development database binary files.
 - `dist` - Production ready distribution builds.
-- `logs` - Console logs, coverage and test reports.
-- `semantic` - User interface framework source.
+- `logs` - Access, info and error log files.
+- `logs/tests/server|client` - Coverage and testing reports.
+- `logs/tests/server|client/html` - Coverage html report.
+- `logs/tests/merged` - Merged coverage reports.
+- `logs/tests/merged/html` - Merged coverage html report.
+- `semantic` - User interface themes and customisation source.
 - `server` - Server side application source.
-- `server/api` - API endpoints.
+- `server/api` - REST API endpoints.
 - `server/app` - Core functions for server app.
 - `server/models` - Database models and schemas.
-- `server/test` - Unit testing setup.
-- `server/typings` - Typescript library type mappings.
+- `server/tests` - Test data management.
 
 ## File Structure
 
-- `bower.json` - Client website package dependancies.
-- `config.js` - Configurations for development and distribution.
-- `docker-compose.yml` - Layout for running distribution build with Docker Compose.
-- `Dockerfile` - App Docker definition for distribution build.
-- `gulp.js` - Workflow and build tasks.
-- `mongodb.js` - Executed in MongoDB on database setup.
-- `karma.shim.js` - Middleware to help with Angular unit tests.
-- `package.json` - Server application package dependancies.
-- `semantic.json` - User interface framework configuration.
-- `server.sh` - Start or stop the production server.
-- `tsconfig.json` - Typescript compilation settings.
+- `bower.json` - Browser based package dependancies.
+- `client/main.ts` - Entry point for development and distribution builds.
+- `client/test.ts` - Entry point for testing builds.
+- `config.js` - Configurations for development, testing and distribution.
+- `database.js` - Start, stop and restart the production database container.
+- `docker-compose.yml` - Docker compose definition for the production server.
+- `Dockerfile` - Docker image definition for the distribution build.
+- `mongodb.js` - Executed to configure database settings.
+- `package.json` - Server based package dependancies.
+- `server/main.ts` - Entry point for development and distribution builds.
+- `server/test.ts` - Entry point for testing builds.
+- `server/tests/collections.ts` - List of database collections, models and test data.
+- `server.sh` - Start, stop and restart the production app container.
+- `tsconfig.json` - Typescript compilation options.
+- `tslint.json` - Linting rules and options.
 
 ## Development
 
 For development the primary working directories are.
 
 - `client` - Client side website source.
-- `semantic` - User interface framework source.
+- `semantic` - User interface themes and customisation source.
 - `server` - Server side application source.
 
 You can start the development server which will rebuild any source file changes live.
 
 ```bash
-gulp dev
+gulp
 ```
 
 Press `control + c` to stop and exit the development server.
 
-Use the following to reset the development server database and logs.
+Use the following to reset the development server database.
 
 ```bash
 gulp reset
 ```
 
-The development server stores its `data` and `logs` in the local directory.
+The development server stores its logs in the local directory.
 
-For browser libraries add the paths to `config.js` and they will be included in builds and testing.
+To add non-standard browser libraries add the paths to `config.js` and they will be included in builds and testing.
 
-## Console Logging
+## Logging
 
-Use the following commands to log messages directly to the console and `logs` directory
+Use the following commands to log messages directly to the console and `logs` directory.
 
 ```javascript
 log.error('ERROR'); //Error log file
@@ -127,7 +131,9 @@ log.info('info'); //Info log file
 log.verbose('verbose'); //Access log file
 ```
 
-## User Interface
+Logs will automatically be sorted by severity and bundled into date files.
+
+## Interface
 
 You can make changes to the user interface and themes in the `semantic` directory but must rebuild them to take affect.
 
@@ -135,48 +141,59 @@ You can make changes to the user interface and themes in the `semantic` director
 gulp semantic
 ```
 
-## Unit Testing
+## Testing
 
-You can execute the automated unit tests either combined or individually for the server and client.
+Test files should be included in the `server` and `client` directories and use either `.test.ts or .test.js` extensions.
+
+You can execute tests either combined or individually for the server and client.
 
 ```bash
-gulp client.test
+gulp test
 gulp server.test
+gulp client.test
 ```
 
-Test files should be included in the `server` and `client` directories and use the `.test.ts, .test.js or .test.json` extensions.
+You can also execute them in watch mode which will rebuild and test any source file changes live.
 
-Server side test plans can be created in `config.js` and can then be executed using the `my_plan.test` command.
-
-Testing and coverage reports will be generated in the `logs` directory.
-
-## Testing Database
-
-When testing a blank database will be used, see `server/tests/database.test.js` for populating it before each test.
-
-When running client or external unit tests you can repopulate the database with test data using a http endpoint.
-
-```
-DELETE /reset
+```bash
+gulp server
+gulp client
 ```
 
-You can also start the database in standalone mock test data mode to run tests cases externally.
+Testing and coverage reports will be generated in the `logs/tests` directory.
+
+## Test Plans
+
+You can create test plans in `config.js` to only execute tests in a specified directory.
+
+```
+gulp server.v1.test
+gulp client.services.test
+```
+
+Test plans can also be executed in watch mode.
+
+## Test Data
+
+When testing the server database will be reset before each test with data found in `server/tests` using JSON.
+
+You can add additional collections by specifying them in `server/collections.ts` with the model to use.
+
+## Mock Server
+
+When testing external applications you can run the server in mock mode which allows you to use test data.
 
 ```
 gulp mock
 ```
 
-## Documentation
+You can use the following endpoint in mock mode to reset the test data in the server database.
 
-You can generate a concatenated markdown file from all files with the `.md` extension in your api directory.
-
-```bash
-gulp docs
+```
+DELETE /api
 ```
 
-The documentation will be generated in the `builds/docs` directory.
-
-You can specify custom sets of documentation files through `config.js` which can be generated using the `my_plan.docs` command.
+When running in mock mode please note that internal http and https ports are used to run the server.
 
 ## Distribution
 
@@ -186,36 +203,42 @@ To compile a production ready distribution build use the following command.
 gulp dist
 ```
 
-These main files will be generated in the `dist` directory.
+These files will be generated into the `dist` directory.
 
-- `docker-compose.yml` - Layout for running distribution build with Docker Compose.
-- `mean_app.tar` - App Docker image for distribution build.
-- `mongodb.js` - Executed in MongoDB on database setup.
-- `server.sh` - Start or stop the production server.
+- `*_app.zip` - Docker image for distribution build.
+- `database.js` - Start, stop and restart the production database container.
+- `docker-compose.yml` - Docker compose definition for the production server.
+- `mongodb.js` - Executed to configure database settings.
+- `server.sh` - Start, stop and restart the production app container.
 
 ## Production
 
-First import the Docker image onto the host machine.
+First import the docker image onto the host machine.
 
 ```bash
+unzip mean_app.zip
 docker load < mean_app.tar
 ```
 
 You must then copy `config.js` and the `certs` directory to their respective locations specified in `config.js`.
 
-Make sure to set the correct file permissions for these certificates.
+Make sure to set the correct file permissions for the certificates.
 
 ```bash
 chown -R 999:999 /opt/mean/certs
 ```
 
-Then setup and wipe your production database using the following command.
+Then wipe and configure your production database using the following command.
 
 ```bash
 ./database.sh reset
 ```
 
-Use can then use `server.sh` or `docker-compose.yml` to start and stop your production app using Docker.
+When updating to a new build simply load in the new docker image and restart the server. 
+
+## Process
+
+Use can then use `server.sh` or `docker-compose.yml` to start, stop and restart your production server.
 
 ```bash
 ./server.sh start
@@ -225,4 +248,5 @@ Use can then use `server.sh` or `docker-compose.yml` to start and stop your prod
 ./database.sh stop
 
 docker-compose up
+docker-compose down
 ```

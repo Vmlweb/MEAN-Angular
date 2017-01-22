@@ -133,6 +133,7 @@ gulp.task('dist', gulp.series(
 	'env.dist',
 	'stop',
 	'clean',
+	'dist.clean',
 	'semantic',
 	'build',
 	'dist.copy',
@@ -144,7 +145,7 @@ gulp.task('start', gulp.series('database.start', 'app.start'))
 gulp.task('stop', gulp.series('app.stop', 'database.stop'))
 
 //! Setup Convenience
-gulp.task('clean', gulp.parallel('setup.clean', 'build.clean', 'dist.clean'))
+gulp.task('clean', gulp.parallel('setup.clean', 'build.clean'))
 gulp.task('docker', gulp.parallel('setup.install.nodejs', 'setup.install.mongodb'))
 gulp.task('certs', gulp.parallel('setup.certs'))
 

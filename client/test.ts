@@ -10,12 +10,13 @@ import 'zone.js/dist/async-test'
 import 'zone.js/dist/fake-async-test'
 
 //Modules
+let config = require('config')
 import * as minimatch from 'minimatch'
 import { TestBed } from '@angular/core/testing'
 import { platformBrowserDynamicTesting, BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing'
 
 //Find all test files
-const context = (require as any).context('./', true, /\.test\.ts/)
+const context = (require as any).context('./', true, /\.test\.(ts|js)/)
 
 //Check whether test plan is in used
 if (process.env.hasOwnProperty('TEST')){
@@ -28,7 +29,7 @@ if (process.env.hasOwnProperty('TEST')){
 		for (const matcher of config.tests.client[process.env.TEST]){
 			
 			//Check for match and execute test
-			if (minimatch(test.slice(2), matcher + '.test.ts')){
+			if (minimatch(test.slice(2), matcher + '.test.+(ts|js)')){
 				context(test)
 				continue testLoop
 			}
