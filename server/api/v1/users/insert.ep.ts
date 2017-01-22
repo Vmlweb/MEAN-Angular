@@ -7,13 +7,13 @@ import { User } from 'models'
 
 const execute = async (req, res, next) => {
 
-	//Check required parameters
+	//Collect request parameters
 	const username = req.body.username
 	const email = req.body.email
 	
-	//Validate parameter fields
-	validate(username).isRequired().isString().notEmpty().throws(new ClientError(ErrorCode.UsernameMissing))
-	validate(email).isRequired().isString().isEmail().notEmpty().throws(new ClientError(ErrorCode.EmailMissing))
+	//Validate parameter contents
+	validate(username).isRequired().isString().notEmpty().throws(new ClientError(ErrorCode.USR_InvalidUsername))
+	validate(email).isRequired().isEmail().throws(new ClientError(ErrorCode.USR_InvalidEmail))
 	
 	//Create new user
 	const user = await User.create({
@@ -21,10 +21,10 @@ const execute = async (req, res, next) => {
 		email
 	})
 	
-	log.info('User ' + user.id.toString() + ' created')
+	log.info('User ' + user.id + ' created')
 	
 	res.json({
-		userId: user.id.toString()
+		userId: user.id
 	})
 }
 
@@ -34,19 +34,23 @@ export const endpoint = new Endpoint({
 	url: '/users',
 	method: Method.Post,
 	execute,
-	
+		
 	//! Documentation
-	title: 'Insert User',
-	description: 'Insert a new user into the database.',
+	title: 'Create User',
+	description: 'Create new user in the database.',
+	errors: {
+		USR_InvalidUsername: 'Username was not specified or is invalid',
+		USR_InvalidEmail: 'E-mail address was not specified or is invalid'
+	},
 	
 	//! Layouts
 	parameters: {
 		request: {
-			username: 'Username for the user to add',
-			email: 'E-mail address for the user to add'
+			username: 'Username for the user to create',
+			email: 'E-mail address for the user to create'
 		},
 		response: {
-			userId: 'Identifier of the user'
+			userId: 'Identifier of the created user'
 		}
 	},
 	example: {
