@@ -21,7 +21,10 @@ export enum ErrorCode{
 	Connection = 1003,
 	
 	//Users
-	UserMissing = 2000,
-	UsernameMissing = 2001,
-	EmailMissing = 2002
+	USR_Invalid = 2000,
+	USR_NotFound = 2001,
+	
+	USR_InvalidUsername = 2003,
+	USR_InvalidEmail = 2004,
+	USR_InvalidLimit = 2005
 }

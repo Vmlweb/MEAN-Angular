@@ -1,33 +1,30 @@
+//Modules
+import * as validate from 'the-vladiator'
+
 //Includes
-import { Method, Endpoint, log } from 'app'
+import { log, Method, Endpoint, ErrorCode, ClientError } from 'app'
 import { User } from 'models'
 
-const execute = (req, res, next) => {
+const execute = async (req, res, next) => {
 
-	//Check required parameters
-	const userId = req.params.userId || ''
-	const username = req.body.username || ''
-	const email = req.body.email || ''
-
-	//Validate parameter fields
-	if (userId.length <= 0){ return next('User identifier must be given') }
-	if (username.length <= 0){ return next('Username must be given') }
-	if (email.length <= 0){ return next('E-mail address must be given') }
-
-	//Update user details
-	User.findByIdAndUpdate(userId, {
-		username,
-		email
-	}, (err, user) => {
-		if (err){
-			next(err)
-		}else{
-			log.info('User ' + user.id.toString() + ' updated')
-			res.json({
-				userId: user.id.toString()
-			})
-		}
-	})
+	//Collect request parameters
+	const userId = req.params.userId
+	const username = req.body.username
+	const email = req.body.email
+	
+	//Validate parameter contents
+	validate(userId).isRequired().isMongoId().throws(new ClientError(ErrorCode.USR_Invalid))
+	validate(username).isRequired().isString().notEmpty().throws(new ClientError(ErrorCode.USR_InvalidUsername))
+	validate(email).isRequired().isEmail().throws(new ClientError(ErrorCode.USR_InvalidEmail))
+	
+	//Find and update user
+	if (!await User.findByIdAndUpdate(userId, { username, email })){
+		throw new ClientError(ErrorCode.USR_NotFound)
+	}
+	
+	log.info('User ' + userId + ' updated')
+	
+	res.json({})
 }
 
 export const endpoint = new Endpoint({
@@ -40,13 +37,19 @@ export const endpoint = new Endpoint({
 	//! Documentation
 	title: 'Update User',
 	description: 'Update a specific users details.',
+	errors: {
+		USR_Invalid: 'User identifier was not specified or invalid',
+		USR_InvalidUsername: 'Username was not specified or is invalid',
+		USR_InvalidEmail: 'E-mail address was not specified or is invalid',
+		USR_NotFound: 'User with identifier could not be found'
+	},
 	
 	//! Layouts
 	parameters: {
 		request: {
 			userId: 'Identifier of the user to update',
 			username: 'New username to apply to user',
-			email: 'New email address to apply to user'
+			email: 'New e-mail address to apply to user'
 		},
 		response: {
 			userId: 'Identifier of the user'
@@ -57,9 +60,6 @@ export const endpoint = new Endpoint({
 			userId: '607f1f77bcf86cd799439013',
 			username: 'NewUsername',
 			email: 'NewEmail@NewEmail.com'
-		},
-		response: {
-			userId: '607f1f77bcf86cd799439013'
 		}
 	}
 })
