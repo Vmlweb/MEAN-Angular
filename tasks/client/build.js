@@ -203,9 +203,10 @@ gulp.task('client.build.compile', function(done){
 			}else{
 				beep()
 			}
-		}else{
-			module.exports.setup = true
 		}
+		
+		//Set build status variables
+		module.exports.setup = true		
 		
 		done(err)
 	}

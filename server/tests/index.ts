@@ -27,7 +27,7 @@ export class Collection{
 			this.modified = true
 			next()
 		})
-	
+		
 		//Overide global mongoose model change hooks and mark collection as modified 
 		for (const hook of [ 'findByIdAndUpdate', 'findByIdAndRemove', 'findOneAndUpdate', 'findOneAndRemove', 'update', 'remove' ]){
 			(model as any)['___' + hook] = model[hook]

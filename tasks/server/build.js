@@ -10,7 +10,7 @@ const { CheckerPlugin } = require('awesome-typescript-loader')
 
 //Config
 const config = require('../../config.js')
-module.exports = { setup: false, webpack: undefined }
+module.exports = { setup: false, valid: false, webpack: undefined }
 
 /*! Tasks
 - server.build
@@ -118,9 +118,11 @@ gulp.task('server.build', function(done){
 			}else{
 				beep()
 			}
-		}else{
-			module.exports.setup = true
 		}
+		
+		//Set build status variables
+		module.exports.setup = true		
+		module.exports.valid = !stats.hasErrors()
 		
 		done(err)
 	}

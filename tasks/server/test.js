@@ -11,6 +11,7 @@ const remap = require('remap-istanbul/lib/gulpRemapIstanbul')
 
 //Config
 const config = require('../../config.js')
+const build = require('./build.js')
 
 /*! Tasks 
 - server.test
@@ -33,14 +34,21 @@ gulp.task('server.test', gulp.series(
 ))
 
 //Execute tests and collect coverage
-gulp.task('server.test.execute', function(){
+gulp.task('server.test.execute', function(done){
 	
 	//Clear node require cache
 	decache(path.resolve('builds/server/main.js'))
 	
+	//Check whether build is invalid
+	if (!build.valid){
+		beep(2)
+		done()
+		return
+	}
+	
 	//Execute jasmine tests
 	let fail = false
-	return gulp.src('builds/server/main.js')
+	gulp.src('builds/server/main.js')
 		.pipe(jasmine({
 			errorOnFail: true,
 			reporter: [
@@ -68,6 +76,7 @@ gulp.task('server.test.execute', function(){
 		}))
 		.on('end', function(){
 			beep(fail ? 2 : 1)
+			done()
 	    })
 })
 
