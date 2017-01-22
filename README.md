@@ -8,7 +8,7 @@ Quick and simple template to get up and running with a productive MEAN stack web
 
   * NodeJS 6.x
   * Docker & Compose
-  * AngularJS 2 & Typescript 2
+  * Angular 2 & Typescript 2
   * Gulp 4 & Webpack 2
   * Semantic UI 2
   * Jasmine, Karma & Istanbul
@@ -26,9 +26,9 @@ Quick and simple template to get up and running with a productive MEAN stack web
 
 ## Prequisitions
 
-First make sure you have both NodeJS and Docker installed on your machine.
+First make sure you have both NodeJS and Docker installed on your machine. (Docker Compose is optional)
 
-Next download this repository from GitHub.
+Next clone the repository from GitHub.
 
 ```bash
 git clone https://github.com/Vmlweb/MEAN-AngularJS-2.git
@@ -48,12 +48,6 @@ Then install the project dependancies and setup the development environment.
 ```bash
 npm install
 gulp setup
-```
-
-Some non-root environments may require modified file permissions for the certificates.
-
-```
-chown -R 999:999 certs
 ```
 
 ## Directory Structure
@@ -108,7 +102,7 @@ You can start the development server which will rebuild any source file changes 
 gulp
 ```
 
-Press `control + c` to stop and exit the development server.
+Use `control + c` to stop and exit the development server.
 
 Use the following to reset the development server database.
 
@@ -143,7 +137,7 @@ gulp semantic
 
 ## Testing
 
-Test files should be included in the `server` and `client` directories and use either `.test.ts or .test.js` extensions.
+Test files should be included in the `server` and `client` directories and use either `.test.ts` or `.test.js` extensions.
 
 You can execute tests either combined or individually for the server and client.
 
@@ -164,18 +158,18 @@ Testing and coverage reports will be generated in the `logs/tests` directory.
 
 ## Test Plans
 
-You can create test plans in `config.js` to only execute tests in a specified directory.
+You can create test plans in `config.js` which will only execute tests in a specified directory.
 
 ```
 gulp server.v1.test
 gulp client.services.test
 ```
 
-Test plans can also be executed in watch mode.
+These can also be executed in watch mode.
 
 ## Test Data
 
-When testing the server database will be reset before each test with data found in `server/tests` using JSON.
+When testing, the server database will be reset before each test with the data found in `server/tests` JSON files.
 
 You can add additional collections by specifying them in `server/collections.ts` with the model to use.
 
@@ -193,7 +187,7 @@ You can use the following endpoint in mock mode to reset the test data in the se
 DELETE /api
 ```
 
-When running in mock mode please note that internal http and https ports are used to run the server.
+When running in mock mode please note that internal http and https ports are used.
 
 ## Distribution
 
@@ -205,7 +199,7 @@ gulp dist
 
 These files will be generated into the `dist` directory.
 
-- `*_app.zip` - Docker image for distribution build.
+- `*.zip` - Docker image for distribution build.
 - `database.js` - Start, stop and restart the production database container.
 - `docker-compose.yml` - Docker compose definition for the production server.
 - `mongodb.js` - Executed to configure database settings.
@@ -216,8 +210,8 @@ These files will be generated into the `dist` directory.
 First import the docker image onto the host machine.
 
 ```bash
-unzip mean_app.zip
-docker load < mean_app.tar
+unzip mean.zip
+docker load < mean.tar
 ```
 
 You must then copy `config.js` and the `certs` directory to their respective locations specified in `config.js`.

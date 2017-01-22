@@ -24,10 +24,10 @@ gulp.task('dist.clean', function(){
 
 //Build and compress docker image for app
 gulp.task('dist.build', shell.task([
-	'docker build -t ' + config.name + '_app $PWD',
-	'docker save ' + config.name + '_app > ' + config.name + '_app.tar',
-	'zip ' + config.name + '_app.zip ' + config.name + '_app.tar',
-	'rm -r ' + config.name + '_app.tar',
+	'docker build -t ' + config.name + ' $PWD',
+	'docker save ' + config.name + ' > ' + config.name + '.tar',
+	'zip ' + config.name + '.zip ' + config.name + '.tar',
+	'rm -r ' + config.name + '.tar',
 	'chmod +x server.sh'
 ],{
 	verbose: true,
