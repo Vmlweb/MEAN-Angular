@@ -84,6 +84,10 @@ gulp.task('client.build.compile', function(done){
 					}).map(function(lib){
 						return '/libs/' + path.basename(lib)
 					})
+			}),
+			new webpack.ProvidePlugin({
+				$: 'jquery',
+				jQuery: 'jquery'
 			})
 		],
 		performance: {

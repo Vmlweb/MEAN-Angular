@@ -5,9 +5,6 @@ import { Model } from 'mongoose'
 //Includes
 import { log, database, app } from 'app'
 
-//Models
-import { User } from 'models'
-
 export class Collection{
 	
 	modified = false
