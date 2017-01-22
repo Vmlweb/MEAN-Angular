@@ -11,7 +11,7 @@ Quick and simple template to get up and running with a productive MEAN stack web
   * [Angular 2](https://angular.io) & [Typescript 2](https://typescriptlang.org)
   * [Gulp 4](http://gulpjs.com) & [Webpack 2](https://webpack.js.org)
   * [Semantic UI 2](http://semantic-ui.com)
-  * [Jasmine](https://jasmine.github.io), [Karma](http://karma-runner.github.io) & [Istanbul](https://github.com/SBoudrias/gulp-istanbul)
+  * [Jasmine](https://jasmine.github.io), [Karma](http://karma-runner.github.io) & [Istanbul](http://gotwarlost.github.io/istanbul)
   * [Winston](https://github.com/winstonjs/winston) & [PM2](http://pm2.keymetrics.io)
   
 ## Features
