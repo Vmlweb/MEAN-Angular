@@ -1,25 +1,26 @@
+//Modules
+import * as validate from 'the-vladiator'
+
 //Includes
-import { Method, Endpoint, ErrorCode, ClientError } from 'app'
+import { log, Method, Endpoint, ErrorCode, ClientError } from 'app'
 import { User } from 'models'
 
 const execute = async (req, res, next) => {
 	
-	//Check required parameters
-	const userId = req.params.userId || ''
+	//Collect request parameters
+	const userId = req.params.userId
 	
-	//Validate parameter fields
-	if (typeof userId !== 'string' || userId.length <= 0){ return next('User identifier must be given') } 
+	//Validate parameter contents
+	validate(userId).isRequired().isMongoId().throws(new ClientError(ErrorCode.USR_Invalid))
 	
-	//Find user in database and remove
-	try{
-		await User.findByIdAndRemove(userId)
-	}catch(err){
-		throw new ClientError(ErrorCode.UserMissing)
+	//Find and remove user
+	if (!await User.findByIdAndRemove(userId)){
+		throw new ClientError(ErrorCode.USR_NotFound)
 	}
 	
-	res.json({
-		userId
-	})
+	log.info('User ' + userId + ' removed')
+	
+	res.json({})
 }
 
 export const endpoint = new Endpoint({
@@ -32,20 +33,18 @@ export const endpoint = new Endpoint({
 	//! Documentation
 	title: 'Delete User',
 	description: 'Deletes a specific user from the database.',
+	errors: {
+		USR_Invalid: 'User identifier was not specified or invalid',
+		USR_NotFound: 'User with identifier could not be found'
+	},
 	
 	//! Layouts
 	parameters: {
 		request: {
 			userId: 'Identifier of user to remove'
-		},
-		response: {
-			userId: 'Identifier of the user'
 		}
 	},
 	example: {
-		request: '/607f1f77bcf86cd799439014',
-		response: {
-			userId: '607f1f77bcf86cd799439014'
-		}
+		request: '/607f1f77bcf86cd799439014'
 	}
 })
