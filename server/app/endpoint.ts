@@ -31,35 +31,6 @@ export class Endpoint{
 	method: Method
 	execute: express.RequestHandler | express.RequestHandler[]
 	
-	promise(){
-		
-		//Check whether execution is single or multi part
-		if (this.execute instanceof Array){
-			
-			//Return array of try catch wrapped async executors
-			const items = []
-			for (const item of this.execute){
-				items.push((...args) => {
-					(item as any)(...args)
-						.catch(err => {
-							args[args.length-1](err)
-						})
-				})
-			}
-			return items
-			
-		}else{
-			
-			//Return single try catch wrapped async executor
-			return (...args) => {
-				(this.execute as any)(...args)
-					.catch(err => {
-						args[args.length-1](err)
-					})
-			}
-		}
-	}
-	
 	title: string | undefined
 	description: string | undefined
 	errors: Object | undefined
