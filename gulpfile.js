@@ -161,14 +161,36 @@ gulp.task('env.dev', function(done) { process.env.NODE_ENV = 'development'; done
 gulp.task('env.test', function(done) { process.env.NODE_ENV = 'testing'; done() })
 gulp.task('env.dist', function(done) { process.env.NODE_ENV = 'production'; done() })
 
-//! Test Plans
-for (const i in config.tests){
-	(function(i) {
-		gulp.task(i + '.test', gulp.series(function(done){
-			process.env.TEST = i
-			done()
-		}, 'server.test'))
-	})(i)
+//! Server Test Plans
+for (const i in config.tests.server){
+	if (config.tests.server.hasOwnProperty(i)){
+		(function(i) {
+			gulp.task('server.' + i + '.test', gulp.series(function(done){
+				process.env.TEST = i
+				done()
+			}, 'server.test'))
+			gulp.task('server.' + i, gulp.series(function(done){
+				process.env.TEST = i
+				done()
+			}, 'server'))
+		})(i)
+	}
+}
+
+//! Client Test Plans
+for (const i in config.tests.client){
+	if (config.tests.client.hasOwnProperty(i)){
+		(function(i) {
+			gulp.task('client.' + i + '.test', gulp.series(function(done){
+				process.env.TEST = i
+				done()
+			}, 'client.test'))
+			gulp.task('client.' + i, gulp.series(function(done){
+				process.env.TEST = i
+				done()
+			}, 'client'))
+		})(i)
+	}
 }
 
 //Stop database and app containers on exit

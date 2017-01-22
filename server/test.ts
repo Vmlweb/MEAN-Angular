@@ -3,7 +3,7 @@ import * as minimatch from 'minimatch'
 
 //Includes
 import { shutdown } from 'main'
-import { log, database } from 'app'
+import { config, database } from 'app'
 
 //Wait for database connection
 beforeAll(done => {
@@ -20,20 +20,24 @@ const context = require.context('./', true, /\.test\.ts/)
 //Check whether test plan is in used
 if (process.env.hasOwnProperty('TEST')){
 	
-	log.info('Filtering tests for plan ' + process.env.TEST)
+	//Create default test
+	describe('Server Tests', () => { it(process.env.TEST + ' tests', () => {}) })
 	
 	//Loop through each test and plan matcher
 	testLoop: for (const test of context.keys()){
-		for (const matcher of process.env.CONFIG.tests[process.env.TEST]){
+		for (const matcher of config.tests.server[process.env.TEST]){
 			
 			//Check for match and execute test
-			if (minimatch(test, matcher)){
+			if (minimatch(test.slice(2), matcher + '.test.ts')){
 				context(test)
 				continue testLoop
 			}
 		}
 	}
 }else{
+	
+	//Create default test
+	describe('Server Tests', () => { it('all tests', () => {}) })
 	
 	//Execute all tests
 	context.keys().forEach(context)

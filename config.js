@@ -72,8 +72,13 @@ module.exports = {
 	
 	//! Server Test Plans
 	tests: {
-		v1: [ './*.test.ts' ],
-		users: [ '/api_v1/users/' ]
+		server: {
+			v1: [ 'api/v1/**/*' ],
+			users: [ 'api/v1/users/**/*' ]
+		},
+		client: {
+			users: [ 'api/v1/users/**/user' ]
+		}
 	},
 	
 	//! API Documentation
