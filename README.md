@@ -6,13 +6,13 @@ Quick and simple template to get up and running with a productive MEAN stack web
 
 ## Technologies
 
-  * NodeJS 6.x
-  * Docker & Compose
-  * Angular 2 & Typescript 2
-  * Gulp 4 & Webpack 2
-  * Semantic UI 2
-  * Jasmine, Karma & Istanbul
-  * Winston & PM2
+  * [NodeJS](https://nodejs.org) 6.x
+  * [Docker](https://docker.com) & [Compose](https://docs.docker.com/compose)
+  * [Angular 2](https://angular.io) & [Typescript 2](https://typescriptlang.org)
+  * [Gulp 4](http://gulpjs.com) & [Webpack 2](https://webpack.js.org)
+  * [Semantic UI 2](http://semantic-ui.com)
+  * [Jasmine](https://jasmine.github.io), [Karma](http://karma-runner.github.io) & [Istanbul](https://github.com/SBoudrias/gulp-istanbul)
+  * [Winston](https://github.com/winstonjs/winston) & [PM2](http://pm2.keymetrics.io)
   
 ## Features
 
