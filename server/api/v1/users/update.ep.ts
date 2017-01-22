@@ -38,21 +38,21 @@ export const endpoint = new Endpoint({
 	title: 'Update User',
 	description: 'Update a specific users details.',
 	errors: {
-		USR_Invalid: 'User identifier was not specified or invalid',
-		USR_InvalidUsername: 'Username was not specified or is invalid',
-		USR_InvalidEmail: 'E-mail address was not specified or is invalid',
-		USR_NotFound: 'User with identifier could not be found'
+		USR_Invalid: 'User identifier was not specified or invalid.',
+		USR_InvalidUsername: 'Username was not specified or is invalid.',
+		USR_InvalidEmail: 'E-mail address was not specified or is invalid.',
+		USR_NotFound: 'User with identifier could not be found.'
 	},
 	
 	//! Layouts
 	parameters: {
 		request: {
-			userId: 'Identifier of the user to update',
-			username: 'New username to apply to user',
-			email: 'New e-mail address to apply to user'
+			userId: 'Identifier of the user to update.',
+			username: 'New username to apply to user.',
+			email: 'New e-mail address to apply to user.'
 		},
 		response: {
-			userId: 'Identifier of the user'
+			userId: 'Identifier of the user.'
 		}
 	},
 	example: {

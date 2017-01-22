@@ -1,28 +1,31 @@
+//Modules
+import * as validate from 'the-vladiator'
+
 //Includes
-import { Method, Endpoint, ServerError } from 'app'
+import { Method, Endpoint, ErrorCode, ClientError } from 'app'
 import { User } from 'models'
 
 const execute = async (req, res, next) => {
 
-	//Check for all required parameters
-	const limit: number = req.query.limit ? parseInt(req.query.limit) : -1
-
-	//Construct find users database query
-	const query = User.find().sort('username')
-	if (limit > 0){ query.limit(limit) }
-
-	//Execute query and return users
-	let users
-	try{
-		users = await query.exec()
-	}catch(err){
-		throw new ServerError('Could not query database for users list')
-	}
-
+	//Collect request parameters
+	const limit = req.query.limit ? parseInt(req.query.limit) || -1 : undefined
+	
+	//Validate parameter contents
+	validate(limit).isOptional().isNumber().isPositive().throws(new ClientError(ErrorCode.USR_InvalidLimit))
+	
+	//Create query to user
+	const query = User.find()
+	
+	//Limit users returned
+	if (limit){ query.limit(limit) }
+	
+	//Execute query
+	const users = await query.exec()
+	
 	res.json({
 		users: users.map(user => {
 			return {
-				userId: user.id.toString(),
+				userId: user.id,
 				username: user.username,
 				email: user.email
 			}
@@ -38,24 +41,27 @@ export const endpoint = new Endpoint({
 	execute,
 
 	//! Documentation
-	title: 'Get Users',
-	description: 'Gets a list of users from the database with a limit.',
+	title: 'List Users',
+	description: 'List users in the database sorted by user id.',
+	errors: {
+		USR_InvalidLimit: 'Limit was not specified or invalid.'
+	},
 
 	//! Layouts
 	parameters: {
 		request: {
-			limit: 'Limit the number of results'
+			limit: 'Limit the number of results.'
 		},
 		response: {
 			users: {
-				userId: 'Identifier of the user',
-				username: 'Username of the user',
-				email: 'E-mail address of the user'
+				userId: 'Identifier of the user.',
+				username: 'Username of the user.',
+				email: 'E-mail address of the user.'
 			}
 		}
 	},
 	example: {
-		request: '?limit=5',
+		request: '?limit=3',
 		response: {
 			user: [
 				{ userId: '607f1f77bcf86cd799439011', username: 'FirstUser', email: 'FirstUser@FirstUser.com' },

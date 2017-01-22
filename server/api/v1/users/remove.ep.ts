@@ -34,14 +34,14 @@ export const endpoint = new Endpoint({
 	title: 'Delete User',
 	description: 'Deletes a specific user from the database.',
 	errors: {
-		USR_Invalid: 'User identifier was not specified or invalid',
-		USR_NotFound: 'User with identifier could not be found'
+		USR_Invalid: 'User identifier was not specified or invalid.',
+		USR_NotFound: 'User with identifier could not be found.'
 	},
 	
 	//! Layouts
 	parameters: {
 		request: {
-			userId: 'Identifier of user to remove'
+			userId: 'Identifier of user to remove.'
 		}
 	},
 	example: {

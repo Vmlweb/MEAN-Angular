@@ -39,18 +39,18 @@ export const endpoint = new Endpoint({
 	title: 'Create User',
 	description: 'Create new user in the database.',
 	errors: {
-		USR_InvalidUsername: 'Username was not specified or is invalid',
-		USR_InvalidEmail: 'E-mail address was not specified or is invalid'
+		USR_InvalidUsername: 'Username was not specified or is invalid.',
+		USR_InvalidEmail: 'E-mail address was not specified or is invalid.'
 	},
 	
 	//! Layouts
 	parameters: {
 		request: {
-			username: 'Username for the user to create',
-			email: 'E-mail address for the user to create'
+			username: 'Username for the user to create.',
+			email: 'E-mail address for the user to create.'
 		},
 		response: {
-			userId: 'Identifier of the created user'
+			userId: 'Identifier of the created user.'
 		}
 	},
 	example: {
