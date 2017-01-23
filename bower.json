@@ -1,0 +1,20 @@
+{
+  "name": "men",
+  "description": "MEN Stack Template for NodeJS and Docker",
+  "main": "server/main.ts",
+  "authors": [
+    "Victor Leach <admin@vmlweb.co.uk>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Vmlweb/MEAN-AngularJS-2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.1"
+  }
+}
