@@ -69,6 +69,7 @@ gulp setup
 - `server/app` - Core functions for server app.
 - `server/models` - Database models and schemas.
 - `server/tests` - Test data management.
+- `shared` - Modules used by both client and server.
 
 ## File Structure
 
