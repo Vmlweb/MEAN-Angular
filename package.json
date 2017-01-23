@@ -1,17 +1,17 @@
 {
   "name": "mean",
   "version": "1.0.0",
-  "description": "MEAN Stack Template for EmberJS 2 and Docker",
-  "main": "server/main.js",
+  "description": "MEAN Stack Template for AngularJS 2 and Docker",
+  "main": "server/main.ts",
   "author": "Victor Leach <mail@vmlweb.co.uk>",
   "license": "MIT",
-  "homepage": "https://github.com/Vmlweb/MEEN-Stack#readme",
+  "homepage": "https://github.com/Vmlweb/MEAN-AngularJS-2#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Vmlweb/MEEN-Stack"
+    "url": "https://github.com/Vmlweb/MEAN-AngularJS-2"
   },
   "bugs": {
-    "url": "https://github.com/Vmlweb/MEEN-Stack/issues"
+    "url": "https://github.com/Vmlweb/MEAN-AngularJS-2/issues"
   },
   "devDependencies": {
     "@angular/common": "~2.4.0",
