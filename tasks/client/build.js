@@ -8,7 +8,7 @@ const WebpackObfuscator = require('webpack-obfuscator')
 const WebpackHTML = require('html-webpack-plugin')
 const WebpackFavicons = require('favicons-webpack-plugin')
 const PathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin
-const { CheckerPlugin } = require('awesome-typescript-loader')
+const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin
 
 //Config
 const config = require('../../config.js')
@@ -101,9 +101,10 @@ gulp.task('client.build.compile', function(done){
 			modules: [ './client', './bower_components', './node_modules' ],
 			extensions: [ '.js', '.ts', '.json', '.png', '.jpg', '.jpeg', '.gif' ],
 			alias: {
-				config: '../config.js',
+				config: path.resolve('./config.js'),
+				shared: path.resolve('./shared'),
 				jquery: process.env.NODE_ENV === 'production' ? 'jquery/dist/jquery.min' : 'jquery/src/jquery',
-				semantic: process.env.NODE_ENV === 'production' ? '../semantic/dist/semantic.min' : '../semantic/dist/semantic'
+				semantic: path.resolve(process.env.NODE_ENV === 'production' ? 'semantic/dist/semantic.min' : 'semantic/dist/semantic')
 			},
 			plugins: [
 				new PathsPlugin()
@@ -132,8 +133,11 @@ gulp.task('client.build.compile', function(done){
 							target: 'es5',
 							types: config.types.client.concat([ 'webpack', 'node', 'jasmine' ]),
 							baseUrl: './client',
-							cacheDirectory: './builds/.client',
-							useCache: true
+							cacheDirectory: '.client',
+							useCache: true,
+							paths: {
+								shared: [ path.resolve('./shared') ]
+							}
 						}
 					},
 					'angular2-template-loader?keepUrl=true',
@@ -201,7 +205,7 @@ gulp.task('client.build.compile', function(done){
 		}))
 		
 		//Beep for success or errors
-		if (module.exports.setup && process.env.MODE === 'single'){
+		if (module.exports.setup && process.env.MODE === 'watch'){
 			if (stats.hasErrors()){
 				beep(2)
 			}else{

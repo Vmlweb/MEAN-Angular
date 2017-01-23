@@ -52,7 +52,7 @@ gulp.task('server.build', function(done){
 			modules: [ './server', './node_modules' ],
 			extensions: [ '.js', '.ts', '.json' ],
 			alias: {
-				config: '../config.js'
+				shared: path.resolve('./shared')
 			},
 			plugins: [
 				new PathsPlugin()
@@ -69,8 +69,11 @@ gulp.task('server.build', function(done){
 					target: 'es5',
 					types: config.types.server.concat([ 'webpack', 'webpack-env', 'node', 'jasmine' ]),
 					baseUrl: './server',
-					cacheDirectory: './builds/.server',
-					useCache: true
+					cacheDirectory: '.server',
+					useCache: true,
+					paths: {
+						shared: [ path.resolve('./shared') ]
+					}
 				}
 			}]
 		}
@@ -112,7 +115,7 @@ gulp.task('server.build', function(done){
 		}))
 		
 		//Beep for success or errors
-		if (module.exports.setup && process.env.MODE === 'single'){
+		if (module.exports.setup && process.env.MODE === 'watch'){
 			if (stats.hasErrors()){
 				beep(2)
 			}else{
