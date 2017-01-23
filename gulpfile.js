@@ -140,9 +140,10 @@ gulp.task('dist', gulp.series(
 	'dist.build'
 ))
 
-//! Database & App
+//! Convenience
 gulp.task('start', gulp.series('database.start', 'app.start'))
 gulp.task('stop', gulp.series('app.stop', 'database.stop'))
+gulp.task('wait', function(done){ setTimeout(done, 1000) })
 
 //! Setup Convenience
 gulp.task('clean', gulp.parallel('setup.clean', 'build.clean'))
