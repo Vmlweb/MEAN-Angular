@@ -8,9 +8,8 @@ Quick and simple template to get up and running with a productive MEAN stack web
 
   * [NodeJS 6.x](https://nodejs.org) on Linux
   * [Docker](https://docker.com) & [Compose](https://docs.docker.com/compose)
-  * [Angular 2](https://angular.io) & [Typescript 2](https://www.typescriptlang.org)
+  * [Typescript 2](https://www.typescriptlang.org)
   * [Gulp 4](http://gulpjs.com) & [Webpack 2](https://webpack.js.org)
-  * [Semantic UI 2](http://semantic-ui.com)
   * [Jasmine](https://jasmine.github.io), [Karma](http://karma-runner.github.io) & [Istanbul](http://gotwarlost.github.io/istanbul)
   * [Winston](https://github.com/winstonjs/winston) & [PM2](http://pm2.keymetrics.io)
   
@@ -35,10 +34,10 @@ git clone https://github.com/Vmlweb/MEAN-AngularJS-2.git
 cd MEAN-AngularJS-2
 ```
 
-Then install the Gulp 4 and Bower command line tools if you have not already.
+Then install the Gulp 4 command line tools if you have not already.
 
 ```bash
-npm install -g gulpjs/gulp.git#4.0 bower
+npm install -g gulpjs/gulp.git#4.0
 ```
 
 ## Installation
@@ -54,28 +53,20 @@ gulp setup
 
 - `builds` - Temporary development build files.
 - `certs` - SSL certificate and key files.
-- `client` - Client side website source.
-- `client/app` - Angular app source.
 - `data` - Development database binary files.
 - `dist` - Production ready distribution builds.
 - `logs` - Access, info and error log files.
-- `logs/tests/server|client` - Coverage and testing reports.
-- `logs/tests/server|client/html` - Coverage html report.
-- `logs/tests/merged` - Merged coverage reports.
-- `logs/tests/merged/html` - Merged coverage html report.
-- `semantic` - User interface themes and customisation source.
+- `logs/tests/server` - Coverage and testing reports.
+- `logs/tests/server/html` - Coverage html report.
 - `server` - Server side application source.
 - `server/api` - REST API endpoints.
 - `server/app` - Core functions for server app.
 - `server/models` - Database models and schemas.
 - `server/tests` - Test data management.
-- `shared` - Modules used by both client and server.
+- `shared` - Shared modules used by server.
 
 ## File Structure
 
-- `bower.json` - Browser based package dependancies.
-- `client/main.ts` - Entry point for development and distribution builds.
-- `client/test.ts` - Entry point for testing builds.
 - `config.js` - Configurations for development, testing and distribution.
 - `database.js` - Start, stop and restart the production database container.
 - `docker-compose.yml` - Docker compose definition for the production server.
@@ -93,9 +84,8 @@ gulp setup
 
 For development the primary working directories are.
 
-- `client` - Client side website source.
-- `semantic` - User interface themes and customisation source.
 - `server` - Server side application source.
+- `shared` - Shared module source files.
 
 You can start the development server which will rebuild any source file changes live.
 
@@ -113,8 +103,6 @@ gulp reset
 
 The development server stores its logs in the local directory.
 
-To add non-standard browser libraries add the paths to `config.js` and they will be included in builds and testing.
-
 ## Logging
 
 Use the following commands to log messages directly to the console and `logs` directory.
@@ -128,31 +116,20 @@ log.verbose('verbose'); //Access log file
 
 Logs will automatically be sorted by severity and bundled into date files.
 
-## Interface
-
-You can make changes to the user interface and themes in the `semantic` directory but must rebuild them to take affect.
-
-```bash
-gulp semantic
-```
-
 ## Testing
 
-Test files should be included in the `server` and `client` directories and use either `.test.ts` or `.test.js` extensions.
+Test files should be included in the `server` directory and use either `.test.ts` or `.test.js` extensions. 
 
-You can execute tests either combined or individually for the server and client.
+They can be executed using the following command.
 
 ```bash
 gulp test
-gulp server.test
-gulp client.test
 ```
 
 You can also execute them in watch mode which will rebuild and test any source file changes live.
 
 ```bash
 gulp server
-gulp client
 ```
 
 Testing and coverage reports will be generated in the `logs/tests` directory.
@@ -163,7 +140,6 @@ You can create test plans in `config.js` which will only execute tests in a spec
 
 ```
 gulp server.v1.test
-gulp client.services.test
 ```
 
 These can also be executed in watch mode.

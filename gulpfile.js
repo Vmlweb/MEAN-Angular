@@ -15,12 +15,6 @@ require('./tasks/setup.js')
 require('./tasks/dist.js')
 require('./tasks/test.js')
 
-//Client
-require('./tasks/client/build.js')
-require('./tasks/client/lint.js')
-require('./tasks/client/test.js')
-require('./tasks/client/watch.js')
-
 //Server
 require('./tasks/server/build.js')
 require('./tasks/server/lint.js')
@@ -36,7 +30,6 @@ gulp.task('setup', gulp.series(
 	'clean',
 	'setup.install',
 	'setup.certs',
-	'semantic',
 	'reset'
 ))
 
@@ -63,23 +56,7 @@ gulp.task('dev', gulp.series(
 	'app.attach',
 	'lint',
 	'server.watch',
-	'client.watch',
 	'server.watch.build'
-))
-
-//! Client
-gulp.task('client', gulp.series(
-	'env.watch',
-	'env.test',
-	'stop',
-	'clean',
-	'build',
-	'database.test',
-	'database.setup',
-	'mock.start',
-	'client.test.execute',
-	'client.lint',
-	'client.watch'
 ))
 
 //! Server
@@ -108,12 +85,7 @@ gulp.task('test', gulp.series(
 	'database.setup',
 	'server.test.execute',
 	'server.test.coverage',
-	'mock.start',
-	'client.test.execute',
-	'client.test.coverage',
-	'mock.stop',
-	'test.merge',
-	'client.test.close'
+	'test.merge'
 ))
 
 //! Mocking
@@ -134,7 +106,6 @@ gulp.task('dist', gulp.series(
 	'stop',
 	'clean',
 	'dist.clean',
-	'semantic',
 	'build',
 	'dist.copy',
 	'dist.build'
@@ -151,9 +122,8 @@ gulp.task('docker', gulp.parallel('setup.install.nodejs', 'setup.install.mongodb
 gulp.task('certs', gulp.parallel('setup.certs'))
 
 //! Build Convenience
-gulp.task('build', gulp.parallel('build.config', 'server.build', 'client.build'))
-gulp.task('semantic', gulp.parallel('build.semantic'))
-gulp.task('lint', gulp.series('client.lint', 'server.lint'))
+gulp.task('build', gulp.parallel('build.config', 'server.build'))
+gulp.task('lint', gulp.series('server.lint'))
 
 //! Enviroment Variables
 process.env.MODE = 'single'
@@ -174,22 +144,6 @@ for (const i in config.tests.server){
 				process.env.TEST = i
 				done()
 			}, 'server'))
-		})(i)
-	}
-}
-
-//! Client Test Plans
-for (const i in config.tests.client){
-	if (config.tests.client.hasOwnProperty(i)){
-		(function(i) {
-			gulp.task('client.' + i + '.test', gulp.series(function(done){
-				process.env.TEST = i
-				done()
-			}, 'client.test'))
-			gulp.task('client.' + i, gulp.series(function(done){
-				process.env.TEST = i
-				done()
-			}, 'client'))
 		})(i)
 	}
 }

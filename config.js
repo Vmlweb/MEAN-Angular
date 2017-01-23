@@ -66,8 +66,7 @@ module.exports = {
 	
 	//! Typescript Types
 	types: {
-		server: [ 'async', 'body-parser', 'compression', 'express', 'helmet', 'moment', 'mongoose', 'morgan', 'winston' ],
-		client: [ 'jquery', 'jasmine' ]
+		server: [ 'async', 'body-parser', 'compression', 'express', 'helmet', 'moment', 'mongoose', 'morgan', 'winston' ]
 	},
 	
 	//! Test Plans
@@ -75,9 +74,6 @@ module.exports = {
 		server: {
 			v1: [ 'api/v1/**/*' ],
 			users: [ 'api/v1/users/**/*' ]
-		},
-		client: {
-			users: [ 'api/v1/users/**/user' ]
 		}
 	},
 	

@@ -5,7 +5,6 @@ VOLUME /home/certs
 
 COPY package.json /home/package.json
 COPY server /home/server
-COPY client /home/client
 
 ENV NODE_ENV production
 

@@ -14,7 +14,6 @@ const config = require('../config.js')
 - dist.copy.certs
 - dist.copy.config
 - dist.copy.server
-- dist.copy.client
 */
 
 //Remove all distribution files
@@ -37,8 +36,7 @@ gulp.task('dist.build', shell.task([
 //! Copy
 gulp.task('dist.copy', gulp.parallel(
 	'dist.copy.config',
-	'dist.copy.server',
-	'dist.copy.client'
+	'dist.copy.server'
 ))
 
 //Copy config files
@@ -59,10 +57,4 @@ gulp.task('dist.copy.config', function(){
 gulp.task('dist.copy.server', function(){
 	return gulp.src('builds/server/**/*')
 		.pipe(gulp.dest('dist/server'))
-})
-
-//Copy client executable files
-gulp.task('dist.copy.client', function(){
-	return gulp.src('builds/client/**/*')
-		.pipe(gulp.dest('dist/client'))
 })

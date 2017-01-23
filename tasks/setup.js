@@ -12,11 +12,9 @@ const config = require('../config.js')
 	
 - setup.install
 - setup.install.zip
-- setup.install.bower
 - setup.install.nodejs
 - setup.install.mongodb
 - setup.install.npm
-- setup.install.semantic
 */
 
 //Clean docker volumes
@@ -45,28 +43,11 @@ gulp.task('setup.install', gulp.parallel(
 	'setup.install.bower',
 	'setup.install.nodejs',
 	'setup.install.mongodb',
-	gulp.series(
-		'setup.install.npm',
-		'setup.install.semantic'
-	)
+	gulp.series('setup.install.npm')
 ))
 
 //Install npm dependancies
 gulp.task('setup.install.npm', shell.task('npm install --save-dev --ignore-scripts semantic-ui', {
-	verbose: true
-}))
-
-//Install semantic dependancies
-gulp.task('setup.install.semantic', shell.task([
-	'npm install --production',
-	'gulp install'
-],{
-	verbose: true,
-	cwd: 'node_modules/semantic-ui'
-}))
-
-//Install bower dependancies
-gulp.task('setup.install.bower', shell.task('bower install --config.analytics=false --allow-root', {
 	verbose: true
 }))
 

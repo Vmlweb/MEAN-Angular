@@ -6,14 +6,6 @@ import * as express from 'express'
 //Includes
 import { log, app, http, https, connections, database } from 'app'
 
-//Frontend
-app.use(express.static('./client'))
-app.get(/^(?!\/api).*/, (req, res) => {
-	res.sendFile(path.resolve('./client/index.html'))
-})
-
-log.info('Mounted static frontend')
-
 //Backend
 require.ensure([], (require) => {
 	app.use('/api', (require('api') as any).router)

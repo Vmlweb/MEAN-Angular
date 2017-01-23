@@ -48,7 +48,6 @@ gulp.task('app.start', function(done){
 			Privileged: true,
 			Binds: [
 				path.join(process.cwd(), 'builds', 'server') + ':/home/server',
-				path.join(process.cwd(), 'builds', 'client') + ':/home/client',
 				path.join(process.cwd(), 'certs') + ':/home/certs',
 				path.join(process.cwd(), 'logs') + ':/home/logs',
 				path.join(process.cwd(), 'node_modules') + ':/home/node_modules',
