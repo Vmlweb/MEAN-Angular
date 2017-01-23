@@ -45,13 +45,13 @@ gulp.task('client.test.execute', function(done){
 	const libs = config.libs.map(function(item){
 		return {
 			included: path.extname(item) === '.js',
-			pattern: path.join('./builds/client/libs/', path.basename(item))
+			pattern: path.join('./client/libs/', path.basename(item))
 		}
 	})
 	
 	//Setup karma configuration
 	new karma({
-		basePath: '',
+		basePath: './builds',
 		
 		//Frameworks and plugins
 		frameworks: [ 'jasmine' ],
@@ -71,6 +71,7 @@ gulp.task('client.test.execute', function(done){
 		autoWatch: process.env.MODE === 'watch',
 		singleRun: process.env.MODE === 'single',
 		failOnEmptyTestSuite: false,
+		autoWatchBatchDelay: 1000,
 		
 		//PhantomJS
 		customLaunchers: {
@@ -90,8 +91,8 @@ gulp.task('client.test.execute', function(done){
 		},
 		
 		//Files
-		preprocessors: { './builds/client/main.js': [ 'webpack', 'sourcemap' ] },
-		files: [ './builds/client/main.js' ].concat(libs),
+		preprocessors: { './client/main.js': [ 'webpack', 'sourcemap' ] },
+		files: [ './client/main.js' ].concat(libs),
 		
 		//Webpack
 		webpack: build.webpack,
@@ -111,10 +112,11 @@ gulp.task('client.test.execute', function(done){
 			outputDir: 'logs/tests/client'
 		}
 
-	}, function(failed){
-		beep(failed ? 2 : 1)
-		done()
-	}).start()
+	}, done)
+	.on('browser_complete', function(browser){
+		beep(browser.lastResult.failed > 0 ? 2 : 1)
+	})
+	.start()
 })
 
 //Remap and log coverage reports 

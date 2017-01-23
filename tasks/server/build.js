@@ -115,7 +115,7 @@ gulp.task('server.build', function(done){
 		}))
 		
 		//Beep for success or errors
-		if (module.exports.setup && process.env.MODE === 'watch'){
+		if (module.exports.setup && process.env.NODE_ENV === 'developent' && process.env.MODE === 'watch'){
 			if (stats.hasErrors()){
 				beep(2)
 			}else{
