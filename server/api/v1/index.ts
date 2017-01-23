@@ -12,7 +12,7 @@ const router = express.Router()
 const epFiles = {}
 const requireContext = require.context('./', true, /\.ep.ts$/)
 requireContext.keys().forEach(key => epFiles[key] = requireContext(key))
-
+console.log(1)
 //Loop through found endpoints
 const endpoints: Endpoint[] = []
 Object.keys(epFiles).forEach((file) => {

@@ -2,7 +2,8 @@
 import * as express from 'express'
 
 //Includes
-import { log, ErrorCode, ServerError, ClientError } from 'app'
+import { ErrorCode, ServerError, ClientError } from 'shared'
+import { log } from 'app'
 
 //Create router
 const router = express.Router()

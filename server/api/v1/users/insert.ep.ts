@@ -2,7 +2,8 @@
 import * as validate from 'the-vladiator'
 
 //Includes
-import { log, Method, Endpoint, ErrorCode, ClientError } from 'app'
+import { ErrorCode, ClientError } from 'shared'
+import { log, Method, Endpoint } from 'app'
 import { User } from 'models'
 
 const execute = async (req, res, next) => {

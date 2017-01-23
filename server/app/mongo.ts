@@ -4,7 +4,8 @@ import * as mongoose from 'mongoose'
 import * as fs from 'fs'
 
 //Includes
-import { log, config } from 'app'
+import { config } from 'shared'
+import { log } from 'app'
 
 //Prepare connection string
 const auth = config.database.auth.username + ':' + config.database.auth.password

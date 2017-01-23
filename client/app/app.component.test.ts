@@ -40,7 +40,7 @@ describe('AppComponent (inline template)', () => {
 describe('1st tests', () => {
 	it('asdfadsfsdf', (done) => {
 	  //setTimeout(function(){
-		  
+		  expect(true).toBe(true)
 		  //var test = new AppComponent()
 		  //expect(test.test()).toBe('test')
   

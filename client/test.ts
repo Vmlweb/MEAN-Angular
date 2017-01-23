@@ -8,12 +8,15 @@ import 'zone.js/dist/sync-test'
 import 'zone.js/dist/jasmine-patch'
 import 'zone.js/dist/async-test'
 import 'zone.js/dist/fake-async-test'
+import 'rxjs'
 
 //Modules
-let config = require('config')
 import * as minimatch from 'minimatch'
 import { TestBed } from '@angular/core/testing'
 import { platformBrowserDynamicTesting, BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing'
+
+//Includes
+import { config } from 'shared'
 
 //Find all test files
 const context = (require as any).context('./', true, /\.test\.(ts|js)/)

@@ -3,7 +3,7 @@ import * as request from 'request-promise-native'
 import * as catcher from 'promise-catcher'
 
 //Includes
-import { ErrorCode } from 'app'
+import { ErrorCode } from 'shared'
 
 describe('List Users', () => {
 	

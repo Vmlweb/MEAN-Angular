@@ -2,8 +2,9 @@
 import * as minimatch from 'minimatch'
 
 //Includes
+import { config } from 'shared'
 import { shutdown } from 'main'
-import { config, database } from 'app'
+import { database } from 'app'
 
 //Wait for database connection
 beforeAll(done => {

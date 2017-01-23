@@ -13,7 +13,8 @@ import * as contentFilter from 'content-filter'
 import * as express from 'express'
 
 //Includes
-import { log, config } from 'app'
+import { config } from 'shared'
+import { log } from 'app'
 
 //Attach request logger
 const app = express()
