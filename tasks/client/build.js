@@ -129,7 +129,7 @@ gulp.task('client.build.compile', function(done){
 							target: 'es5',
 							types: config.types.client.concat([ 'webpack', 'node', 'jasmine' ]),
 							baseUrl: './client',
-							cacheDirectory: './asdfclient',
+							cacheDirectory: '.client',
 							useCache: true,
 							paths: {
 								shared: [ path.resolve('./shared') ]

@@ -103,16 +103,18 @@ gulp.task('client.test.execute', function(done){
 		coverageReporter: {
 			reporters: [{
 				type: 'json',
-				dir:'logs/tests/client',
+				dir:'../logs/tests/client',
 				file: 'coverage.json',
 				subdir: '.'
 			}]
 		},
 		junitReporter: {
-			outputDir: 'logs/tests/client'
+			outputDir: '../logs/tests/client'
 		}
 
-	}, done)
+	}, function(){
+		done()
+	})
 	.on('browser_complete', function(browser){
 		beep(browser.lastResult.failed > 0 ? 2 : 1)
 	})
