@@ -11,7 +11,6 @@ const config = require('../config.js')
 - setup.certs
 	
 - setup.install
-- setup.install.zip
 - setup.install.bower
 - setup.install.nodejs
 - setup.install.mongodb
@@ -41,14 +40,10 @@ gulp.task('setup.certs', shell.task([
 
 //! Installations
 gulp.task('setup.install', gulp.parallel(
-	'setup.install.zip',
 	'setup.install.bower',
 	'setup.install.nodejs',
 	'setup.install.mongodb',
-	gulp.series(
-		'setup.install.npm',
-		'setup.install.semantic'
-	)
+	gulp.series('setup.install.npm', 'setup.install.semantic')
 ))
 
 //Install npm dependancies
@@ -67,11 +62,6 @@ gulp.task('setup.install.semantic', shell.task([
 
 //Install bower dependancies
 gulp.task('setup.install.bower', shell.task('bower install --config.analytics=false --allow-root', {
-	verbose: true
-}))
-
-//Install zip dependancies
-gulp.task('setup.install.zip', shell.task('apt-get install -y zip', {
 	verbose: true
 }))
 
