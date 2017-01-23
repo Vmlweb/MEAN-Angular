@@ -8,6 +8,7 @@ const gulp = require('gulp')
 //! Watch
 gulp.task('client.watch', function(done){
 	gulp.watch([ 'client/**/*.js', 'client/**/*.ts' ], gulp.series(
+		'wait',
 		'client.lint'
 	))
 	done()
