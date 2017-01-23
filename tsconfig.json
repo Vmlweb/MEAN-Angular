@@ -11,7 +11,5 @@
     "node_modules",
     "bower_components"
   ],
-  "files": [
-    "node_modules/typescript/lib/typescriptServices.d.ts"
-  ]
+  "files": [ "node_modules/typescript/lib/typescriptServices.d.ts" ]
 }

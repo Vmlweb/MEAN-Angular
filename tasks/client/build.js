@@ -55,10 +55,6 @@ gulp.task('client.build.compile', function(done){
 				'process.env.MODE': JSON.stringify(process.env.MODE),
 				'process.env.URL': JSON.stringify('http://' + config.http.url + ':' + config.http.port.internal)
 			}),
-			new CheckerPlugin({
-				fork: true,
-				useWebpackText: true
-			}),
 			new WebpackHTML({
 				title: config.name,
 				template: './client/index.ejs',
@@ -88,7 +84,8 @@ gulp.task('client.build.compile', function(done){
 			new webpack.ProvidePlugin({
 				$: 'jquery',
 				jQuery: 'jquery'
-			})
+			}),
+			new CheckerPlugin()
 		],
 		performance: {
 			hints: false
@@ -124,8 +121,7 @@ gulp.task('client.build.compile', function(done){
 			},{
 				test: /\.ts$/,
 				exclude: /(node_modules|bower_components)/,
-				use: [
-					{
+				use: [{
 						loader: 'awesome-typescript-loader',
 						query: {
 							instance: 'client',
@@ -133,7 +129,7 @@ gulp.task('client.build.compile', function(done){
 							target: 'es5',
 							types: config.types.client.concat([ 'webpack', 'node', 'jasmine' ]),
 							baseUrl: './client',
-							cacheDirectory: '.client',
+							cacheDirectory: './asdfclient',
 							useCache: true,
 							paths: {
 								shared: [ path.resolve('./shared') ]

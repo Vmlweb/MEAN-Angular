@@ -3,14 +3,13 @@ import * as minimatch from 'minimatch'
 
 //Includes
 import { config } from 'shared'
-import { shutdown } from 'main'
-import { database } from 'app'
+/*import { database } from 'app'
 
 //Wait for database connection
 beforeAll(done => {
 	database.once('open', done)
 	database.once('error', done)
-})
+})*/
 
 //Load testing hooks
 import 'tests'
@@ -43,10 +42,15 @@ if (process.env.hasOwnProperty('TEST')){
 	//Execute all tests
 	context.keys().forEach(context)
 }
+/*
+require.ensure([], (require) => {
+//import { shutdown } from 'main'
+let shutdown = require('main').shutdown
 
 //Shutdown when tests finished
 afterAll(done => {
 	shutdown(done)
 })
 
-export { shutdown }
+//export { shutdown }
+})*/

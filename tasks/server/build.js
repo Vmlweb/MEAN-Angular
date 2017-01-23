@@ -29,6 +29,7 @@ gulp.task('server.build', function(done){
 		entry: process.env.NODE_ENV === 'testing' ? './server/test.ts' : './server/main.ts',
 		target: 'node',
 		externals: nodeModules,
+		watch: true,
 		plugins: [
 			new webpack.DefinePlugin({
 				'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
@@ -36,10 +37,7 @@ gulp.task('server.build', function(done){
 				'process.env.MODE': JSON.stringify(process.env.MODE),
 				'process.env.URL': JSON.stringify('http://' + config.http.url + ':' + config.http.port.internal)
 			}),
-			new CheckerPlugin({
-				fork: true,
-				useWebpackText: true
-			})
+			new CheckerPlugin()
 		],
 		performance: {
 			hints: false
@@ -64,6 +62,8 @@ gulp.task('server.build', function(done){
 				exclude: /node_modules/,
 				loader: 'awesome-typescript-loader',
 				query: {
+					useTranspileModule: true,
+					transpileOnly: false,
 					instance: 'server',
 					lib: [ 'es6' ],
 					target: 'es5',

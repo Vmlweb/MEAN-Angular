@@ -151,9 +151,9 @@ gulp.task('docker', gulp.parallel('setup.install.nodejs', 'setup.install.mongodb
 gulp.task('certs', gulp.parallel('setup.certs'))
 
 //! Build Convenience
+gulp.task('build', gulp.parallel('build.config', 'server.build', 'client.build'))
 gulp.task('semantic', gulp.parallel('build.semantic'))
 gulp.task('lint', gulp.series('client.lint', 'server.lint'))
-gulp.task('build', gulp.parallel('build.config', 'client.build', 'server.build'))
 
 //! Enviroment Variables
 process.env.MODE = 'single'
