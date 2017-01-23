@@ -55,15 +55,6 @@ module.exports = {
 		}
 	},
 	
-	//! Client Libraries
-	libs: [
-		
-		//Semantic UI
-		'semantic/dist/semantic.min.css',
-		'semantic/dist/*/**/*',
-		'!semantic/dist/components/**/*'
-	],
-	
 	//! Typescript Types
 	types: {
 		server: [ 'async', 'body-parser', 'compression', 'express', 'helmet', 'moment', 'mongoose', 'morgan', 'winston' ]

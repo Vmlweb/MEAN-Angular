@@ -84,8 +84,7 @@ gulp.task('test', gulp.series(
 	'database.test',
 	'database.setup',
 	'server.test.execute',
-	'server.test.coverage',
-	'test.merge'
+	'server.test.coverage'
 ))
 
 //! Mocking

@@ -40,6 +40,7 @@
     "gulp-replace": "^0.5.4",
     "gulp-shell": "^0.5.2",
     "gulp-tslint": "^7.0.1",
+    "inject-loader": "^3.0.0-beta3",
     "istanbul-instrumenter-loader": "^1.2.0",
     "jasmine": "^2.5.3",
     "jasmine-core": "^2.4.1",

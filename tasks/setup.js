@@ -14,7 +14,6 @@ const config = require('../config.js')
 - setup.install.zip
 - setup.install.nodejs
 - setup.install.mongodb
-- setup.install.npm
 */
 
 //Clean docker volumes
@@ -40,16 +39,9 @@ gulp.task('setup.certs', shell.task([
 //! Installations
 gulp.task('setup.install', gulp.parallel(
 	'setup.install.zip',
-	'setup.install.bower',
 	'setup.install.nodejs',
-	'setup.install.mongodb',
-	gulp.series('setup.install.npm')
+	'setup.install.mongodb'
 ))
-
-//Install npm dependancies
-gulp.task('setup.install.npm', shell.task('npm install --save-dev --ignore-scripts semantic-ui', {
-	verbose: true
-}))
 
 //Install zip dependancies
 gulp.task('setup.install.zip', shell.task('apt-get install -y zip', {

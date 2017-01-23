@@ -1,7 +1,5 @@
 //Modules
-import * as path from 'path'
 import * as async from 'async'
-import * as express from 'express'
 
 //Includes
 import { log, app, http, https, connections, database } from 'app'
