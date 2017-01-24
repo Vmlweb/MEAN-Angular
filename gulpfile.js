@@ -28,18 +28,17 @@ gulp.task('default', gulp.series('dev'))
 gulp.task('setup', gulp.series(
 	'stop',
 	'clean',
-	'setup.install',
-	'setup.certs',
+	'install',
+	'certs',
 	'reset'
 ))
 
 //! Database
 gulp.task('reset', gulp.series(
 	'stop',
-	'clean',
-	'database.stop',
-	'database.clean',
+	'build.clean',
 	'build.config.mongodb',
+	'database.clean',
 	'database.start',
 	'database.setup',
 	'database.stop'
@@ -50,10 +49,9 @@ gulp.task('dev', gulp.series(
 	'env.watch',
 	'env.dev',
 	'stop',
-	'clean',
+	'build.clean',
 	'build',
 	'start',
-	'app.attach',
 	'lint',
 	'server.watch',
 	'server.watch.build'
@@ -64,7 +62,8 @@ gulp.task('server', gulp.series(
 	'env.watch',
 	'env.test',
 	'stop',
-	'clean',
+	'app.clean',
+	'build.clean',
 	'build.config',
 	'server.build',
 	'database.test',
@@ -72,53 +71,56 @@ gulp.task('server', gulp.series(
 	'server.test.execute',
 	'server.lint',
 	'server.watch',
-	'server.watch.test'
+	'server.watch.test',
+	'purge'
 ))
 
 //! Testing
 gulp.task('test', gulp.series(
 	'env.test',
 	'stop',
-	'clean',
+	'app.clean',
+	'build.clean',
 	'build',
 	'database.test',
 	'database.setup',
 	'server.test.execute',
-	'server.test.coverage'
+	'server.test.coverage',
+	'purge'
 ))
 
 //! Mocking
 gulp.task('mock', gulp.series(
 	'env.test',
 	'stop',
-	'clean',
+	'build.clean',
 	'build.config',
 	'server.build',
 	'database.test',
 	'database.setup',
-	'mock.start'
+	'mock.start',
+	'purge'
 ))
  
 //! Distribution
 gulp.task('dist', gulp.series(
 	'env.dist',
 	'stop',
-	'clean',
-	'dist.clean',
+	'build.clean',
 	'build',
+	'dist.clean',
 	'dist.copy',
 	'dist.build'
 ))
 
-//! Convenience
+//! Process Convenience
 gulp.task('start', gulp.series('database.start', 'app.start'))
 gulp.task('stop', gulp.series('app.stop', 'database.stop'))
 gulp.task('wait', function(done){ setTimeout(done, 1000) })
 
 //! Setup Convenience
-gulp.task('clean', gulp.parallel('setup.clean', 'build.clean'))
-gulp.task('docker', gulp.parallel('setup.install.nodejs', 'setup.install.mongodb'))
-gulp.task('certs', gulp.parallel('setup.certs'))
+gulp.task('clean', gulp.parallel('purge', 'build.clean', 'app.clean', 'database.clean', 'dist.clean'))
+gulp.task('docker', gulp.parallel('install.nodejs', 'install.mongodb'))
 
 //! Build Convenience
 gulp.task('build', gulp.parallel('build.config', 'server.build'))

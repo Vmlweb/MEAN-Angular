@@ -3,6 +3,7 @@
   ports:
 @@COMPOSE_CONFIG
   volumes:
+    - "@@CERTS_PATH:/home/certs"
     - "@@LOGS_PATH:/home/logs"
     - "@@CONFIG:/home/config.js"
 @@NAME_db:

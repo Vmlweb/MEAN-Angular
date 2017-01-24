@@ -6,7 +6,7 @@ Quick and simple template to get up and running with a productive MEAN stack web
 
 ## Technologies
 
-  * [NodeJS 6.x](https://nodejs.org) on Linux
+  * [NodeJS 6.x](https://nodejs.org)
   * [Docker](https://docker.com) & [Compose](https://docs.docker.com/compose)
   * [Typescript 2](https://www.typescriptlang.org)
   * [Gulp 4](http://gulpjs.com) & [Webpack 2](https://webpack.js.org)
@@ -25,19 +25,23 @@ Quick and simple template to get up and running with a productive MEAN stack web
 
 ## Prequisitions
 
-First make sure you have both NodeJS and Docker installed on your machine. (Docker Compose is optional)
+First make sure you have the following dependancies installed on your machine.
+
+- `NodeJS` - Available for [All Platforms](https://nodejs.org/en/).
+- `Docker` - Available for [Linux](https://docs.docker.com/engine/installation/linux/), [Mac](https://docs.docker.com/docker-for-mac/), [Windows](https://docs.docker.com/docker-for-windows/).
+- `OpenSSL` - Available on Linux Package Managers, Bundled with Mac or [Windows](https://slproweb.com/products/Win32OpenSSL.html).
+
+Then install the Gulp 4 command line tools if you have not already.
+
+```bash
+npm install -g gulpjs/gulp.git#4.0
+```
 
 Next clone the repository from GitHub.
 
 ```bash
 git clone https://github.com/Vmlweb/MEAN-AngularJS-2.git
 cd MEAN-AngularJS-2
-```
-
-Then install the Gulp 4 command line tools if you have not already.
-
-```bash
-npm install -g gulpjs/gulp.git#4.0
 ```
 
 ## Installation
@@ -47,6 +51,24 @@ Then install the project dependancies and setup the development environment.
 ```bash
 npm install
 gulp setup
+```
+
+By default the Docker socket is used but you can modify this for tcp or http connections in `config.js`. 
+
+You must populate the docker property with a [Dockerode](https://github.com/apocas/dockerode#getting-started) object.
+
+## Windows
+
+When using Windows you must configure the engine to accept tcp connections.
+
+[Read More](https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon#configure-docker-with-configuration-file).
+
+## Linux
+
+When using Linux you must apply the correct Docker ownership to the certificate files.
+
+```bash
+chown -R 999:999 certs
 ```
 
 ## Directory Structure
@@ -193,15 +215,16 @@ docker load < mean.tar
 
 You must then copy `config.js` and the `certs` directory to their respective locations specified in `config.js`.
 
-Make sure to set the correct file permissions for the certificates.
+When using Linux make sure to set the correct file permissions for the certificates.
 
 ```bash
 chown -R 999:999 /opt/mean/certs
 ```
 
-Then wipe and configure your production database using the following command.
+Then wipe and configure your production database using `database.sh`.
 
 ```bash
+chmod +x database.sh
 ./database.sh reset
 ```
 
@@ -212,6 +235,9 @@ When updating to a new build simply load in the new docker image and restart the
 Use can then use `server.sh` or `docker-compose.yml` to start, stop and restart your production server.
 
 ```bash
+cmod +x server.sh
+cmod +x database.sh
+
 ./server.sh start
 ./server.sh stop
 

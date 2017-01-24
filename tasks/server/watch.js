@@ -20,8 +20,7 @@ gulp.task('server.watch', function(done){
 gulp.task('server.watch.build', function(done){
 	gulp.watch('builds/server/**/*.js', gulp.series(
 		'app.stop',
-		'app.start',
-		'app.attach'
+		'app.start'
 	))
 	done()
 })

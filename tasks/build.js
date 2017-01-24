@@ -10,7 +10,6 @@ const config = require('../config.js')
 
 /*! Tasks 
 - build.clean
-- build.semantic
 
 - build.config
 - build.config.nodejs
@@ -23,13 +22,7 @@ gulp.task('build.clean', function(t){
 	return del('builds/**/*')
 })
 
-//Compile semantic ui and themes
-gulp.task('build.semantic', shell.task('gulp build', {
-	verbose: true,
-	cwd: 'node_modules/semantic-ui'
-}))
-
-//! Config
+//! Build Config
 gulp.task('build.config', gulp.parallel(
 	'build.config.nodejs',
 	'build.config.mongodb',
@@ -70,9 +63,11 @@ gulp.task('build.config.docker', function(){
 	//HTTP port mappings
 	if (config.http.port.internal.length > 0){
 		if (config.http.port.external.length > 0){
+			
 			//Internal and external port mappings
 			mappedPorts.push(config.http.port.external.toString() + ':' + config.http.port.internal.toString())
 		}else{
+			
 			//Only internal port mappings
 			mappedPorts.push(config.http.port.external.toString() + ':' + config.http.port.internal.toString())
 		}
@@ -80,10 +75,12 @@ gulp.task('build.config.docker', function(){
 	
 	//HTTPS port mappings
 	if (config.https.port.internal.length > 0){
-		if (config.https.port.external.length > 0){			
+		if (config.https.port.external.length > 0){		
+				
 			//Internal and external port mappings
 			mappedPorts.push(config.https.port.external.toString() + ':' + config.https.port.internal.toString())
 		}else{
+			
 			//Only internal port mappings
 			mappedPorts.push(config.https.port.external.toString() + ':' + config.https.port.internal.toString())
 		}

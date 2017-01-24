@@ -1,16 +1,22 @@
 //Modules
 const gulp = require('gulp')
 const path = require('path')
-const docker = require('dockerode')()
+const del = require('del')
 
 //Includes
 const config = require('../config.js')
+const docker = require('dockerode')(config.docker)
 
 /*! Tasks 
+- app.clean
 - app.start
-- app.attach
 - app.stop
 */
+
+//Remove all app log files
+gulp.task('app.clean', function(){
+	return del('logs/**/*')
+})
 
 //Start app server
 gulp.task('app.start', function(done){
@@ -58,28 +64,23 @@ gulp.task('app.start', function(done){
 	}, function(err, container) {
 		if (err){ throw err }
 		
+		//Attach to container
+		container.attach({
+			stream: true,
+			stdout: true,
+			stderr: true
+		}, function (err, stream) {
+			if (err){ throw err }
+			
+			//Stream output to console
+	        container.modem.demuxStream(stream, process.stdout, process.stderr)
+		})
+		
 		//Start container
 		container.start(function(err, data){
 			if (err){ throw err }
 			done()
 		})
-	})
-})
-
-//Attach console to app server output
-gulp.task('app.attach', function(done){
-	const container = docker.getContainer(config.name + '_app')
-	container.attach({
-		stream: true,
-		stdout: true,
-		stderr: true
-	}, function (err, stream) {
-		if (err){ throw err }
-		
-		//Stream output to console
-        container.modem.demuxStream(stream, process.stdout, process.stderr)
-        
-        done()
 	})
 })
 

@@ -4,10 +4,10 @@ const del = require('del')
 const fs = require('fs')
 const async = require('async')
 const path = require('path')
-const docker = require('dockerode')()
 
 //Includes
 const config = require('../config.js')
+const docker = require('dockerode')(config.docker)
 
 /*! Tasks 
 - database.clean
@@ -18,7 +18,7 @@ const config = require('../config.js')
 */
 
 //Remove all database files
-gulp.task('database.clean', function(t){
+gulp.task('database.clean', function(){
 	return del('data/**/*')
 })
 
@@ -58,6 +58,17 @@ gulp.task('database.start', function(done){
 	}, function(err, container) {
 		if (err){ throw err }
 		
+		//Attach to container errors
+		container.attach({
+			stream: true,
+			stderr: true
+		}, function (err, stream) {
+			if (err){ throw err }
+			
+			//Stream output to console
+	        container.modem.demuxStream(stream, process.stdout, process.stderr)
+		})
+		
 		//Start container
 		container.start(function(err, data){
 			if (err){ throw err }
@@ -90,8 +101,19 @@ gulp.task('database.test', function(done){
 	}, function(err, container) {
 		if (err){ throw err }
 		
+		//Attach to container errors
+		container.attach({
+			stream: true,
+			stderr: true
+		}, function (err, stream) {
+			if (err){ throw err }
+			
+			//Stream output to console
+	        container.modem.demuxStream(stream, process.stdout, process.stderr)
+		})
+		
 		//Start container
-		container.start(function(err, data){
+		container.start(function(err, stream){
 			if (err){ throw err }
 			setTimeout(done, 500)
 		})
@@ -112,31 +134,33 @@ gulp.task('database.setup', function(done){
 	}
 	
 	//Prepare command
-	container.exec({
-		Cmd: cmd,
-		AttachStdin: true,
-		AttachStdout: true,
-		Tty: false
-	}, function(err, exec) {
-		if (err){ throw err }
-		
-		//Execute command
-		exec.start({
-			hijack: true,
-			stdin: true,
-			stdout: true
-		}, function(err, stream) {
+	setTimeout(function(){
+		container.exec({
+			Cmd: cmd,
+			AttachStdin: true,
+			AttachStdout: true,
+			Tty: false
+		}, function(err, exec) {
 			if (err){ throw err }
-						
-			//Stream output to console
-	        container.modem.demuxStream(stream, process.stdout, process.stderr)
-		
-			//Stream file into container mongo cli
-			fs.createReadStream('builds/mongodb.js', 'binary').pipe(stream).on('end', function(){
-				done()
+			
+			//Execute command
+			exec.start({
+				hijack: true,
+				stdin: true,
+				stdout: true
+			}, function(err, stream) {
+				if (err){ throw err }
+							
+				//Stream output to console
+		        container.modem.demuxStream(stream, process.stdout, process.stderr)
+			
+				//Stream file into container mongo cli
+				fs.createReadStream('builds/mongodb.js', 'binary').pipe(stream).on('end', function(){
+					done()
+				})
 			})
 		})
-	})
+	}, 1500)
 })
 
 

@@ -8,7 +8,8 @@ const istanbul = require('istanbul')
 const config = require('../config.js')
 
 /*! Tasks 
-- test.mock
+- mock.start
+- mock.stop
 */
 
 //Create global jasmine jook stores

@@ -1,37 +1,33 @@
 //Modules
 const gulp = require('gulp')
-const shell = require('gulp-shell')
 const del = require('del')
+const tar = require('gulp-tar')
+const zip = require('gulp-zip')
+const shell = require('gulp-shell')
 
 //Includes
 const config = require('../config.js')
+const docker = require('dockerode')(config.docker)
 
 /*! Tasks 
 - dist.clean
-- dist.build
 
 - dist.copy
 - dist.copy.certs
 - dist.copy.config
-- dist.copy.server
+
+- dist.build
+- dist.build.tar
+- dist.build.docker
+- dist.build.save
+- dist.build.zip
+- dist.build.clean
 */
 
 //Remove all distribution files
 gulp.task('dist.clean', function(){
 	return del('dist/**/*')
 })
-
-//Build and compress docker image for app
-gulp.task('dist.build', shell.task([
-	'docker build -t ' + config.name + ' $PWD',
-	'docker save ' + config.name + ' > ' + config.name + '.tar',
-	'zip ' + config.name + '.zip ' + config.name + '.tar',
-	'rm -r ' + config.name + '.tar',
-	'chmod +x server.sh'
-],{
-	verbose: true,
-	cwd: 'dist'
-}))
 
 //! Copy
 gulp.task('dist.copy', gulp.parallel(
@@ -57,4 +53,53 @@ gulp.task('dist.copy.config', function(){
 gulp.task('dist.copy.server', function(){
 	return gulp.src('builds/server/**/*')
 		.pipe(gulp.dest('dist/server'))
+})
+
+//! Build
+gulp.task('dist.build', gulp.series(
+	'dist.build.tar',
+	'dist.build.docker',
+	'dist.build.save',
+	'dist.build.zip',
+	'dist.build.clean'
+))
+
+//Compress dockerfile and context into tar
+gulp.task('dist.build.tar', function(){
+	return gulp.src('dist/**/*')
+		.pipe(tar('Dockerfile.tar'))
+		.pipe(gulp.dest('dist'))
+})
+
+//Generate docker image
+gulp.task('dist.build.docker', function(done){
+	docker.buildImage('./dist/Dockerfile.tar', {
+		t: config.name + '_app'
+	}, function (err, stream){
+		if (err){ throw err }
+		
+		//Attach to pull progress
+		stream.pipe(process.stdout)
+        
+		//Track pull progress
+		docker.modem.followProgress(stream, function (err, output){
+			if (err){ throw err }
+			done()
+		})
+	})
+})
+
+//Save docker image to file
+gulp.task('dist.build.save', shell.task('docker save ' + config.name + '_app > ' + config.name + '.tar', { cwd: 'dist' }))
+
+//Compress docker image to zip
+gulp.task('dist.build.zip', function(){
+	return gulp.src('dist/' + config.name + '.tar')
+		.pipe(zip(config.name + '.zip'))
+		.pipe(gulp.dest('dist'))
+})
+
+//Remove large tar files used for building
+gulp.task('dist.build.clean', function(){
+	return del([ 'dist/' + config.name + '.tar', 'dist/Dockerfile.tar' ])
 })
