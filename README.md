@@ -54,7 +54,9 @@ npm install
 gulp setup
 ```
 
-By default the Docker socket is used but you can modify this for tcp or http connections in `config.js`. You must populate the docker property with a [Dockerode](https://github.com/apocas/dockerode#getting-started) object.
+By default the Docker socket is used but you can modify this for tcp or http connections in `config.js`. 
+
+You must populate the docker property with a [Dockerode](https://github.com/apocas/dockerode#getting-started) object.
 
 ## Windows
 
