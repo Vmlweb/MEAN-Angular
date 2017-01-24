@@ -200,7 +200,7 @@ gulp.task('client.build.compile', function(done){
 		}))
 		
 		//Beep for success or errors
-		if (module.exports.setup && process.env.NODE_ENV === 'developent' && process.env.MODE === 'watch'){
+		if (module.exports.setup && process.env.NODE_ENV === 'development' && process.env.MODE === 'watch'){
 			if (stats.hasErrors()){
 				beep(2)
 			}else{
