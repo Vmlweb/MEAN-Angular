@@ -6,7 +6,7 @@ Quick and simple template to get up and running with a productive MEAN stack web
 
 ## Technologies
 
-  * [NodeJS 6.x](https://nodejs.org)
+  * [NodeJS 7.x](https://nodejs.org)
   * [Docker](https://docker.com) & [Compose](https://docs.docker.com/compose)
   * [Angular 2](https://angular.io) & [Typescript 2](https://www.typescriptlang.org)
   * [Gulp 4](http://gulpjs.com) & [Webpack 2](https://webpack.js.org)
