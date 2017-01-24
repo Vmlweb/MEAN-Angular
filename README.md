@@ -46,6 +46,8 @@ cd MEAN-AngularJS-2
 
 ## Installation
 
+First your IP address to `config.js` under `database.repl.nodes.hostname` for MongoDB.
+
 Then install the project dependancies and setup the development environment.
 
 ```bash
@@ -55,7 +57,7 @@ gulp setup
 
 By default the Docker socket is used but you can modify this for tcp or http connections in `config.js`. 
 
-You must populate the docker property with a [Dockerode](https://github.com/apocas/dockerode#getting-started) object.
+You must populate the `.docker` property with a [Dockerode](https://github.com/apocas/dockerode#getting-started) object.
 
 ## Windows
 
@@ -204,7 +206,7 @@ These files will be generated into the `dist` directory.
 
 ## Production
 
-First import the docker image onto the host machine.
+First import the Docker image onto the host machine.
 
 ```bash
 unzip mean.zip
@@ -226,7 +228,7 @@ chmod +x database.sh
 ./database.sh reset
 ```
 
-When updating to a new build simply load in the new docker image and restart the server. 
+When updating to a new build simply load in the new Docker image and restart the server. 
 
 ## Process
 
