@@ -41,12 +41,21 @@ const subj = '"/C=' + config.certs.details.country + '/ST=' + config.certs.detai
 //Prepare openssl location
 const openssl = os.platform() === 'win32' ? 'C:\OpenSSL-Win' + (os.arch().indexOf('64') > -1 ? '64' : '32') + '\bin\openssl.exe' : 'openssl'
 
-//Generate ssl certificate files
-gulp.task('certs.generate', shell.task([
+//Prepare shell commands
+const cmd = [
 	openssl + ' req -new -newkey rsa:2048 -days 1825 -nodes -x509 -subj ' + subj + ' -keyout ' + config.https.ssl.key + ' -out ' + config.https.ssl.cert,
 	openssl + ' req -new -newkey rsa:2048 -days 1825 -nodes -x509 -subj ' + subj + ' -keyout ' + config.database.ssl.key + ' -out ' + config.database.ssl.cert,
-	openssl + ' rand -base64 741 > ' + config.database.repl.key,
-],{
+	openssl + ' rand -base64 741 > ' + config.database.repl.key
+]
+
+//Prepare chown for Linux only
+if (os.platform() === 'linux'){
+	cmd.push('chown -R 999:999 certs')
+}
+
+//Generate ssl certificate files
+gulp.task('certs.generate', shell.task(cmd, {
+	ignoreErrors: true,
 	verbose: true,
 	cwd: 'certs'
 }))
