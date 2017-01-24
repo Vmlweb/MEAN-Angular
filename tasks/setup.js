@@ -1,5 +1,4 @@
 //Modules
-const os = require('os')
 const gulp = require('gulp')
 const shell = require('gulp-shell')
 const concat = require('gulp-concat')
@@ -39,7 +38,7 @@ gulp.task('certs', gulp.series(
 const subj = '"/C=' + config.certs.details.country + '/ST=' + config.certs.details.state + '/L=' + config.certs.details.city + '/O=' + config.certs.details.organisation + '/CN=' + config.certs.details.hostname + '"'
 
 //Prepare openssl location
-const openssl = os.platform() === 'win32' ? 'C:\OpenSSL-Win' + (os.arch().indexOf('64') > -1 ? '64' : '32') + '\bin\openssl.exe' : 'openssl'
+const openssl = process.platform === 'win32' ? 'C:\\OpenSSL-Win' + (process.arch.indexOf('64') > -1 ? '64' : '32') + '\\bin\\openssl.exe' : 'openssl'
 
 //Prepare shell commands
 const cmd = [
@@ -49,7 +48,7 @@ const cmd = [
 ]
 
 //Prepare chown for Linux only
-if (os.platform() === 'linux'){
+if (process.platform !== 'win32'){
 	cmd.push('chown -R 999:999 ../certs')
 }
 

@@ -52,6 +52,7 @@ gulp.task('build.config.mongodb', function(){
 	//Copy and replace mongodb config
 	return gulp.src('mongodb.js')
 		.pipe(replace('@@DATABASE_ADMIN_PASSWORD', password))
+		.pipe(replace('@@DATABASE_REPL_ENABLED', config.database.repl.enabled))
 		.pipe(replace('@@DATABASE_REPL_NAME', config.database.repl.name))
 		.pipe(replace('@@DATABASE_REPL_NODES_HOSTNAME', config.database.repl.nodes[0].hostname))
 		.pipe(replace('@@DATABASE_REPL_NODES_PORT', config.database.repl.nodes[0].port))
@@ -123,6 +124,7 @@ gulp.task('build.config.docker', function(){
 		.pipe(replace('@@LOGS_PATH', config.logs.path))
 		.pipe(replace('@@CERTS_PATH', config.certs.path))
 		.pipe(replace('@@DATABASE_PATH', config.database.path))
+		.pipe(replace('@@DATABASE_REPL_ENABLED', config.database.repl.enabled))
 		.pipe(replace('@@DATABASE_REPL_NAME', config.database.repl.name))
 		.pipe(replace('@@DATABASE_REPL_NODES_PORT', config.database.repl.nodes[0].port))
 		.pipe(replace('@@DATABASE_REPL_KEY', config.database.repl.key))

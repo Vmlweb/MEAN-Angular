@@ -23,18 +23,26 @@ gulp.task('database.clean', function(){
 })
 
 //Prepare command
-const cmd = ['mongod', '--auth', '--keyFile', path.join('/home/certs/', config.database.repl.key), '--replSet', config.database.repl.name]
+const cmd = ['mongod', '--auth']
+if (process.platform !== 'win32' && config.database.repl.enabled){
+	cmd.push('--keyFile', '/home/certs/' + config.database.repl.key, '--replSet', config.database.repl.name)
+}
 
 //Prepare SSL
 if (config.database.ssl.enabled){
-	cmd.push('--sslMode')
-	cmd.push('requireSSL')
-	cmd.push('--sslPEMKeyFile')
-	cmd.push(path.join('/home/certs/', config.database.ssl.pem))
+	cmd.push('--sslMode', 'requireSSL', '--sslPEMKeyFile', '/home/certs/' + config.database.ssl.pem)
 }
 
 //Start database server
 gulp.task('database.start', function(done){
+	
+	//Prepare binds
+	let binds = []
+	if (process.platform === 'win32'){
+		binds.push('//' + process.cwd().replace(/\\/g, '/').replace(':', '/') + '/certs' + ':/home/certs')
+	}else{
+		binds.push(process.cwd() + '/data' + ':/data/db', process.cwd() + '/certs' + ':/home/certs')
+	}
 	
 	//Prepare container
 	docker.createContainer({
@@ -47,10 +55,7 @@ gulp.task('database.start', function(done){
 		},
 		HostConfig: {
 			Privileged: true,
-			Binds: [
-				path.join(process.cwd(), 'data') + ':/data/db',
-				path.join(process.cwd(), 'certs') + ':/home/certs'
-			],
+			Binds: binds,
 			PortBindings: {
 				['27017/tcp']: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
 			}
@@ -61,7 +66,8 @@ gulp.task('database.start', function(done){
 		//Attach to container errors
 		container.attach({
 			stream: true,
-			stderr: true
+			stderr: true,
+			stdout: true
 		}, function (err, stream) {
 			if (err){ throw err }
 			
@@ -80,6 +86,14 @@ gulp.task('database.start', function(done){
 //Start testing database server
 gulp.task('database.test', function(done){
 	
+	//Prepare binds
+	let binds = []
+	if (process.platform === 'win32'){
+		binds.push('//' + process.cwd().replace(/\\/g, '/').replace(':','/') + '/certs' + ':/home/certs')
+	}else{
+		binds.push(process.cwd() + 'certs' + ':/home/certs')
+	}
+	
 	//Prepare container
 	docker.createContainer({
 		Hostname: config.database.repl.nodes[0].hostname,
@@ -91,9 +105,7 @@ gulp.task('database.test', function(done){
 		},
 		HostConfig: {
 			Privileged: true,
-			Binds: [
-				path.join(process.cwd(), 'certs') + ':/home/certs'
-			],
+			Binds: binds,
 			PortBindings: {
 				['27017/tcp']: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
 			}
@@ -129,8 +141,7 @@ gulp.task('database.setup', function(done){
 	
 	//Prepare SSL
 	if (config.database.ssl.enabled){
-		cmd.push('--ssl')
-		cmd.push('--sslAllowInvalidCertificates')
+		cmd.push('--ssl', '--sslAllowInvalidCertificates')
 	}
 	
 	//Prepare command
@@ -153,14 +164,14 @@ gulp.task('database.setup', function(done){
 							
 				//Stream output to console
 		        container.modem.demuxStream(stream, process.stdout, process.stderr)
-			
+				
 				//Stream file into container mongo cli
 				fs.createReadStream('builds/mongodb.js', 'binary').pipe(stream).on('end', function(){
 					done()
 				})
 			})
 		})
-	}, 1500)
+	}, 500)
 })
 
 

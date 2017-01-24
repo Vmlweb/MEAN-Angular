@@ -6,7 +6,7 @@ module.exports = {
 	
 	//! Docker
 	docker: {
-		socketPath: '/var/run/docker.sock'
+		socketPath: process.platform === 'win32' ? '//./pipe/docker_engine' : '/var/run/docker.sock'
 	},
 	
 	//! HTTP
@@ -50,6 +50,7 @@ module.exports = {
 			validate: false
 		},
 		repl: {
+			enabled: process.platform !== 'win32',
 			name: 'rs0',
 			read: 'nearest',
 			key: 'repl.key',
