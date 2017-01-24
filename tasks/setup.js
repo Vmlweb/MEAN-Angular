@@ -70,7 +70,7 @@ gulp.task('certs.chmod', function(){
 })
 
 //! Install
-gulp.task('install', gulp.parallel(
+gulp.task('install', gulp.series(
 	'install.bower',
 	'install.nodejs',
 	'install.mongodb',
