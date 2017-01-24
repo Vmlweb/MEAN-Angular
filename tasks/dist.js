@@ -1,18 +1,22 @@
 //Modules
 const gulp = require('gulp')
-const shell = require('gulp-shell')
 const del = require('del')
-const docker = require('dockerode')()
+const tar = require('gulp-tar')
+const zip = require('gulp-zip')
+const shell = require('gulp-shell')
 
 //Includes
 const config = require('../config.js')
+const docker = require('dockerode')(config.docker)
 
 /*! Tasks 
 - dist.clean
 - dist.build
 
 - dist.build
+- dist.build.tar
 - dist.build.docker
+- dist.build.save
 - dist.build.zip
 - dist.build.clean
 
@@ -30,33 +34,51 @@ gulp.task('dist.clean', function(){
 
 //! Build
 gulp.task('dist.build', gulp.series(
+	'dist.build.tar',
 	'dist.build.docker',
+	'dist.build.save',
 	'dist.build.zip',
 	'dist.build.clean'
 ))
 
-//Generate docker image
-gulp.task('dist.build.docker', function(){
-	docker.buildImage(config.name + '.tar', {
-		t: config.name + '_app'
-	}, function (err, response){
-		done(err)
-	})
-}, {
-	cwd: 'dist'
+//Compress dockerfile and context into tar
+gulp.task('dist.build.tar', function(){
+	return gulp.src('dist/**/*')
+		.pipe(tar('Dockerfile.tar'))
+		.pipe(gulp.dest('dist'))
 })
+
+//Generate docker image
+gulp.task('dist.build.docker', function(done){
+	docker.buildImage('./dist/Dockerfile.tar', {
+		t: config.name + '_app'
+	}, function (err, stream){
+		if (err){ throw err }
+		
+		//Attach to pull progress
+		stream.pipe(process.stdout)
+        
+		//Track pull progress
+		docker.modem.followProgress(stream, function (err, output){
+			if (err){ throw err }
+			done()
+		})
+	})
+})
+
+//Save docker image to file
+gulp.task('dist.build.save', shell.task('docker save ' + config.name + '_app > ' + config.name + '.tar', { cwd: 'dist' }))
 
 //Compress docker image to zip
 gulp.task('dist.build.zip', function(){
-	return gulp.src(config.name + '.tar')
-		.pipe(gulp.dest('./'))
-}, {
-	cwd: 'dist'
+	return gulp.src('dist/' + config.name + '.tar')
+		.pipe(zip(config.name + '.zip'))
+		.pipe(gulp.dest('dist'))
 })
 
-//Remove non compressed docker image
+//Remove large tar files used for building
 gulp.task('dist.build.clean', function(){
-	return del('dist/' + config.name + '.tar')
+	return del([ 'dist/' + config.name + '.tar', 'dist/Dockerfile.tar' ])
 })
 
 //! Copy
