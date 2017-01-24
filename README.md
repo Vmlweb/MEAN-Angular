@@ -30,7 +30,7 @@ First make sure you have the following dependancies installed on your machine.
 
 - `NodeJS` - Available for [All Platforms](https://nodejs.org/en/).
 - `Docker` - Available for [Linux](https://docs.docker.com/engine/installation/linux/), [Mac](https://docs.docker.com/docker-for-mac/), [Windows](https://docs.docker.com/docker-for-windows/).
-- `OpenSSL` - Bundled with Mac, Available for Linux apt, yum or [Windows](https://slproweb.com/products/Win32OpenSSL.html).
+- `OpenSSL` - Available on Linux Package Managers, Bundled with Mac or [Windows](https://slproweb.com/products/Win32OpenSSL.html).
 
 Then install the Gulp 4 and Bower command line tools if you have not already.
 
