@@ -1,10 +1,10 @@
 //Modules
 const gulp = require('gulp')
 const shell = require('gulp-shell')
-const docker = require('dockerode')()
 
 //Includes
 const config = require('../config.js')
+const docker = require('dockerode')(config.docker)
 
 /*! Tasks 
 - setup.clean
@@ -31,8 +31,7 @@ gulp.task('setup.certs', shell.task([
 	'openssl req -new -newkey rsa:2048 -days 1825 -nodes -x509 -subj ' + subj + ' -keyout ' + config.https.ssl.key + ' -out ' + config.https.ssl.cert,
 	'openssl req -new -newkey rsa:2048 -days 1825 -nodes -x509 -subj ' + subj + ' -keyout ' + config.database.ssl.key + ' -out ' + config.database.ssl.cert,
 	'openssl rand -base64 741 > ' + config.database.repl.key + ' && chmod 600 ' + config.database.repl.key,
-	'cat ' + config.database.ssl.key + ' ' + config.database.ssl.cert + ' > ' + config.database.ssl.pem,
-	'sudo chown -R 999:999 ../certs || true'
+	'cat ' + config.database.ssl.key + ' ' + config.database.ssl.cert + ' > ' + config.database.ssl.pem
 ],{
 	verbose: true,
 	cwd: 'certs'
@@ -61,7 +60,7 @@ gulp.task('setup.install.semantic', shell.task([
 }))
 
 //Install bower dependancies
-gulp.task('setup.install.bower', shell.task('bower install --config.analytics=false --allow-root', {
+gulp.task('setup.install.bower', shell.task('bower install --config.analytics=false', {
 	verbose: true
 }))
 
@@ -70,10 +69,12 @@ gulp.task('setup.install.mongodb', function(done){
 	docker.pull('mongo:latest', function (err, stream) {
 		if (err){ throw err }
 		
+		//Attach to pull progress
+		stream.pipe(process.stdout)
+		
 		//Track pull progress
 		docker.modem.followProgress(stream, function (err, output){
 			if (err){ throw err }
-			console.log(output)
 			done()
 		})
 	})
@@ -81,13 +82,15 @@ gulp.task('setup.install.mongodb', function(done){
 
 //Install nodejs docker image
 gulp.task('setup.install.nodejs', function(done){
-	docker.pull('node:slim', { Privileged: true }, function (err, stream) {
+	docker.pull('node:slim', function (err, stream) {
 		if (err){ throw err }
+		
+		//Attach to pull progress
+		stream.pipe(process.stdout)
 		
 		//Track pull progress
 		docker.modem.followProgress(stream, function (err, output){
 			if (err){ throw err }
-			console.log(output)
 			done()
 		})
 	})

@@ -1,10 +1,10 @@
 //Modules
 const gulp = require('gulp')
 const path = require('path')
-const docker = require('dockerode')()
 
 //Includes
 const config = require('../config.js')
+const docker = require('dockerode')(config.docker)
 
 /*! Tasks 
 - app.start
@@ -68,8 +68,6 @@ gulp.task('app.start', function(done){
 			
 			//Stream output to console
 	        container.modem.demuxStream(stream, process.stdout, process.stderr)
-	        
-	        done()
 		})
 		
 		//Start container
