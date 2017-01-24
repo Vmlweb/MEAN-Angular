@@ -46,7 +46,7 @@ cd MEAN-AngularJS-2
 
 ## Installation
 
-First your IP address to `config.js` under `database.repl.nodes.hostname` for MongoDB.
+First add your IP address to `config.js` under `database.repl.nodes.hostname` for the database.
 
 Then install the project dependancies and setup the development environment.
 
