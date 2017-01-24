@@ -8,12 +8,14 @@ const istanbul = require('istanbul')
 const config = require('../config.js')
 
 /*! Tasks 
-- test.merge
-- test.mock
+- merge
+
+- mock.start
+- mock.stop
 */
 
 //Merge coverage reports
-gulp.task('test.merge', function(done){
+gulp.task('merge', function(done){
 	
     //Collect coverage json files
     const collector = new istanbul.Collector()

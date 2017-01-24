@@ -1,15 +1,22 @@
 //Modules
 const gulp = require('gulp')
 const path = require('path')
+const del = require('del')
 
 //Includes
 const config = require('../config.js')
 const docker = require('dockerode')(config.docker)
 
 /*! Tasks 
+- app.clean
 - app.start
 - app.stop
 */
+
+//Remove all app log files
+gulp.task('app.clean', function(){
+	return del('logs/**/*')
+})
 
 //Start app server
 gulp.task('app.start', function(done){

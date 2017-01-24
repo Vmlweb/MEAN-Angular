@@ -16,7 +16,6 @@ module.exports = { setup: false, webpack: undefined }
 
 /*! Tasks
 - client.build
-
 - client.build.libs
 - client.build.compile
 */

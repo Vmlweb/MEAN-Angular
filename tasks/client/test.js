@@ -13,7 +13,6 @@ const build = require('./build.js')
 
 /*! Tasks 
 - client.test
-
 - client.test.execute
 - client.test.coverage
 - client.test.close

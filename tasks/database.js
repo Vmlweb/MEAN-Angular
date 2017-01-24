@@ -18,7 +18,7 @@ const docker = require('dockerode')(config.docker)
 */
 
 //Remove all database files
-gulp.task('database.clean', function(t){
+gulp.task('database.clean', function(){
 	return del('data/**/*')
 })
 

@@ -11,7 +11,12 @@ const docker = require('dockerode')(config.docker)
 
 /*! Tasks 
 - dist.clean
-- dist.build
+
+- dist.copy
+- dist.copy.certs
+- dist.copy.config
+- dist.copy.server
+- dist.copy.client
 
 - dist.build
 - dist.build.tar
@@ -19,17 +24,44 @@ const docker = require('dockerode')(config.docker)
 - dist.build.save
 - dist.build.zip
 - dist.build.clean
-
-- dist.copy
-- dist.copy.certs
-- dist.copy.config
-- dist.copy.server
-- dist.copy.client
 */
 
 //Remove all distribution files
 gulp.task('dist.clean', function(){
 	return del('dist/**/*')
+})
+
+//! Copy
+gulp.task('dist.copy', gulp.parallel(
+	'dist.copy.config',
+	'dist.copy.server',
+	'dist.copy.client'
+))
+
+//Copy config files
+gulp.task('dist.copy.config', function(){
+	return gulp.src([
+		'builds/config.js',
+		'builds/package.json',
+		'builds/Dockerfile',
+		'builds/docker-compose.yml',
+		'builds/mongodb.js',
+		'builds/server.sh',
+		'builds/database.sh'
+	])
+	.pipe(gulp.dest('dist'))
+})
+
+//Copy server executable files
+gulp.task('dist.copy.server', function(){
+	return gulp.src('builds/server/**/*')
+		.pipe(gulp.dest('dist/server'))
+})
+
+//Copy client executable files
+gulp.task('dist.copy.client', function(){
+	return gulp.src('builds/client/**/*')
+		.pipe(gulp.dest('dist/client'))
 })
 
 //! Build
@@ -79,37 +111,4 @@ gulp.task('dist.build.zip', function(){
 //Remove large tar files used for building
 gulp.task('dist.build.clean', function(){
 	return del([ 'dist/' + config.name + '.tar', 'dist/Dockerfile.tar' ])
-})
-
-//! Copy
-gulp.task('dist.copy', gulp.parallel(
-	'dist.copy.config',
-	'dist.copy.server',
-	'dist.copy.client'
-))
-
-//Copy config files
-gulp.task('dist.copy.config', function(){
-	return gulp.src([
-		'builds/config.js',
-		'builds/package.json',
-		'builds/Dockerfile',
-		'builds/docker-compose.yml',
-		'builds/mongodb.js',
-		'builds/server.sh',
-		'builds/database.sh'
-	])
-	.pipe(gulp.dest('dist'))
-})
-
-//Copy server executable files
-gulp.task('dist.copy.server', function(){
-	return gulp.src('builds/server/**/*')
-		.pipe(gulp.dest('dist/server'))
-})
-
-//Copy client executable files
-gulp.task('dist.copy.client', function(){
-	return gulp.src('builds/client/**/*')
-		.pipe(gulp.dest('dist/client'))
 })
