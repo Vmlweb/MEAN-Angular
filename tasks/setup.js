@@ -85,7 +85,7 @@ gulp.task('install.npm', shell.task('npm install --save-dev --ignore-scripts sem
 gulp.task('install.semantic', shell.task([ 'npm install --production', 'gulp install' ],{ verbose: true, cwd: 'node_modules/semantic-ui' }))
 
 //Install bower dependancies
-gulp.task('install.bower', shell.task('bower install --config.analytics=false', { verbose: true }))
+gulp.task('install.bower', shell.task('bower install --config.analytics=false --allow-root', { verbose: true }))
 
 //Install mongodb docker image
 gulp.task('install.mongodb', function(done){
