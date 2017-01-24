@@ -60,9 +60,7 @@ You must populate the docker property with a [Dockerode](https://github.com/apoc
 
 ## Windows
 
-When using Windows you must configure the engine to accept tcp connections.
-
-[Read More](https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon#configure-docker-with-configuration-file).
+When using Windows you must configure the engine to accept tcp connections. [Read More](https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon#configure-docker-with-configuration-file)
 
 ## Linux
 
