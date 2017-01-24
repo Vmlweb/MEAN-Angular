@@ -50,7 +50,7 @@ const cmd = [
 
 //Prepare chown for Linux only
 if (os.platform() === 'linux'){
-	cmd.push('chown -R 999:999 certs')
+	cmd.push('chown -R 999:999 ../certs')
 }
 
 //Generate ssl certificate files
