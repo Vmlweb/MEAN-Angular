@@ -60,7 +60,6 @@ gulp.task('dev', gulp.series(
 	'clean',
 	'build',
 	'start',
-	'app.attach',
 	'lint',
 	'server.watch',
 	'client.watch',

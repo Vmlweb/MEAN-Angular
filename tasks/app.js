@@ -8,7 +8,6 @@ const config = require('../config.js')
 
 /*! Tasks 
 - app.start
-- app.attach
 - app.stop
 */
 
@@ -59,28 +58,25 @@ gulp.task('app.start', function(done){
 	}, function(err, container) {
 		if (err){ throw err }
 		
+		//Attach to container
+		container.attach({
+			stream: true,
+			stdout: true,
+			stderr: true
+		}, function (err, stream) {
+			if (err){ throw err }
+			
+			//Stream output to console
+	        container.modem.demuxStream(stream, process.stdout, process.stderr)
+	        
+	        done()
+		})
+		
 		//Start container
 		container.start(function(err, data){
 			if (err){ throw err }
 			done()
 		})
-	})
-})
-
-//Attach console to app server output
-gulp.task('app.attach', function(done){
-	const container = docker.getContainer(config.name + '_app')
-	container.attach({
-		stream: true,
-		stdout: true,
-		stderr: true
-	}, function (err, stream) {
-		if (err){ throw err }
-		
-		//Stream output to console
-        container.modem.demuxStream(stream, process.stdout, process.stderr)
-        
-        done()
 	})
 })
 
