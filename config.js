@@ -4,6 +4,11 @@ module.exports = {
 	name: 'mean',
 	config: '/opt/mean/config.js',
 	
+	//! Docker
+	docker: {
+		socketPath: '/var/run/docker.sock'
+	},
+	
 	//! HTTP
 	http: {
 		hostname: '::',
@@ -49,7 +54,7 @@ module.exports = {
 			read: 'nearest',
 			key: 'repl.key',
 			nodes: [{
-				hostname: '192.168.0.18',
+				hostname: '192.168.0.9',
 				port: 27017 
 			}]
 		}
