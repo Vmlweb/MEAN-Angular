@@ -26,7 +26,7 @@ const docker = require('dockerode')(config.docker)
 - dist.build.clean
 */
 
-//Remove all distribution files
+//Remove distribution files
 gulp.task('dist.clean', function(){
 	return del('dist/**/*')
 })
@@ -82,9 +82,7 @@ gulp.task('dist.build.tar', function(){
 
 //Generate docker image
 gulp.task('dist.build.docker', function(done){
-	docker.buildImage('./dist/Dockerfile.tar', {
-		t: config.name + '_app'
-	}, function (err, stream){
+	docker.buildImage('./dist/Dockerfile.tar', { t: config.name + '_app' }, function (err, stream){
 		if (err){ throw err }
 		
 		//Attach to pull progress

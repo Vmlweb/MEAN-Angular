@@ -47,7 +47,6 @@ gulp.task('reset', gulp.series(
 	'build.clean',
 	'build.config.mongodb',
 	'database.clean',
-	'database.start.volume',
 	'database.start',
 	'database.setup',
 	'database.stop'
@@ -60,11 +59,10 @@ gulp.task('dev', gulp.series(
 	'stop',
 	'build.clean',
 	'build',
-	'start',
 	'lint',
+	'start',
 	'server.watch',
-	'client.watch',
-	'server.watch.build'
+	'client.watch'
 ))
 
 //! Client
@@ -75,14 +73,11 @@ gulp.task('client', gulp.series(
 	'app.clean',
 	'build.clean',
 	'build',
-	'database.test.volume',
 	'database.test',
-	'database.setup',
 	'mock.start',
 	'client.test.execute',
 	'client.lint',
-	'client.watch',
-	'purge'
+	'client.watch'
 ))
 
 //! Server
@@ -94,14 +89,11 @@ gulp.task('server', gulp.series(
 	'build.clean',
 	'build.config',
 	'server.build',
-	'database.test.volume',
 	'database.test',
-	'database.setup',
 	'server.test.execute',
 	'server.lint',
 	'server.watch',
-	'server.watch.test',
-	'purge'
+	'server.watch.test'
 ))
 
 //! Testing
@@ -111,9 +103,7 @@ gulp.task('test', gulp.series(
 	'app.clean',
 	'build.clean',
 	'build',
-	'database.test.volume',
 	'database.test',
-	'database.setup',
 	'server.test.execute',
 	'server.test.coverage',
 	'mock.start',
@@ -121,7 +111,6 @@ gulp.task('test', gulp.series(
 	'client.test.coverage',
 	'mock.stop',
 	'merge',
-	'purge',
 	'client.test.close'
 ))
 
@@ -132,11 +121,8 @@ gulp.task('mock', gulp.series(
 	'build.clean',
 	'build.config',
 	'server.build',
-	'database.test.volume',
 	'database.test',
-	'database.setup',
-	'mock.start',
-	'purge'
+	'mock.start'
 ))
  
 //! Distribution
@@ -157,7 +143,7 @@ gulp.task('stop', gulp.series('app.stop', 'database.stop'))
 gulp.task('wait', function(done){ setTimeout(done, 1000) })
 
 //! Setup Convenience
-gulp.task('clean', gulp.parallel('purge', 'build.clean', 'app.clean', 'database.clean', 'dist.clean'))
+gulp.task('clean', gulp.parallel('build.clean', 'app.clean', 'database.clean', 'dist.clean'))
 gulp.task('docker', gulp.parallel('install.nodejs', 'install.mongodb'))
 
 //! Build Convenience
@@ -208,26 +194,10 @@ const shutdown = function(){
 	const app = docker.getContainer(config.name + '_app')
 	const db = docker.getContainer(config.name + '_db')
 	app.stop({ t: 10 }, function(err, data){
-		app.remove({ force: true }, function(err, data){
-			db.stop({ t: 10 }, function(err, data){
-				db.remove({ force: true }, function(err, data){
-					process.exit()
-				})
-			})
+		db.stop({ t: 10 }, function(err, data){
+			process.exit()
 		})
 	})
-}
-
-//Forward windows exit signals
-if (process.platform === "win32") {
-	rl.createInterface({ input: process.stdin, output: process.stdout }).on('SIGINT', function(){
-		//process.emit('SIGINT')
-	})
-	process.stdin.on("keypress", function(chunk, key) {
-  if(key && key.name === "c" && key.ctrl) {
-	  shutdown()
-  }
-});
 }
 
 process.on('SIGTERM', shutdown)

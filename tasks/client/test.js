@@ -22,11 +22,10 @@ const build = require('./build.js')
 gulp.task('client.test', gulp.series(
 	'env.test',
 	'stop',
-	'clean',
+	'app.clean',
+	'build.clean',
 	'build',
-	'database.test.volume',
 	'database.test',
-	'database.setup',
 	'mock.start',
 	'client.test.execute',
 	'client.test.coverage',

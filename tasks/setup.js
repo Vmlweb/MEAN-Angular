@@ -9,8 +9,6 @@ const config = require('../config.js')
 const docker = require('dockerode')(config.docker)
 
 /*! Tasks
-- purge
-
 - certs
 - certs.generate
 - certs.merge
@@ -23,9 +21,6 @@ const docker = require('dockerode')(config.docker)
 - install.npm
 - install.semantic
 */
-
-//Remove all unused docker volumes
-gulp.task('purge', shell.task('docker volume rm $(docker volume ls -qf dangling=true)', { verbose: true, ignoreErrors: true }))
 
 //! Certs
 gulp.task('certs', gulp.series(
@@ -47,8 +42,8 @@ const cmd = [
 	openssl + ' rand -base64 741 > ' + config.database.repl.key
 ]
 
-//Prepare chown for Linux only
-if (process.platform !== 'win32'){
+//Prepare chown for linux only
+if (process.platform === 'linux'){
 	cmd.push('chown -R 999:999 ../certs')
 }
 
