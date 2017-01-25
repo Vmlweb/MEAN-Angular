@@ -69,7 +69,7 @@ gulp.task('server.build', function(done){
 					target: 'es5',
 					types: config.types.server.concat([ 'webpack', 'webpack-env', 'node', 'jasmine' ]),
 					baseUrl: './server',
-					cacheDirectory: '.server',
+					cacheDirectory: './builds/.server',
 					useCache: true,
 					paths: {
 						shared: [ path.resolve('./shared') ]
