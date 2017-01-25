@@ -146,9 +146,11 @@ gulp.task('database.setup', function(done){
 	        container.modem.demuxStream(stream, process.stdout, process.stderr)
 				
 			//Stream file into container mongo cli
-			fs.createReadStream('./builds/mongodb.js', 'binary').pipe(stream).on('end', function(){
-				setTimeout(done, 500)
-			})
+			setTimeout(function(){
+				fs.createReadStream('./builds/mongodb.js', 'binary').pipe(stream).on('end', function(){
+					setTimeout(done, 500)
+				})
+			}, 500)
 		})
 	})
 })
