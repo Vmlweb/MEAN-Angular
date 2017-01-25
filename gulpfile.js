@@ -62,6 +62,7 @@ gulp.task('dev', gulp.series(
 	'lint',
 	'start',
 	'server.watch',
+	'server.watch.build',
 	'client.watch'
 ))
 
@@ -198,6 +199,11 @@ const shutdown = function(){
 			process.exit()
 		})
 	})
+}
+
+//Handle windows watch shutdown
+if (process.platform === 'win32'){
+	rl.createInterface({ input: process.stdin, output: process.stdout }).on('SIGINT', function() { shutdown() })
 }
 
 process.on('SIGTERM', shutdown)

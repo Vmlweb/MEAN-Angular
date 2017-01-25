@@ -1,6 +1,8 @@
 .server/*
 .client/*
-semantic/*
+certs/*
+semantic/tasks/*
+semantic/dist/*
 logs/*
 dist/*
 builds/*

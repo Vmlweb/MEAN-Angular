@@ -1,4 +1,5 @@
 //Modules
+import * as rl from 'readline'
 import * as minimatch from 'minimatch'
 
 //Includes
@@ -49,4 +50,9 @@ afterAll(done => {
 	shutdown(done)
 })
 
+//Handle windows watch shutdown
+if (process.platform === 'win32'){
+	rl.createInterface({ input: process.stdin, output: process.stdout }).on('SIGINT', () => { shutdown() })
+}
+  
 export { shutdown }
