@@ -10,8 +10,8 @@ import { log } from 'app'
 //Prepare connection string
 const auth = config.database.auth.username + ':' + config.database.auth.password
 const nodes = config.database.repl.nodes.map(node => node.hostname + ':' + node.port)
-const repl = config.database.repl.enabled ? 'replicaSet=' + config.database.repl.name : ''
-const ssl = '&ssl=' + config.database.ssl.enabled
+const repl = config.database.repl.enabled ? ('replicaSet=' + config.database.repl.name) : ''
+const ssl = (repl.length > 0 ? '&' : '') + 'ssl=' + config.database.ssl.enabled
 
 //Create connection to database
 setTimeout(() => {
