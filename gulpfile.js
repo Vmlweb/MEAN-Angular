@@ -1,10 +1,11 @@
 //Modules
 const gulp = require('gulp')
 const reference = require('undertaker-forward-reference')
-const docker = require('dockerode')()
+const rl = require("readline")
 
 //Includes
 const config = require('./config.js')
+const docker = require('dockerode')(config.docker)
 gulp.registry(reference())
 
 //! Tasks
@@ -51,8 +52,8 @@ gulp.task('dev', gulp.series(
 	'stop',
 	'build.clean',
 	'build',
-	'start',
 	'lint',
+	'start',
 	'server.watch',
 	'server.watch.build'
 ))
@@ -67,12 +68,10 @@ gulp.task('server', gulp.series(
 	'build.config',
 	'server.build',
 	'database.test',
-	'database.setup',
 	'server.test.execute',
 	'server.lint',
 	'server.watch',
-	'server.watch.test',
-	'purge'
+	'server.watch.test'
 ))
 
 //! Testing
@@ -83,10 +82,8 @@ gulp.task('test', gulp.series(
 	'build.clean',
 	'build',
 	'database.test',
-	'database.setup',
 	'server.test.execute',
-	'server.test.coverage',
-	'purge'
+	'server.test.coverage'
 ))
 
 //! Mocking
@@ -97,9 +94,7 @@ gulp.task('mock', gulp.series(
 	'build.config',
 	'server.build',
 	'database.test',
-	'database.setup',
-	'mock.start',
-	'purge'
+	'mock.start'
 ))
  
 //! Distribution
@@ -119,7 +114,7 @@ gulp.task('stop', gulp.series('app.stop', 'database.stop'))
 gulp.task('wait', function(done){ setTimeout(done, 1000) })
 
 //! Setup Convenience
-gulp.task('clean', gulp.parallel('purge', 'build.clean', 'app.clean', 'database.clean', 'dist.clean'))
+gulp.task('clean', gulp.parallel('build.clean', 'app.clean', 'database.clean', 'dist.clean'))
 gulp.task('docker', gulp.parallel('install.nodejs', 'install.mongodb'))
 
 //! Build Convenience
@@ -153,15 +148,16 @@ for (const i in config.tests.server){
 const shutdown = function(){
 	const app = docker.getContainer(config.name + '_app')
 	const db = docker.getContainer(config.name + '_db')
-	app.stop({ t: 5 }, function(err, data){
-		app.remove({ force: true }, function(err, data){
-			db.stop({ t: 5 }, function(err, data){
-				db.remove({ force: true }, function(err, data){
-					process.exit()
-				})
-			})
+	app.stop({ t: 10 }, function(err, data){
+		db.stop({ t: 10 }, function(err, data){
+			process.exit()
 		})
 	})
+}
+
+//Handle windows watch shutdown
+if (process.platform === 'win32'){
+	rl.createInterface({ input: process.stdin, output: process.stdout }).on('SIGINT', function() { shutdown() })
 }
 
 process.on('SIGTERM', shutdown)

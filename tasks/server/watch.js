@@ -3,14 +3,12 @@ const gulp = require('gulp')
 
 /*! Tasks 
 - server.watch
-- server.watch.build
 - server.watch.test
 */
 
 //! Watch
 gulp.task('server.watch', function(done){
 	gulp.watch([ 'server/**/*.js', 'server/**/*.ts' ], gulp.series(
-		'wait',
 		'server.lint'
 	))
 	done()

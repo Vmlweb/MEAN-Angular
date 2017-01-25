@@ -1,5 +1,4 @@
 //Modules
-const os = require('os')
 const gulp = require('gulp')
 const shell = require('gulp-shell')
 const concat = require('gulp-concat')
@@ -10,8 +9,6 @@ const config = require('../config.js')
 const docker = require('dockerode')(config.docker)
 
 /*! Tasks
-- purge
-
 - certs
 - certs.generate
 - certs.merge
@@ -21,9 +18,6 @@ const docker = require('dockerode')(config.docker)
 - install.nodejs
 - install.mongodb
 */
-
-//Remove all unused docker volumes
-gulp.task('purge', shell.task('docker volume rm $(docker volume ls -qf dangling=true)', { verbose: true, ignoreErrors: true }))
 
 //! Certs
 gulp.task('certs', gulp.series(
@@ -36,7 +30,7 @@ gulp.task('certs', gulp.series(
 const subj = '"/C=' + config.certs.details.country + '/ST=' + config.certs.details.state + '/L=' + config.certs.details.city + '/O=' + config.certs.details.organisation + '/CN=' + config.certs.details.hostname + '"'
 
 //Prepare openssl location
-const openssl = os.platform() === 'win32' ? 'C:\OpenSSL-Win' + (os.arch().indexOf('64') > -1 ? '64' : '32') + '\bin\openssl.exe' : 'openssl'
+const openssl = process.platform === 'win32' ? 'C:\\OpenSSL-Win' + (process.arch.indexOf('64') > -1 ? '64' : '32') + '\\bin\\openssl.exe' : 'openssl'
 
 //Prepare shell commands
 const cmd = [
@@ -45,8 +39,8 @@ const cmd = [
 	openssl + ' rand -base64 741 > ' + config.database.repl.key
 ]
 
-//Prepare chown for Linux only
-if (os.platform() === 'linux'){
+//Prepare chown for linux only
+if (process.platform === 'linux'){
 	cmd.push('chown -R 999:999 ../certs')
 }
 
@@ -82,7 +76,7 @@ gulp.task('install', gulp.series(
 ))
 
 //Install mongodb docker image
-gulp.task('install.mongodb', function(done){
+gulp.task('install.mongodb', process.platform === 'win32' ? shell.task('docker pull mongo:latest') : function(done){
 	docker.pull('mongo:latest', function (err, stream) {
 		if (err){ throw err }
 		
@@ -98,7 +92,7 @@ gulp.task('install.mongodb', function(done){
 })
 
 //Install nodejs docker image
-gulp.task('install.nodejs', function(done){
+gulp.task('install.nodejs', process.platform === 'win32' ? shell.task('docker pull node:slim') : function(done){
 	docker.pull('node:slim', function (err, stream) {
 		if (err){ throw err }
 		

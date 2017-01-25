@@ -1,17 +1,21 @@
-//Setup replica set with configuration
-rs.initiate({
-	'_id': '@@DATABASE_REPL_NAME',
-	'version': 1,
-	'members': [{
-		'_id': 1,
-		'host': '@@DATABASE_REPL_NODES_HOSTNAME:@@DATABASE_REPL_NODES_PORT' 
-	}]
-});
+//Check whether repl is being used
+if (@@DATABASE_REPL_ENABLED){
 
-//Wait for replica set to finish instantiating
-while (!rs.isMaster().ismaster){
-	sleep(500);
-};
+	//Setup replica set with configuration
+	rs.initiate({
+		'_id': '@@DATABASE_REPL_NAME',
+		'version': 1,
+		'members': [{
+			'_id': 1,
+			'host': '@@DATABASE_REPL_NODES_HOSTNAME:@@DATABASE_REPL_NODES_PORT' 
+		}]
+	});
+	
+	//Wait for replica set to finish instantiating
+	while (!rs.isMaster().ismaster){
+		sleep(500);
+	};
+}
 
 //Create administrator account
 use admin;
