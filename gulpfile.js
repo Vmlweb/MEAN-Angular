@@ -194,9 +194,12 @@ for (const i in config.tests.client){
 const shutdown = function(){
 	const app = docker.getContainer(config.name + '_app')
 	const db = docker.getContainer(config.name + '_db')
+	const test = docker.getContainer(config.name + '_db_test')
 	app.stop({ t: 10 }, function(err, data){
 		db.stop({ t: 10 }, function(err, data){
-			process.exit()
+			test.stop({ t: 10 }, function(err, data){
+				process.exit()
+			})
 		})
 	})
 }
