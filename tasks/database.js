@@ -33,15 +33,37 @@ if (config.database.ssl.enabled){
 	cmd.push('--sslMode', 'requireSSL', '--sslPEMKeyFile', '/home/certs/' + config.database.ssl.pem)
 }
 
+//Reset database volume, windows workaround
+gulp.task('database.start.volume', function(done){
+	if (process.platform === 'win32'){
+		const volume = docker.getVolume(config.name + '_data')
+		
+		//Remove existing and create new volume
+		volume.remove(function(err){
+			docker.createVolume({
+				name: config.name + '_data'
+			}, function(err){
+				if (err){ throw err }
+				done()
+			})
+		})
+		
+	}else{
+		done()
+	}
+})
+
 //Start database server
 gulp.task('database.start', function(done){
 	
-	//Prepare binds
-	let binds = []
+	//Prepare volume bindings
+	const binds = []
 	if (process.platform === 'win32'){
+		binds.push(config.name + '_data' + ':/data/db')
 		binds.push('//' + process.cwd().replace(/\\/g, '/').replace(':', '/') + '/certs' + ':/home/certs')
 	}else{
-		binds.push(process.cwd() + '/data' + ':/data/db', process.cwd() + '/certs' + ':/home/certs')
+		binds.push(process.cwd() + '/data' + ':/data/db')
+		binds.push(process.cwd() + '/certs' + ':/home/certs')
 	}
 	
 	//Prepare container
@@ -66,8 +88,7 @@ gulp.task('database.start', function(done){
 		//Attach to container errors
 		container.attach({
 			stream: true,
-			stderr: true,
-			stdout: true
+			stderr: true
 		}, function (err, stream) {
 			if (err){ throw err }
 			
@@ -78,7 +99,22 @@ gulp.task('database.start', function(done){
 		//Start container
 		container.start(function(err, data){
 			if (err){ throw err }
-			setTimeout(done, 500)
+			setTimeout(done, 1000)
+		})
+	})
+})
+
+//Reset testing database volume
+gulp.task('database.test.volume', function(done){
+	const volume = docker.getVolume(config.name + '_test')
+		
+	//Remove existing and create new volume
+	volume.remove(function(err){
+		docker.createVolume({
+			name: config.name + '_test'
+		}, function(err){
+			if (err){ throw err }
+			done()
 		})
 	})
 })
@@ -86,12 +122,14 @@ gulp.task('database.start', function(done){
 //Start testing database server
 gulp.task('database.test', function(done){
 	
-	//Prepare binds
-	let binds = []
+	//Prepare volume bindings
+	const binds = []
 	if (process.platform === 'win32'){
+		binds.push(config.name + '_test' + ':/data/db')
 		binds.push('//' + process.cwd().replace(/\\/g, '/').replace(':','/') + '/certs' + ':/home/certs')
 	}else{
-		binds.push(process.cwd() + 'certs' + ':/home/certs')
+		binds.push(config.name + '_test' + ':/data/db')
+		binds.push(process.cwd() + '/certs' + ':/home/certs')
 	}
 	
 	//Prepare container
@@ -145,33 +183,31 @@ gulp.task('database.setup', function(done){
 	}
 	
 	//Prepare command
-	setTimeout(function(){
-		container.exec({
-			Cmd: cmd,
-			AttachStdin: true,
-			AttachStdout: true,
-			Tty: false
-		}, function(err, exec) {
+	container.exec({
+		Cmd: cmd,
+		AttachStdin: true,
+		AttachStdout: true,
+		Tty: true
+	}, function(err, exec) {
+		if (err){ throw err }
+		
+		//Execute command
+		exec.start({
+			hijack: true,
+			stdin: true,
+			stdout: true
+		}, function(err, stream) {
 			if (err){ throw err }
-			
-			//Execute command
-			exec.start({
-				hijack: true,
-				stdin: true,
-				stdout: true
-			}, function(err, stream) {
-				if (err){ throw err }
-							
-				//Stream output to console
-		        container.modem.demuxStream(stream, process.stdout, process.stderr)
 				
-				//Stream file into container mongo cli
-				fs.createReadStream('builds/mongodb.js', 'binary').pipe(stream).on('end', function(){
-					done()
-				})
+			//Stream output to console
+	        container.modem.demuxStream(stream, process.stdout, process.stderr)
+				
+			//Stream file into container mongo cli
+			fs.createReadStream('./builds/mongodb.js', 'binary').pipe(stream).on('end', function(){
+				setTimeout(done, 500)
 			})
 		})
-	}, 500)
+	})
 })
 
 

@@ -50,7 +50,7 @@ module.exports = {
 			validate: false
 		},
 		repl: {
-			enabled: process.platform !== 'win32',
+			enabled: false,
 			name: 'rs0',
 			read: 'nearest',
 			key: 'repl.key',

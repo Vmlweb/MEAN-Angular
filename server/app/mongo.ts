@@ -10,12 +10,16 @@ import { log } from 'app'
 //Prepare connection string
 const auth = config.database.auth.username + ':' + config.database.auth.password
 const nodes = config.database.repl.nodes.map(node => node.hostname + ':' + node.port)
-const repl = config.database.repl.enabled ? ('replicaSet=' + config.database.repl.name) : ''
-const ssl = (repl.length > 0 ? '&' : '') + 'ssl=' + config.database.ssl.enabled
+
+//Prepare connection parameters
+const params = ['ssl=' + config.database.ssl.enabled]
+if (config.database.repl.enabled){
+	params.push('replicaSet=' + config.database.repl.name)
+}
 
 //Create connection to database
 setTimeout(() => {
-	mongoose.connect('mongodb://' + auth + '@' + nodes.join(',') + '/' + config.database.auth.database + '?' + repl + ssl, { 
+	mongoose.connect('mongodb://' + auth + '@' + nodes.join(',') + '/' + config.database.auth.database + '?' + params.join('&'), { 
 		replset: {
 			sslValidate: config.database.ssl.validate,
 			sslKey: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.key)) : undefined,

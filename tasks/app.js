@@ -41,6 +41,25 @@ gulp.task('app.start', function(done){
 		}
 	}
 	
+	//Prepare volume bindings
+	const binds = []
+	if (process.platform === 'win32'){
+		const prefix = '//' + process.cwd().replace(/\\/g, '/').replace(':','/')
+		binds.push(prefix + '/builds/server' + ':/home/server')
+		binds.push(prefix + '/builds/client' + ':/home/client')
+		binds.push(prefix + '/certs' + ':/home/certs')
+		binds.push(prefix + '/logs' + ':/home/logs')
+		binds.push(prefix + '/node_modules' + ':/home/node_modules')
+		binds.push(prefix + '/config.js' + ':/home/config.js')
+	}else{
+		binds.push(process.cwd() + '/builds/server' + ':/home/server')
+		binds.push(process.cwd() + '/builds/client' + ':/home/client')
+		binds.push(process.cwd() + '/certs' + ':/home/certs')
+		binds.push(process.cwd() + '/logs' + ':/home/logs')
+		binds.push(process.cwd() + '/node_modules' + ':/home/node_modules')
+		binds.push(process.cwd() + '/config.js' + ':/home/config.js')
+	}
+	
 	//Prepare container
 	docker.createContainer({
 		Image: 'node:slim',
@@ -52,14 +71,7 @@ gulp.task('app.start', function(done){
 		Env: [ 'NODE_ENV=development' ],
 		HostConfig: {
 			Privileged: true,
-			Binds: [
-				path.join(process.cwd(), 'builds', 'server') + ':/home/server',
-				path.join(process.cwd(), 'builds', 'client') + ':/home/client',
-				path.join(process.cwd(), 'certs') + ':/home/certs',
-				path.join(process.cwd(), 'logs') + ':/home/logs',
-				path.join(process.cwd(), 'node_modules') + ':/home/node_modules',
-				path.join(process.cwd(), 'config.js') + ':/home/config.js'
-			],
+			Binds: binds,
 			PortBindings: externalPorts
 		}
 	}, function(err, container) {

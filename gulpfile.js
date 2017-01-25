@@ -1,10 +1,11 @@
 //Modules
 const gulp = require('gulp')
 const reference = require('undertaker-forward-reference')
-const docker = require('dockerode')()
+const rl = require("readline")
 
 //Includes
 const config = require('./config.js')
+const docker = require('dockerode')(config.docker)
 gulp.registry(reference())
 
 //! Tasks
@@ -46,6 +47,7 @@ gulp.task('reset', gulp.series(
 	'build.clean',
 	'build.config.mongodb',
 	'database.clean',
+	'database.start.volume',
 	'database.start',
 	'database.setup',
 	'database.stop'
@@ -73,6 +75,7 @@ gulp.task('client', gulp.series(
 	'app.clean',
 	'build.clean',
 	'build',
+	'database.test.volume',
 	'database.test',
 	'database.setup',
 	'mock.start',
@@ -91,6 +94,7 @@ gulp.task('server', gulp.series(
 	'build.clean',
 	'build.config',
 	'server.build',
+	'database.test.volume',
 	'database.test',
 	'database.setup',
 	'server.test.execute',
@@ -107,6 +111,7 @@ gulp.task('test', gulp.series(
 	'app.clean',
 	'build.clean',
 	'build',
+	'database.test.volume',
 	'database.test',
 	'database.setup',
 	'server.test.execute',
@@ -127,6 +132,7 @@ gulp.task('mock', gulp.series(
 	'build.clean',
 	'build.config',
 	'server.build',
+	'database.test.volume',
 	'database.test',
 	'database.setup',
 	'mock.start',
@@ -201,15 +207,27 @@ for (const i in config.tests.client){
 const shutdown = function(){
 	const app = docker.getContainer(config.name + '_app')
 	const db = docker.getContainer(config.name + '_db')
-	app.stop({ t: 5 }, function(err, data){
+	app.stop({ t: 10 }, function(err, data){
 		app.remove({ force: true }, function(err, data){
-			db.stop({ t: 5 }, function(err, data){
+			db.stop({ t: 10 }, function(err, data){
 				db.remove({ force: true }, function(err, data){
 					process.exit()
 				})
 			})
 		})
 	})
+}
+
+//Forward windows exit signals
+if (process.platform === "win32") {
+	rl.createInterface({ input: process.stdin, output: process.stdout }).on('SIGINT', function(){
+		//process.emit('SIGINT')
+	})
+	process.stdin.on("keypress", function(chunk, key) {
+  if(key && key.name === "c" && key.ctrl) {
+	  shutdown()
+  }
+});
 }
 
 process.on('SIGTERM', shutdown)

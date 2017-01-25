@@ -24,6 +24,7 @@ gulp.task('client.test', gulp.series(
 	'stop',
 	'clean',
 	'build',
+	'database.test.volume',
 	'database.test',
 	'database.setup',
 	'mock.start',
