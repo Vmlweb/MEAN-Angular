@@ -91,7 +91,7 @@ gulp.task('install.semantic', shell.task([ 'npm install --production', 'gulp ins
 gulp.task('install.bower', shell.task('bower install --config.analytics=false --allow-root', { verbose: true }))
 
 //Install mongodb docker image
-gulp.task('install.mongodb', function(done){
+gulp.task('install.mongodb', process.platform === 'win32' ? shell.task('docker pull mongo:latest') : function(done){
 	docker.pull('mongo:latest', function (err, stream) {
 		if (err){ throw err }
 		
@@ -107,7 +107,7 @@ gulp.task('install.mongodb', function(done){
 })
 
 //Install nodejs docker image
-gulp.task('install.nodejs', function(done){
+gulp.task('install.nodejs', process.platform === 'win32' ? shell.task('docker pull node:slim') : function(done){
 	docker.pull('node:slim', function (err, stream) {
 		if (err){ throw err }
 		
