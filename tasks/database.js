@@ -100,7 +100,7 @@ gulp.task('database.start', function(done){
 						['27017/tcp']: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
 					}
 				}
-			}, function(err, container) {
+			}, function(err, container){
 				if (err){ throw err }
 				
 				//Start container
