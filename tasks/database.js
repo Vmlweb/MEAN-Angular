@@ -106,7 +106,7 @@ gulp.task('database.start', function(done){
 				//Start container
 				container.start(function(err, data){
 					if (err){ throw err }
-					setTimeout(done, 1000)
+					setTimeout(done, 2000)
 				})
 			})
 		}
@@ -246,7 +246,7 @@ gulp.task('database.test.start', function(done){
 				//Start container
 				container.start(function(err, stream){
 					if (err){ throw err }
-					setTimeout(done, 1000)
+					setTimeout(done, 2000)
 				})
 			})
 		}
