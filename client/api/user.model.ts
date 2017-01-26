@@ -1,3 +1,8 @@
+export interface ICreateUser {
+	username: string
+	email: string
+}
+
 export interface IUser {
 	userId: string
 	username: string

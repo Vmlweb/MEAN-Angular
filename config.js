@@ -83,7 +83,7 @@ module.exports = {
 			users: [ 'api/v1/users/**/*' ]
 		},
 		client: {
-			users: [ 'api/v1/users/**/user' ]
+			client: [ '**/*' ]
 		}
 	},
 	

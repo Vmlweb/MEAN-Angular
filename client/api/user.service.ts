@@ -3,25 +3,30 @@ import { Injectable } from '@angular/core'
 import { Http, Headers, Response } from '@angular/http'
 
 //Includes
-import { IUser, User } from './user.model'
+import { ICreateUser, IUser, User } from './user.model'
 
 @Injectable()
 export class UserService {
 	
 	constructor(private http: Http){}
 	
-	async insert(username: string, email: string){
+	async insert(options: ICreateUser){
 		let headers = new Headers({ 'Content-Type': 'application/json' })
 		
-		let response = await this.http.post('/api/v1/users', JSON.stringify({
-			username, email
+		let response = await this.http.post('http://localhost:8080/api/v1/users', JSON.stringify({
+			username: options.username,
+			email: options.email
 		}), {headers: headers}).toPromise()
 		
 		if (response.json().error){
 			throw new Error(response.json().error)
 		}
 		
-		return new User({ userId: response.json().userId, username, email })
+		return new User({
+			userId: response.json().userId,
+			username: options.username,
+			email: options.email
+		})
 	}
 	
 	async list(){

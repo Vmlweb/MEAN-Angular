@@ -27,8 +27,8 @@ export class AppComponent implements AfterViewInit {
 	
 	async test2(){
 		try{
-			let thing = await this.service.insert('test', 'test@2test.com')
-			console.log(thing)
+			//let thing = await this.service.insert('test', 'test@2test.com')
+			//console.log(thing)
 			
 		}catch(err){
 			console.log(err)
