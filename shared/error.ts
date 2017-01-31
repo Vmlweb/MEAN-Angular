@@ -28,3 +28,20 @@ export enum ErrorCode{
 	USR_InvalidEmail = 2004,
 	USR_InvalidLimit = 2005
 }
+
+export namespace ErrorCode{
+	export function message(code: ErrorCode): string{
+		switch (code){
+			
+			//Users
+			case ErrorCode.USR_Invalid: return 'User identifier was not given or invalid'
+			case ErrorCode.USR_NotFound: return 'User could not be found'
+			
+			case ErrorCode.USR_InvalidUsername: return 'Username was not given or invalid'
+			case ErrorCode.USR_InvalidEmail: return 'E-mail address was not given or invalid'
+			case ErrorCode.USR_InvalidLimit: return 'User limit was not given or invalid'
+			
+			default: return ''
+		}
+	}
+}
