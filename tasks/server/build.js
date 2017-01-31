@@ -22,7 +22,7 @@ gulp.task('server.build', function(done){
 	//Generate list of file paths to exclude from bundle
 	const nodeModules = {}
 	fs.readdirSync('node_modules').filter(function(x) { return ['.bin'].indexOf(x) === -1 }).forEach(function(mod) { nodeModules[mod] = 'commonjs ' + mod })
-	nodeModules['config'] = 'commonjs ' + (process.env.NODE_ENV === 'testing' ? '../../config.js' : '../config.js')
+	nodeModules['config'] = 'commonjs ../config.js'
 	
 	//Create webpack options
 	module.exports.webpack = {
