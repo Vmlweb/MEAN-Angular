@@ -1,39 +1,82 @@
 //Modules
 import { Injectable } from '@angular/core'
-import { Http, Headers, Response } from '@angular/http'
+import { Http, Headers } from '@angular/http'
 
 //Includes
-import { ICreateUser, IUser, User } from './user.model'
+import { ClientError } from 'shared'
+import { IUserAction, User } from './user.model'
 
 @Injectable()
 export class UserService {
 	
 	constructor(private http: Http){}
 	
-	async insert(options: ICreateUser){
-		let headers = new Headers({ 'Content-Type': 'application/json' })
+	async list(limit: number = -1){
 		
-		let response = await this.http.post('http://localhost:8080/api/v1/users', JSON.stringify({
-			username: options.username,
-			email: options.email
-		}), {headers: headers}).toPromise()
+		//Perform http request
+		const response = await this.http.get(process.env.URL + '/api/v1/users?' + (limit > 0 ? 'limit=' + limit : '')).toPromise()
 		
-		if (response.json().error){
-			throw new Error(response.json().error)
+		//Check json for error
+		const json = response.json()
+		if (json.error){
+			throw new ClientError(parseInt(json.error))
 		}
 		
+		//Parse and return users
+		return json.users.map(user => new User(user))
+	}
+	
+	async insert(options: IUserAction){
+		
+		//Perform http request
+		const response = await this.http.post(process.env.URL + '/api/v1/users', JSON.stringify(options), {
+			headers: new Headers({ 'Content-Type': 'application/json' })
+		}).toPromise()
+		
+		//Check json for error
+		const json = response.json()
+		if (json.error){
+			throw new ClientError(parseInt(json.error))
+		}
+		
+		//Return user object
 		return new User({
-			userId: response.json().userId,
+			userId: json.userId,
 			username: options.username,
 			email: options.email
 		})
 	}
 	
-	async list(){
+	async update(user: User, options: IUserAction){
 		
-		let response = await this.http.get('/api/v1/users').toPromise()
-		response = response.json().users.map(user => new User(user))
-		return response
-		//console.log(response)
+		//Perform http request
+		const response = await this.http.put(process.env.URL + '/api/v1/users/' + user.userId, JSON.stringify(options), {
+			headers: new Headers({ 'Content-Type': 'application/json' })
+		}).toPromise()
+		
+		//Check json for error
+		const json = response.json()
+		if (json.error){
+			throw new ClientError(parseInt(json.error))
+		}
+		
+		//Return user object
+		return new User({
+			userId: user.userId,
+			username: options.username,
+			email: options.email
+		})
+	}
+	
+	async remove(user: User){
+		
+		//Perform http request
+		const response = await this.http.delete(process.env.URL + '/api/v1/users/' + user.userId).toPromise()
+		
+		//Check json for error
+		const json = response.json()
+		if (json.error){
+			throw new ClientError(parseInt(json.error))
+		}
 	}
 }

@@ -1,86 +1,80 @@
 <!-- Following Menu -->
 <div class="ui large top fixed hidden menu">
-  <div class="ui container">
-    <a class="item" routerLink="/home" routerLinkActive="active">Home</a>
-    <a class="item" routerLink="/work" routerLinkActive="active">Work</a>
-    <a class="item">Company</a>
-    <a class="item">Careers</a>
-    <div class="right menu">
-      <div class="item">
-        <a class="ui button">Log in</a>
-      </div>
-      <div class="item">
-        <a class="ui primary button">Sign Up</a>
-      </div>
-    </div>
-  </div>
+	<div class="ui container">
+		<a class="item" routerLink="/home" routerLinkActive="active">Home</a>
+		<a class="item" routerLink="/work" routerLinkActive="active">Work</a>
+		<a class="item">Company</a>
+		<a class="item">Careers</a>
+		<div class="right menu">
+			<div class="item">
+				<a class="ui button">Log in</a>
+			</div>
+			<div class="item">
+				<a class="ui primary button">Sign Up</a>
+			</div>
+		</div>
+	</div>
 </div>
 
 <!-- Sidebar Menu -->
 <div class="ui vertical inverted sidebar menu">
-  <a class="item" routerLink="/home" routerLinkActive="active">Home</a>
-  <a class="item" routerLink="/work" routerLinkActive="active">Work</a>
-  <a class="item">Company</a>
-  <a class="item">Careers</a>
-  <a class="item">Login</a>
-  <a class="item">Signup</a>
+	<a class="item" routerLink="/home" routerLinkActive="active">Home</a>
+	<a class="item" routerLink="/work" routerLinkActive="active">Work</a>
+	<a class="item">Company</a>
+	<a class="item">Careers</a>
+	<a class="item">Login</a>
+	<a class="item">Signup</a>
 </div>
 
 <!-- Page Contents -->
 <div class="pusher">
-  <div class="ui inverted vertical masthead center aligned segment">
-
-    <div class="ui container">
-      <div class="ui large secondary inverted pointing menu">
-        <a class="toc item">
-          <i class="sidebar icon"></i>
-        </a>
-		<a class="item" routerLink="/home" routerLinkActive="active">Home</a>
-		<a class="item" routerLink="/work" routerLinkActive="active">Work</a>
-        <a class="item">Company</a>
-        <a class="item">Careers</a>
-        <div class="right item">
-          <a class="ui inverted button">Log in</a>
-          <a class="ui inverted button">Sign Up</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="ui text container">
-      <h1 class="ui inverted header">{{ router.url === '/home' ? 'Home' : router.url === '/work' ? 'Work' : 'Loading...' }}</h1>
-      <div class="ui hidden divider"></div>
-      <div class="ui huge primary button" (click)="showModal()">Show Modal <i class="right arrow icon"></i></div>
-    </div>
-
-  </div>
-
-  <router-outlet></router-outlet>
+	<div class="ui inverted vertical masthead center aligned segment">
+		<div class="ui container">
+			<div class="ui large secondary inverted pointing menu">
+				<a class="toc item">
+				<i class="sidebar icon"></i>
+				</a>
+				<a class="item" routerLink="/home" routerLinkActive="active">Home</a>
+				<a class="item" routerLink="/work" routerLinkActive="active">Work</a>
+				<a class="item">Company</a>
+				<a class="item">Careers</a>
+				<div class="right item">
+					<a class="ui inverted button">Log in</a>
+					<a class="ui inverted button">Sign Up</a>
+				</div>
+			</div>
+		</div>
+		<div class="ui text container">
+			<h1 class="ui inverted header">{{ router.url === '/home' ? 'Home' : router.url === '/work' ? 'Work' : 'Loading...' }}</h1>
+			<div class="ui hidden divider"></div>
+			<div class="ui huge primary button" (click)="showModal()">Show Modal <i class="right arrow icon"></i></div>
+		</div>
+	</div>
+	<router-outlet></router-outlet>
 </div>
 
-<h1>{{ title }}</h1>
-
 <div class="ui modal">
-  <i class="close icon"></i>
-  <div class="header">
-    Profile Picture
-  </div>
-  <div class="image content">
-    <div class="ui medium image">
-      <img src="./images/nan.jpeg">
-    </div>
-    <div class="description">
-      <div class="ui header">We've auto-chosen a profile image for you.</div>
-      <p>We've grabbed the following image from the <a href="https://www.gravatar.com" target="_blank">gravatar</a> image associated with your registered e-mail address.</p>
-      <p>Is it okay to use this photo?</p>
-    </div>
-  </div>
-  <div class="actions">
-    <div class="ui black deny button">
-      Nope
-    </div>
-    <div class="ui positive right labeled icon button">
-      Yep, that's me
-      <i class="checkmark icon"></i>
-    </div>
-  </div>
+	<i class="close icon"></i>
+	<div class="header">
+		Profile Picture
+	</div>
+	<div class="image content">
+		<div class="ui medium image">
+			<img src="./images/nan.jpeg">
+		</div>
+		<div class="description">
+			<div class="ui header">We've auto-chosen a profile image for you.</div>
+			<p>We've grabbed the following image from the <a href="https://www.gravatar.com" target="_blank">gravatar</a> image associated with your registered e-mail address.</p>
+			<p>Is it okay to use this photo?</p>
+		</div>
+	</div>
+	<div class="actions">
+		<div class="ui black deny button">
+			Nope
+		</div>
+		<div class="ui positive right labeled icon button">
+			Yep, that's me
+			<i class="checkmark icon"></i>
+		</div>
+	</div>
 </div>

@@ -1,4 +1,4 @@
-export interface ICreateUser {
+export interface IUserAction {
 	username: string
 	email: string
 }
