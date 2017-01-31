@@ -30,7 +30,7 @@ export enum ErrorCode{
 }
 
 export namespace ErrorCode{
-	export function message(code: ErrorCode): string{
+	export function message(code: ErrorCode): string | undefined{
 		switch (code){
 			
 			//Users
@@ -41,7 +41,7 @@ export namespace ErrorCode{
 			case ErrorCode.USR_InvalidEmail: return 'E-mail address was not given or invalid'
 			case ErrorCode.USR_InvalidLimit: return 'User limit was not given or invalid'
 			
-			default: return ''
+			default: return undefined
 		}
 	}
 }
