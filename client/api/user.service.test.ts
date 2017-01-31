@@ -5,8 +5,7 @@ import { TestBed, async, inject } from '@angular/core/testing'
 import { HttpModule } from '@angular/http'
 
 //Includes
-import { ClientError, ErrorCode } from 'shared'
-import { IUser, User } from './user.model'
+import { ErrorCode } from 'shared'
 import { UserService } from './user.service'
 
 describe('User Service', () => {
@@ -149,7 +148,7 @@ describe('User Service', () => {
 			try{
 				
 				//Create new user
-				let user = await service.insert({
+				const user = await service.insert({
 					username: '',
 					email: 'NewEmail@NewEmail.com'
 				})
@@ -169,7 +168,7 @@ describe('User Service', () => {
 			try{
 				
 				//Create new user
-				let user = await service.insert({
+				const user = await service.insert({
 					username: 'NewUsername',
 					email: ''
 				})
@@ -189,7 +188,7 @@ describe('User Service', () => {
 			try{
 				
 				//Create new user
-				let user = await service.insert({
+				const user = await service.insert({
 					username: 'NewUsername',
 					email: 'InvalidEmail'
 				})
