@@ -111,6 +111,7 @@ gulp.task('test', gulp.series(
 	'client.test.execute',
 	'client.test.coverage',
 	'mock.stop',
+	'database.stop',
 	'merge',
 	'client.test.close'
 ))
