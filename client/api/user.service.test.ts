@@ -164,7 +164,7 @@ describe('User Service', () => {
 			}
 		}))))
 		
-		it('error USR_InvalidEmail if no username is specified', async(inject([UserService], catcher.angular(async (service: UserService) => {
+		it('error USR_InvalidEmail if no e-mail address is specified', async(inject([UserService], catcher.angular(async (service: UserService) => {
 			try{
 				
 				//Create new user
@@ -184,7 +184,7 @@ describe('User Service', () => {
 			}
 		}))))
 		
-		it('error USR_InvalidEmail if no username is specified', async(inject([UserService], catcher.angular(async (service: UserService) => {
+		it('error USR_InvalidEmail if invalid e-mail address is specified', async(inject([UserService], catcher.angular(async (service: UserService) => {
 			try{
 				
 				//Create new user
