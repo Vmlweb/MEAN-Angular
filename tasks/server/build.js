@@ -35,7 +35,7 @@ gulp.task('server.build', function(done){
 				'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
 				'process.env.TEST': JSON.stringify(process.env.TEST),
 				'process.env.MODE': JSON.stringify(process.env.MODE),
-				'process.env.URL': JSON.stringify('http://' + config.http.url + ':' + config.http.port.internal)
+				'process.env.URL': JSON.stringify('http://' + config.http.url + ':' + (process.env.NODE_ENV === 'testing' ? config.http.port.internal : config.http.port.external))
 			}),
 			new CheckerPlugin()
 		],

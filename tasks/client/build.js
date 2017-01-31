@@ -52,7 +52,7 @@ gulp.task('client.build.compile', function(done){
 				'process.env.ENV': JSON.stringify(process.env.NODE_ENV),
 				'process.env.TEST': JSON.stringify(process.env.TEST),
 				'process.env.MODE': JSON.stringify(process.env.MODE),
-				'process.env.URL': JSON.stringify('http://' + config.http.url + ':' + config.http.port.internal)
+				'process.env.URL': JSON.stringify(process.env.NODE_ENV === 'testing' ? ('http://' + config.http.url + ':' + config.http.port.internal) : '')
 			}),
 			new WebpackHTML({
 				title: config.name,
@@ -88,6 +88,12 @@ gulp.task('client.build.compile', function(done){
 		],
 		performance: {
 			hints: false
+		},
+		node: {
+			console: true,
+			fs: 'empty',
+			net: 'empty',
+			tls: 'empty'
 		},
 		output: {
 			path: './builds/client',
