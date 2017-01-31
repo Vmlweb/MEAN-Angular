@@ -15,4 +15,4 @@ export interface IUser extends Document {
 }
 
 //Model
-export const User = model<IUser>('Users', UserSchema)
+export const User = model<IUser>('User', UserSchema)
