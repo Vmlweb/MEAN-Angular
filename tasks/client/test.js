@@ -30,7 +30,7 @@ gulp.task('client.test', gulp.series(
 	'client.test.execute',
 	'client.test.coverage',
 	'mock.stop',
-	'database.stop',
+	'stop',
 	'client.test.close'
 ))
 
