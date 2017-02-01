@@ -114,7 +114,7 @@ gulp.task('client.build.compile', function(done){
 		},
 		module: {
 			rules: [{
-				test: /\.(png|jpg|jpeg|gif)$/,
+				test: /\.(png|jpg|jpeg|gif|svg)$/,
 				loader: 'file-loader?name=images/[hash].[ext]&publicPath=&outputPath='
 			},{ 
 				test: /\.(html|css)$/, 
