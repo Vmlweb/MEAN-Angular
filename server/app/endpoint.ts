@@ -30,6 +30,7 @@ export interface IEndpoint {
 	errors?: Object
 	
 	parameters?: {
+		headers?: string | Object
 		request?: string | Object
 		response?: string | Object
 	}
@@ -50,6 +51,7 @@ export class Endpoint {
 	errors: Object | undefined
 	
 	parameters: {
+		headers: string | Object | undefined
 		request: string | Object | undefined
 		response: string | Object | undefined
 	}
@@ -69,6 +71,7 @@ export class Endpoint {
 		this.errors = options.errors || undefined
 		
 		this.parameters = {
+			headers: options.parameters ? options.parameters.headers || undefined : undefined,
 			request: options.parameters ? options.parameters.request || undefined : undefined,
 			response: options.parameters ? options.parameters.response || undefined : undefined
 		}
