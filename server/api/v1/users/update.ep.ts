@@ -2,11 +2,11 @@
 import * as validate from 'the-vladiator'
 
 //Includes
+import { IHandler, Method, Endpoint, log } from 'app'
 import { ErrorCode, ErrorMessage } from 'shared'
-import { log, Method, Endpoint } from 'app'
 import { User } from 'models'
 
-const execute = async (req, res, next) => {
+const execute: IHandler = async (req, res, next) => {
 
 	//Collect request parameters
 	const userId = req.params.userId

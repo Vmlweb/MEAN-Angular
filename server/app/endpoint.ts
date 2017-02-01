@@ -1,15 +1,32 @@
 //Modules
 import * as express from 'express-serve-static-core'
 
-export enum Method{
+//Includes
+import { ISession } from 'models'
+
+//! Methods
+
+export enum Method {
 	All, Get, Post, Put, Delete, Patch, Options, Head
 }
 
-export interface IEndpoint{
+//! Request Interfaces
+
+export interface IRequest extends express.Request {
+	//...
+}
+
+export interface IHandler {
+	(req: IRequest, res: express.Response, next: express.NextFunction): any
+}
+
+//! Endpoint Interfaces
+
+export interface IEndpoint {
 	
 	url: express.PathParams
 	method: Method
-	execute: express.RequestHandler | express.RequestHandler[]
+	execute: IHandler | IHandler[]
 	
 	title?: string
 	description?: string
@@ -25,11 +42,11 @@ export interface IEndpoint{
 	}
 }
 
-export class Endpoint{
+export class Endpoint {
 	
 	url: express.PathParams
 	method: Method
-	execute: express.RequestHandler | express.RequestHandler[]
+	execute: IHandler | IHandler[]
 	
 	title: string | undefined
 	description: string | undefined
