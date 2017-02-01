@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core'
 import { Http, Headers } from '@angular/http'
 
 //Includes
-import { ClientError } from 'shared'
+import { ErrorCode } from 'shared'
 import { IUserAction, User } from './user.model'
 
 @Injectable()
@@ -19,7 +19,7 @@ export class UserService {
 		//Check json for error
 		const json = response.json()
 		if (json.error){
-			throw new ClientError(parseInt(json.error))
+			throw json.error
 		}
 		
 		//Parse and return users
@@ -36,7 +36,7 @@ export class UserService {
 		//Check json for error
 		const json = response.json()
 		if (json.error){
-			throw new ClientError(parseInt(json.error))
+			throw json.error
 		}
 		
 		//Return user object
@@ -57,7 +57,7 @@ export class UserService {
 		//Check json for error
 		const json = response.json()
 		if (json.error){
-			throw new ClientError(parseInt(json.error))
+			throw json.error
 		}
 		
 		//Return user object
@@ -76,7 +76,7 @@ export class UserService {
 		//Check json for error
 		const json = response.json()
 		if (json.error){
-			throw new ClientError(parseInt(json.error))
+			throw json.error
 		}
 	}
 }

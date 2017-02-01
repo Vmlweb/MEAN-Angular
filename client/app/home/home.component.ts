@@ -3,7 +3,7 @@ import { wait } from 'promise-catcher'
 import { Component } from '@angular/core'
 
 //Includes
-import { ErrorCode, ClientError } from 'shared'
+import { ErrorMessage, ErrorCode } from 'shared'
 import { IUserAction, User, UserService } from 'api'
 
 @Component({
@@ -37,7 +37,7 @@ export class HomeComponent {
 		try{
 			this.users = await this.userService.list(+this.limit || undefined)
 		}catch(err){
-			alert(ErrorCode.message(err.code) || 'Users could not be loaded')
+			alert(ErrorMessage[err])
 		}
 	}
 	
@@ -49,7 +49,7 @@ export class HomeComponent {
 			await wait(500)
 			await this.userService.insert(this.model)
 		}catch(err){
-			alert(ErrorCode.message(err.code) || 'User could not be inserted')
+			alert(ErrorMessage[err])
 		}
 		
 		//Reload list of users
@@ -69,7 +69,7 @@ export class HomeComponent {
 		try{
 			await this.userService.update(user, { username, email: user.email })
 		}catch(err){
-			alert(ErrorCode.message(err.code) || 'User could not be updated')
+			alert(ErrorMessage[err])
 		}
 		
 		//Reset state
@@ -89,7 +89,7 @@ export class HomeComponent {
 			await wait(500)
 			await this.userService.remove(user)
 		}catch(err){
-			alert(ErrorCode.message(err.code) || 'User could not be removed')
+			alert(ErrorMessage[err])
 		}
 		
 		//Reload list of users

@@ -2,7 +2,7 @@
 import * as validate from 'the-vladiator'
 
 //Includes
-import { ErrorCode, ClientError } from 'shared'
+import { ErrorCode, ErrorMessage } from 'shared'
 import { log, Method, Endpoint } from 'app'
 import { User } from 'models'
 
@@ -13,14 +13,11 @@ const execute = async (req, res, next) => {
 	const email = req.body.email
 	
 	//Validate parameter contents
-	validate(username).isRequired().isString().notEmpty().throws(new ClientError(ErrorCode.USR_InvalidUsername))
-	validate(email).isRequired().isEmail().throws(new ClientError(ErrorCode.USR_InvalidEmail))
+	validate(username).isRequired().isString().notEmpty().throws(ErrorCode.USR_InvalidUsername)
+	validate(email).isRequired().isEmail().throws(ErrorCode.USR_InvalidEmail)
 	
 	//Create new user
-	const user = await User.create({
-		username,
-		email
-	})
+	const user = await User.create({ username, email })
 	
 	log.info('User ' + user.id + ' created')
 	
@@ -40,8 +37,8 @@ export const endpoint = new Endpoint({
 	title: 'Create User',
 	description: 'Create new user in the database.',
 	errors: {
-		USR_InvalidUsername: 'Username was not specified or is invalid.',
-		USR_InvalidEmail: 'E-mail address was not specified or is invalid.'
+		USR_InvalidUsername: ErrorMessage[ErrorCode.USR_InvalidUsername],
+		USR_InvalidEmail: ErrorMessage[ErrorCode.USR_InvalidEmail]
 	},
 	
 	//! Layouts

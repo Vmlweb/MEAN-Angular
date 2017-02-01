@@ -2,7 +2,7 @@
 import * as validate from 'the-vladiator'
 
 //Includes
-import { ErrorCode, ClientError } from 'shared'
+import { ErrorCode, ErrorMessage } from 'shared'
 import { Method, Endpoint } from 'app'
 import { User } from 'models'
 
@@ -12,7 +12,7 @@ const execute = async (req, res, next) => {
 	const limit = req.query.limit ? parseInt(req.query.limit) || -1 : undefined
 	
 	//Validate parameter contents
-	validate(limit).isOptional().isNumber().isPositive().throws(new ClientError(ErrorCode.USR_InvalidLimit))
+	validate(limit).isOptional().isNumber().isPositive().throws(ErrorCode.USR_InvalidLimit)
 	
 	//Create query to user
 	const query = User.find()
@@ -45,7 +45,7 @@ export const endpoint = new Endpoint({
 	title: 'List Users',
 	description: 'List users in the database sorted by user id.',
 	errors: {
-		USR_InvalidLimit: 'Limit was not specified or invalid.'
+		USR_InvalidLimit: ErrorMessage[ErrorCode.USR_InvalidLimit]
 	},
 
 	//! Layouts

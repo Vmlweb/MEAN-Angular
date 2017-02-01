@@ -159,7 +159,7 @@ describe('User Service', () => {
 			}catch(err){
 				
 				//Check returned error
-				expect(err.code).toBe(ErrorCode.USR_InvalidUsername)
+				expect(err).toBe(ErrorCode.USR_InvalidUsername)
 			
 			}
 		}))))
@@ -179,7 +179,7 @@ describe('User Service', () => {
 			}catch(err){
 				
 				//Check returned error
-				expect(err.code).toBe(ErrorCode.USR_InvalidEmail)
+				expect(err).toBe(ErrorCode.USR_InvalidEmail)
 			
 			}
 		}))))
@@ -199,7 +199,7 @@ describe('User Service', () => {
 			}catch(err){
 				
 				//Check returned error
-				expect(err.code).toBe(ErrorCode.USR_InvalidEmail)
+				expect(err).toBe(ErrorCode.USR_InvalidEmail)
 			
 			}
 		}))))
