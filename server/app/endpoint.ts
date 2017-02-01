@@ -1,9 +1,6 @@
 //Modules
 import * as express from 'express-serve-static-core'
 
-//Includes
-import { ISession } from 'models'
-
 //! Methods
 
 export enum Method {
