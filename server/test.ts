@@ -3,7 +3,7 @@ import * as rl from 'readline'
 import * as minimatch from 'minimatch'
 
 //Includes
-import { config } from 'shared'
+const config = require('config')
 import { shutdown } from 'main'
 import { database } from 'app'
 

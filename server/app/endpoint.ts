@@ -1,21 +1,36 @@
 //Modules
 import * as express from 'express-serve-static-core'
 
-export enum Method{
+//! Methods
+
+export enum Method {
 	All, Get, Post, Put, Delete, Patch, Options, Head
 }
 
-export interface IEndpoint{
+//! Request Interfaces
+
+export interface IRequest extends express.Request {
+	//...
+}
+
+export interface IHandler {
+	(req: IRequest, res: express.Response, next: express.NextFunction): any
+}
+
+//! Endpoint Interfaces
+
+export interface IEndpoint {
 	
 	url: express.PathParams
 	method: Method
-	execute: express.RequestHandler | express.RequestHandler[]
+	execute: IHandler | IHandler[]
 	
 	title?: string
 	description?: string
 	errors?: Object
 	
 	parameters?: {
+		headers?: string | Object
 		request?: string | Object
 		response?: string | Object
 	}
@@ -25,17 +40,18 @@ export interface IEndpoint{
 	}
 }
 
-export class Endpoint{
+export class Endpoint {
 	
 	url: express.PathParams
 	method: Method
-	execute: express.RequestHandler | express.RequestHandler[]
+	execute: IHandler | IHandler[]
 	
 	title: string | undefined
 	description: string | undefined
 	errors: Object | undefined
 	
 	parameters: {
+		headers: string | Object | undefined
 		request: string | Object | undefined
 		response: string | Object | undefined
 	}
@@ -55,6 +71,7 @@ export class Endpoint{
 		this.errors = options.errors || undefined
 		
 		this.parameters = {
+			headers: options.parameters ? options.parameters.headers || undefined : undefined,
 			request: options.parameters ? options.parameters.request || undefined : undefined,
 			response: options.parameters ? options.parameters.response || undefined : undefined
 		}

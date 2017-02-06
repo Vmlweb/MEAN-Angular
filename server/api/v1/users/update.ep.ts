@@ -2,11 +2,11 @@
 import * as validate from 'the-vladiator'
 
 //Includes
-import { ErrorCode, ClientError } from 'shared'
-import { log, Method, Endpoint } from 'app'
+import { IHandler, Method, Endpoint, log } from 'app'
+import { ErrorCode, ErrorMessage } from 'shared'
 import { User } from 'models'
 
-const execute = async (req, res, next) => {
+const execute: IHandler = async (req, res, next) => {
 
 	//Collect request parameters
 	const userId = req.params.userId
@@ -14,13 +14,13 @@ const execute = async (req, res, next) => {
 	const email = req.body.email
 	
 	//Validate parameter contents
-	validate(userId).isRequired().isMongoId().throws(new ClientError(ErrorCode.USR_Invalid))
-	validate(username).isRequired().isString().notEmpty().throws(new ClientError(ErrorCode.USR_InvalidUsername))
-	validate(email).isRequired().isEmail().throws(new ClientError(ErrorCode.USR_InvalidEmail))
+	validate(userId).isRequired().isMongoId().throws(ErrorCode.USR_Invalid)
+	validate(username).isRequired().isString().notEmpty().throws(ErrorCode.USR_InvalidUsername)
+	validate(email).isRequired().isEmail().throws(ErrorCode.USR_InvalidEmail)
 	
 	//Find and update user
 	if (!await User.findByIdAndUpdate(userId, { username, email })){
-		throw new ClientError(ErrorCode.USR_NotFound)
+		throw ErrorCode.USR_NotFound
 	}
 	
 	log.info('User ' + userId + ' updated')
@@ -39,10 +39,10 @@ export const endpoint = new Endpoint({
 	title: 'Update User',
 	description: 'Update a specific users details.',
 	errors: {
-		USR_Invalid: 'User identifier was not specified or invalid.',
-		USR_InvalidUsername: 'Username was not specified or is invalid.',
-		USR_InvalidEmail: 'E-mail address was not specified or is invalid.',
-		USR_NotFound: 'User with identifier could not be found.'
+		USR_Invalid: ErrorMessage[ErrorCode.USR_Invalid],
+		USR_InvalidUsername: ErrorMessage[ErrorCode.USR_InvalidUsername],
+		USR_InvalidEmail: ErrorMessage[ErrorCode.USR_InvalidEmail],
+		USR_NotFound: ErrorMessage[ErrorCode.USR_NotFound]
 	},
 	
 	//! Layouts

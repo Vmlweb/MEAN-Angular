@@ -27,7 +27,7 @@
     "@types/webpack": "^2.1.0",
     "@types/webpack-env": "^1.13.0",
     "@types/winston": "^2.2.0",
-    "awesome-typescript-loader": "3.0.0-beta.13",
+    "awesome-typescript-loader": "^3.0.2",
     "beepbeep": "^1.2.0",
     "decache": "^4.1.0",
     "del": "^2.2.0",
@@ -60,11 +60,11 @@
     "webpack-obfuscator": "^0.8.3"
   },
   "dependencies": {
-    "async": "^2.0.0-rc.3",
+    "async": "^2.1.4",
     "body-parser": "^1.15.0",
     "compression": "^1.6.1",
-    "content-filter": "^1.0.22",
     "express": "^4.13.4",
+    "express-mongo-sanitize": "^1.3.2",
     "helmet": "^3.3.0",
     "moment": "^2.13.0",
     "mongoose": "^4.4.14",

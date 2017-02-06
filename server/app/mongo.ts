@@ -4,7 +4,7 @@ import * as mongoose from 'mongoose'
 import * as fs from 'fs'
 
 //Includes
-import { config } from 'shared'
+const config = require('config')
 import { log } from 'app'
 
 //Prepare connection string

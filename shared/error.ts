@@ -1,17 +1,3 @@
-export class ServerError extends Error {
-	constructor(public message: string) {
-		super(message)
-		Object.setPrototypeOf(this, ServerError.prototype)
-	}
-}
-
-export class ClientError extends Error {
-	constructor(public code = ErrorCode.Unknown) {
-		super(ErrorCode[code])
-		Object.setPrototypeOf(this, ClientError.prototype)
-	}
-}
-
 export enum ErrorCode{
 	
 	//Core
@@ -23,25 +9,30 @@ export enum ErrorCode{
 	//Users
 	USR_Invalid = 2000,
 	USR_NotFound = 2001,
+	USR_Disabled = 2002,
 	
-	USR_InvalidUsername = 2003,
-	USR_InvalidEmail = 2004,
+	USR_InvalidLogin = 2003,
+	USR_InvalidUsername = 2004,
+	USR_InvalidEmail = 2005,
+	USR_InvalidPassword = 2006,
 	USR_InvalidLimit = 2005
 }
 
-export namespace ErrorCode{
-	export function message(code: ErrorCode): string | undefined{
-		switch (code){
-			
-			//Users
-			case ErrorCode.USR_Invalid: return 'User identifier was not given or invalid'
-			case ErrorCode.USR_NotFound: return 'User could not be found'
-			
-			case ErrorCode.USR_InvalidUsername: return 'Username was not given or invalid'
-			case ErrorCode.USR_InvalidEmail: return 'E-mail address was not given or invalid'
-			case ErrorCode.USR_InvalidLimit: return 'User limit was not given or invalid'
-			
-			default: return undefined
-		}
-	}
-}
+export const ErrorMessage: string[] = []
+
+//Core
+ErrorMessage[ErrorCode.Unknown] = 'An unknown error occured'
+ErrorMessage[ErrorCode.Server] = 'Server error occured, please contact administrator'
+ErrorMessage[ErrorCode.NotFound] = 'Page could not be found'
+ErrorMessage[ErrorCode.Connection] = 'Could not find server, please check your internet connection'
+
+//Users
+ErrorMessage[ErrorCode.USR_Invalid] = 'User identifier was not given or invalid'
+ErrorMessage[ErrorCode.USR_NotFound] = 'User account could not be found'
+ErrorMessage[ErrorCode.USR_Disabled] = 'User account has been disabled, please contact administrator'
+
+ErrorMessage[ErrorCode.USR_InvalidLogin] = 'User login was not given or invalid'
+ErrorMessage[ErrorCode.USR_InvalidUsername] = 'Username was not given or invalid'
+ErrorMessage[ErrorCode.USR_InvalidEmail] = 'E-mail address was not given or invalid'
+ErrorMessage[ErrorCode.USR_InvalidPassword] = 'Password was not given or invalid'
+ErrorMessage[ErrorCode.USR_InvalidLimit] = 'Limit was not given or invalid'

@@ -2,7 +2,7 @@
 import * as express from 'express'
 
 //Includes
-import { ErrorCode, ServerError, ClientError } from 'shared'
+import { ErrorCode } from 'shared'
 import { log } from 'app'
 
 //Create router
@@ -26,22 +26,12 @@ router.use((req, res, next) => {
 
 //Add exception handling middleware
 router.use((err, req, res, next) => {
-	if (err instanceof ClientError){
+	if (typeof err === 'number'){
 	
 		//Client error found
-		const error = (err as ClientError)
 		res.status(200).json({
-			error: ErrorCode[error.message]
+			error: err
 		})
-
-	}else if (err instanceof ServerError){
-		
-		//Server error found
-		const error = (err as ServerError)
-		res.status(500).json({
-			error: ErrorCode.Server
-		})
-		log.error(error.stack)
 		
 	}else{
 		

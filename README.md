@@ -55,6 +55,8 @@ npm install
 gulp setup
 ```
 
+Make sure to set a unique project name in `config.js` as it will stop docker containers from clashing.
+
 ## Directory Structure
 
 - `builds` - Temporary development build files.

@@ -2,6 +2,7 @@
 const gulp = require('gulp')
 const path = require('path')
 const async = require('async')
+const decache = require('decache')
 const istanbul = require('istanbul')
 
 //Includes
@@ -20,6 +21,9 @@ afterEachHooks = []
 
 //Start mock testing server
 gulp.task('mock.start', function(done){
+	
+	//Clear node require cache
+	decache(path.resolve('builds/server/main.js'))
 	
 	//Overide jasmine hooks and collect test functions
 	beforeAll = function(func){ beforeAllHooks.push(func) }
