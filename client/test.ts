@@ -16,7 +16,7 @@ import { TestBed } from '@angular/core/testing'
 import { platformBrowserDynamicTesting, BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing'
 
 //Includes
-import { config } from 'shared'
+const config = require('config')
 
 //Find all test files
 const context = (require as any).context('./', true, /\.test\.(ts|js)/)

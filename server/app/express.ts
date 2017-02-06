@@ -13,7 +13,7 @@ import * as sanitize from 'express-mongo-sanitize'
 import * as express from 'express'
 
 //Includes
-import { config } from 'shared'
+const config = require('config')
 import { log } from 'app'
 
 //Attach request logger
