@@ -3,7 +3,7 @@ import { wait } from 'promise-catcher'
 import { Component } from '@angular/core'
 
 //Includes
-import { ErrorMessage, ErrorCode } from 'shared'
+import { ErrorMessage } from 'shared'
 import { IUserAction, User, UserService } from 'api'
 
 @Component({

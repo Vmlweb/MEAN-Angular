@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core'
 import { Http, Headers } from '@angular/http'
 
 //Includes
-import { ErrorCode } from 'shared'
 import { IUserAction, User } from './user.model'
 
 @Injectable()
