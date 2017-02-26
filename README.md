@@ -1,6 +1,6 @@
 # MEAN Stack Template
 
-[![Build Status](http://bamboo.vmlweb.co.uk:8085/plugins/servlet/wittified/build-status/OPEN-MEAN2)](http://bamboo.vmlweb.co.uk:8085/browse/OPEN-MEAN2)
+[![Build Status](http://bamboo.vmlweb.co.uk:8085/plugins/servlet/wittified/build-status/OPEN-MEAN)](http://bamboo.vmlweb.co.uk:8085/browse/OPEN-MEAN2)
 
 Quick and simple template to get up and running with a productive MEAN stack web app inside of Docker.
 
