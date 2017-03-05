@@ -8,9 +8,7 @@ const replace = require('gulp-replace')
 //Includes
 const config = require('../config.js')
 
-/*! Tasks 
-- semantic
-
+/*! Tasks
 - build.clean
 
 - build.config
@@ -18,11 +16,6 @@ const config = require('../config.js')
 - build.config.mongodb
 - build.config.docker
 */
-//Compile semantic ui and themes
-gulp.task('semantic', shell.task('gulp build', {
-	verbose: true,
-	cwd: 'node_modules/semantic-ui'
-}))
 
 //Remove all build files
 gulp.task('build.clean', function(t){

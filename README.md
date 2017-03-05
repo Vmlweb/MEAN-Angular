@@ -71,7 +71,7 @@ Make sure to set a unique project name in `config.js` as it will stop docker con
 - `logs/tests/server|client/html` - Coverage html report.
 - `logs/tests/merged` - Merged coverage reports.
 - `logs/tests/merged/html` - Merged coverage html report.
-- `semantic` - User interface themes and customisation source.
+- `semantic` - User interface customisations.
 - `server` - Server side application source.
 - `server/api` - REST API endpoints.
 - `server/app` - Core functions for server app.
@@ -102,7 +102,7 @@ Make sure to set a unique project name in `config.js` as it will stop docker con
 For development the primary working directories are.
 
 - `client` - Client side website source.
-- `semantic` - User interface themes and customisation source.
+- `semantic` - User interface customisations.
 - `server` - Server side application source.
 - `shared` - Modules used by both client and server.
 
@@ -139,11 +139,9 @@ Logs will automatically be sorted by severity and bundled into date files.
 
 ## Interface
 
-You can make changes to the user interface and themes in the `semantic` directory but must rebuild them to take affect.
+You can make customisations to the user interface and base themes in the `semantic` directory.
 
-```bash
-gulp semantic
-```
+Please see the [Semantic UI](http://semantic-ui.com/usage/theming.html) theme guide for more information on this.
 
 ## Testing
 

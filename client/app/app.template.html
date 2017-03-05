@@ -47,7 +47,7 @@
 		<div class="ui text container">
 			<h1 class="ui inverted header">{{ router.url === '/home' ? 'Home' : router.url === '/work' ? 'Work' : 'Loading...' }}</h1>
 			<div class="ui hidden divider"></div>
-			<div class="ui huge primary button" (click)="showModal()">Show Modal <i class="right arrow icon"></i></div>
+			<div class="ui huge button" (click)="showModal()" [ngClass]="router.url === '/home' ? 'primary' : 'secondary'">Show Modal <i class="right arrow icon"></i></div>
 		</div>
 	</div>
 	<router-outlet></router-outlet>

@@ -6,6 +6,7 @@ const fs = require('fs')
 const webpack = require('webpack')
 const WebpackObfuscator = require('webpack-obfuscator')
 const WebpackHTML = require('html-webpack-plugin')
+const WebpackExtractText = require("extract-text-webpack-plugin")
 const WebpackFavicons = require('favicons-webpack-plugin')
 const PathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin
@@ -84,6 +85,7 @@ gulp.task('client.build.compile', function(done){
 				$: 'jquery',
 				jQuery: 'jquery'
 			}),
+			new WebpackExtractText('style.css'),
 			new CheckerPlugin()
 		],
 		performance: {
@@ -105,8 +107,7 @@ gulp.task('client.build.compile', function(done){
 			alias: {
 				config: path.resolve('./config.js'),
 				shared: path.resolve('./shared'),
-				jquery: process.env.NODE_ENV === 'production' ? 'jquery/dist/jquery.min' : 'jquery/src/jquery',
-				semantic: path.resolve(process.env.NODE_ENV === 'production' ? 'semantic/dist/semantic.min' : 'semantic/dist/semantic')
+				jquery: process.env.NODE_ENV === 'production' ? 'jquery/dist/jquery.min' : 'jquery/src/jquery'
 			},
 			plugins: [
 				new PathsPlugin()
@@ -124,6 +125,26 @@ gulp.task('client.build.compile', function(done){
 				test: /\.async\.(html|css)$/, 
 				loaders: [ 'file-loader?name=[name].[hash].[ext]', 'extract' ]
 			},{
+				test: /\.less$/,
+				include: [/[\/\\]node_modules[\/\\]semantic-ui-less[\/\\]/],
+				use: WebpackExtractText.extract({
+					use: [ 'css-loader', 'postcss-loader' {
+						loader: 'semantic-ui-less-module-loader',
+						options: {
+							siteFolder: path.join(__dirname, '../../semantic'),
+							themeConfigPath: path.join(__dirname, '../../semantic/theme.config')
+						}
+					}]
+				})
+			}, {
+				test: /\.(png|jpg|jpeg|gif|svg)$/,
+				loader: 'url-loader?limit=10240&absolute&name=images/[path][name]-[hash:7].[ext]',
+				include: [/[\/\\]node_modules[\/\\]semantic-ui-less[\/\\]/]
+		    }, {
+				test: /\.(woff|woff2|ttf|svg|eot)$/,
+				loader: 'url-loader?limit=10240&name=fonts/[name]-[hash:7].[ext]',
+				include: [/[\/\\]node_modules[\/\\]semantic-ui-less[\/\\]/]
+		    },{
 				test: /\.ts$/,
 				exclude: /(node_modules|bower_components)/,
 				use: [{

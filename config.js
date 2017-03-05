@@ -1,7 +1,7 @@
 module.exports = {
 	
 	//! Process
-	name: 'mean',
+	name: 'mean2',
 	config: '/opt/mean/config.js',
 	
 	//! Docker
@@ -62,13 +62,7 @@ module.exports = {
 	},
 	
 	//! Client Libraries
-	libs: [
-		
-		//Semantic UI
-		'semantic/dist/semantic.min.css',
-		'semantic/dist/*/**/*',
-		'!semantic/dist/components/**/*'
-	],
+	libs: [],
 	
 	//! Typescript Types
 	types: {

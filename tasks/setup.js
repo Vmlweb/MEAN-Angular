@@ -18,8 +18,6 @@ const docker = require('dockerode')(config.docker)
 - install.bower
 - install.nodejs
 - install.mongodb
-- install.npm
-- install.semantic
 */
 
 //! Certs
@@ -76,16 +74,8 @@ gulp.task('certs.chmod', function(){
 gulp.task('install', gulp.series(
 	'install.bower',
 	'install.nodejs',
-	'install.mongodb',
-	'install.npm',
-	'install.semantic'
+	'install.mongodb'
 ))
-
-//Install npm dependancies
-gulp.task('install.npm', shell.task('npm install --save-dev --ignore-scripts semantic-ui', { verbose: true }))
-
-//Install semantic dependancies
-gulp.task('install.semantic', shell.task([ 'npm install --production', 'gulp install' ],{ verbose: true, cwd: 'node_modules/semantic-ui' }))
 
 //Install bower dependancies
 gulp.task('install.bower', shell.task('bower install --config.analytics=false --allow-root', { verbose: true }))

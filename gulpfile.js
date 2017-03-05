@@ -36,7 +36,6 @@ gulp.task('setup', gulp.series(
 	'stop',
 	'clean',
 	'install',
-	'semantic',
 	'certs',
 	'reset'
 ))
@@ -131,7 +130,6 @@ gulp.task('mock', gulp.series(
 gulp.task('dist', gulp.series(
 	'env.dist',
 	'stop',
-	'semantic',
 	'build.clean',
 	'build',
 	'dist.clean',

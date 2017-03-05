@@ -4,3 +4,6 @@
 
 @primaryColor   : @blue;
 @secondaryColor : @green;
+
+@imagePath : '../assets/images';
+@fontPath  : '../assets/fonts';
