@@ -28,9 +28,13 @@ gulp.task('client.build', gulp.series(
 ))
 
 //Copy client library files
-gulp.task('client.build.libs', function(){
-	return gulp.src(config.libs)
-		.pipe(gulp.dest('builds/client/libs'))
+gulp.task('client.build.libs', function(done){
+	if (config.libs.length > 0){
+		return gulp.src(config.libs)
+			.pipe(gulp.dest('builds/client/libs'))
+	}else{
+		done()
+	}
 })
 
 //Setup webpack for compilation
@@ -128,7 +132,7 @@ gulp.task('client.build.compile', function(done){
 				test: /\.less$/,
 				include: [/[\/\\]node_modules[\/\\]semantic-ui-less[\/\\]/],
 				use: WebpackExtractText.extract({
-					use: [ 'css-loader', 'postcss-loader' {
+					use: [ 'css-loader?importLoaders=1', {
 						loader: 'semantic-ui-less-module-loader',
 						options: {
 							siteFolder: path.join(__dirname, '../../semantic'),
@@ -136,11 +140,11 @@ gulp.task('client.build.compile', function(done){
 						}
 					}]
 				})
-			}, {
+			},{
 				test: /\.(png|jpg|jpeg|gif|svg)$/,
 				loader: 'url-loader?limit=10240&absolute&name=images/[path][name]-[hash:7].[ext]',
 				include: [/[\/\\]node_modules[\/\\]semantic-ui-less[\/\\]/]
-		    }, {
+		    },{
 				test: /\.(woff|woff2|ttf|svg|eot)$/,
 				loader: 'url-loader?limit=10240&name=fonts/[name]-[hash:7].[ext]',
 				include: [/[\/\\]node_modules[\/\\]semantic-ui-less[\/\\]/]
@@ -158,6 +162,7 @@ gulp.task('client.build.compile', function(done){
 							cacheDirectory: './builds/.client',
 							useCache: true,
 							paths: {
+								config: [ path.resolve('./config.js') ],
 								shared: [ path.resolve('./shared') ]
 							}
 						}

@@ -62,8 +62,6 @@ gulp.task('server.build', function(done){
 				exclude: /node_modules/,
 				loader: 'awesome-typescript-loader',
 				query: {
-					useTranspileModule: true,
-					transpileOnly: false,
 					instance: 'server',
 					lib: [ 'es6' ],
 					target: 'es5',
@@ -72,6 +70,7 @@ gulp.task('server.build', function(done){
 					cacheDirectory: './builds/.server',
 					useCache: true,
 					paths: {
+						config: [ path.resolve('./config.js') ],
 						shared: [ path.resolve('./shared') ]
 					}
 				}
