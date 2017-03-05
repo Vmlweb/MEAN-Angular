@@ -8,6 +8,7 @@ const WebpackObfuscator = require('webpack-obfuscator')
 const WebpackHTML = require('html-webpack-plugin')
 const WebpackExtractText = require("extract-text-webpack-plugin")
 const WebpackFavicons = require('favicons-webpack-plugin')
+const WebpackCSSMinify = require('optimize-css-assets-webpack-plugin')
 const PathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin
 
@@ -206,6 +207,9 @@ gulp.task('client.build.compile', function(done){
 	if (process.env.NODE_ENV === 'production'){
 		module.exports.webpack.plugins.push(
 			new webpack.optimize.UglifyJsPlugin(),
+			new WebpackCSSMinify({
+				cssProcessorOptions: { discardComments: { removeAll: true } }
+			}),
 			new WebpackObfuscator({}, [
 				'vendor.js',
 				'polyfills.js',
