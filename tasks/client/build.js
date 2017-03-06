@@ -121,8 +121,8 @@ gulp.task('client.build.compile', function(done){
 		},
 		module: {
 			rules: [{
-				test: /\.(png|jpg|jpeg|gif|svg)$/,
-				loader: 'file-loader?name=assets/[hash].[ext]&publicPath=&outputPath='
+				test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
+				loader: 'url-loader?limit=10240&name=assets/[hash].[ext]'
 			},{ 
 				test: /\.(html|css)$/, 
 				loader: 'html-loader',
@@ -143,14 +143,6 @@ gulp.task('client.build.compile', function(done){
 					}]
 				})
 			},{
-				test: /\.(png|jpg|jpeg|gif|svg)$/,
-				loader: 'url-loader?limit=10240&name=assets/[hash].[ext]',
-				include: /[\/\\]node_modules[\/\\]semantic-ui-less[\/\\]/
-		    },{
-				test: /\.(woff|woff2|ttf|svg|eot)$/,
-				loader: 'url-loader?limit=10240&name=assets/[hash].[ext]',
-				include: /[\/\\]node_modules[\/\\]semantic-ui-less[\/\\]/
-		    },{
 				test: /\.ts$/,
 				exclude: /(node_modules|bower_components)/,
 				use: [{
