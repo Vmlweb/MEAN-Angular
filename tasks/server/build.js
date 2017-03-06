@@ -64,7 +64,6 @@ gulp.task('server.build', function(done){
 				query: {
 					instance: 'server',
 					lib: [ 'es6' ],
-					target: 'es5',
 					types: config.types.server.concat([ 'webpack', 'webpack-env', 'node', 'jasmine' ]),
 					baseUrl: './server',
 					cacheDirectory: './builds/.server',

@@ -11,6 +11,7 @@ const WebpackFavicons = require('favicons-webpack-plugin')
 const WebpackCSSMinify = require('optimize-css-assets-webpack-plugin')
 const PathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin
+const CompressPlugin = require('compression-webpack-plugin')
 
 //Config
 const config = require('../../config.js')
@@ -121,17 +122,17 @@ gulp.task('client.build.compile', function(done){
 		module: {
 			rules: [{
 				test: /\.(png|jpg|jpeg|gif|svg)$/,
-				loader: 'file-loader?name=images/[hash].[ext]&publicPath=&outputPath='
+				loader: 'file-loader?name=assets/[hash].[ext]&publicPath=&outputPath='
 			},{ 
 				test: /\.(html|css)$/, 
 				loader: 'html-loader',
 				exclude: /\.async\.(html|css)$/
 			},{
 				test: /\.async\.(html|css)$/, 
-				loaders: [ 'file-loader?name=[name].[hash].[ext]', 'extract' ]
+				loaders: [ 'file-loader?name=assets/[hash].[ext]', 'extract' ]
 			},{
 				test: /\.less$/,
-				include: [/[\/\\]node_modules[\/\\]semantic-ui-less[\/\\]/],
+				include: /[\/\\]node_modules[\/\\]semantic-ui-less[\/\\]/,
 				use: WebpackExtractText.extract({
 					use: [ 'css-loader?importLoaders=1', {
 						loader: 'semantic-ui-less-module-loader',
@@ -143,12 +144,12 @@ gulp.task('client.build.compile', function(done){
 				})
 			},{
 				test: /\.(png|jpg|jpeg|gif|svg)$/,
-				loader: 'url-loader?limit=10240&absolute&name=images/[path][name]-[hash:7].[ext]',
-				include: [/[\/\\]node_modules[\/\\]semantic-ui-less[\/\\]/]
+				loader: 'url-loader?limit=10240&name=assets/[hash].[ext]',
+				include: /[\/\\]node_modules[\/\\]semantic-ui-less[\/\\]/
 		    },{
 				test: /\.(woff|woff2|ttf|svg|eot)$/,
-				loader: 'url-loader?limit=10240&name=fonts/[name]-[hash:7].[ext]',
-				include: [/[\/\\]node_modules[\/\\]semantic-ui-less[\/\\]/]
+				loader: 'url-loader?limit=10240&name=assets/[hash].[ext]',
+				include: /[\/\\]node_modules[\/\\]semantic-ui-less[\/\\]/
 		    },{
 				test: /\.ts$/,
 				exclude: /(node_modules|bower_components)/,
@@ -157,7 +158,6 @@ gulp.task('client.build.compile', function(done){
 						query: {
 							instance: 'client',
 							lib: [ 'dom', 'es6' ],
-							target: 'es5',
 							types: config.types.client.concat([ 'webpack', 'node', 'jasmine' ]),
 							baseUrl: './client',
 							cacheDirectory: './builds/.client',
@@ -206,23 +206,30 @@ gulp.task('client.build.compile', function(done){
 	//Add plugins for distribution
 	if (process.env.NODE_ENV === 'production'){
 		module.exports.webpack.plugins.push(
-			new webpack.optimize.UglifyJsPlugin(),
-			new WebpackCSSMinify({
-				cssProcessorOptions: { discardComments: { removeAll: true } }
+			new webpack.optimize.UglifyJsPlugin({
+				compress: { warnings: false },
+				output: { comments: false },
+				sourceMap: false
 			}),
-			new WebpackObfuscator({}, [
-				'vendor.js',
-				'polyfills.js',
-				'libs.js'
-			]),
+			new CompressPlugin({
+				asset: '[path].gz[query]',
+				algorithm: 'gzip',
+				test: /\.js$|\.html$/,
+				threshold: 10240,
+				minRatio: 0.8
+			}),
 			new WebpackFavicons({
 				title: config.name,
 				logo: './client/favicon.png',
 				prefix: 'favicons/',
-				icons: {
-					appleStartup: false
-				}
-			})
+				icons: { appleStartup: false }
+			}),
+			new WebpackCSSMinify({
+				cssProcessorOptions: { discardComments: { removeAll: true } }
+			}),
+			new WebpackObfuscator({}, 
+				[ 'vendor.js', 'polyfills.js', 'libs.js' ]
+			)
 		)
 	}
 	
