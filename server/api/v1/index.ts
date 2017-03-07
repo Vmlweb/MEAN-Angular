@@ -10,7 +10,7 @@ const router = express.Router()
 
 //Find all endpoint files
 const epFiles = {}
-const requireContext = require.context('./', true, /\.ep.ts$/)
+const requireContext = require.context('./', true, /\.ep.(ts|js)$/)
 requireContext.keys().forEach(key => epFiles[key] = requireContext(key))
 
 //Loop through found endpoints
