@@ -58,6 +58,9 @@ gulp.task('server.build', function(done){
 		},
 		module: {
 			rules: [{
+				test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
+				loader: 'file-loader?name=assets/[hash].[ext]'
+			},{
 				test: /\.ts$/,
 				exclude: /node_modules/,
 				loader: 'awesome-typescript-loader',
