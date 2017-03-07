@@ -4,8 +4,8 @@ import { Router } from '@angular/router'
 
 @Component({
 	selector: 'app',
-	styles: ['./app.style.css'],
-	template: './app.template.html'
+	styleUrls: ['app.style.css'],
+	templateUrl: 'app.template.html'
 })
 
 export class AppComponent implements AfterViewInit {
