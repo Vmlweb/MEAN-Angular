@@ -7,8 +7,8 @@ import { ErrorMessage } from 'shared'
 import { IUserAction, User, UserService } from 'api'
 
 @Component({
-	styles: [require('../app.style.css')],
-	template: require('./home.template.html')
+	styles: ['../app.style.css'],
+	template: './home.template.html'
 })
 
 export class HomeComponent {
