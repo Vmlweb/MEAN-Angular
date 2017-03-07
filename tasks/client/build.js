@@ -12,6 +12,7 @@ const WebpackCSSMinify = require('optimize-css-assets-webpack-plugin')
 const PathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin
 const CompressPlugin = require('compression-webpack-plugin')
+const InstallerPlugin = require('npm-install-webpack-plugin')
 
 //Config
 const config = require('../../config.js')
@@ -87,6 +88,11 @@ gulp.task('client.build.compile', function(done){
 						return '/libs/' + path.basename(lib)
 					})
 			}),
+			/*new InstallerPlugin({
+				dev: true,
+				peerDependencies: true,
+				quiet: false
+			}),*/
 			new webpack.ProvidePlugin({
 				$: 'jquery',
 				jQuery: 'jquery'
@@ -108,12 +114,11 @@ gulp.task('client.build.compile', function(done){
 			filename: '[name].js'
 		},
 		resolve: {
-			modules: [ './client', './bower_components', './node_modules' ],
+			modules: [ './client', './node_modules', './bower_components' ],
 			extensions: [ '.js', '.ts', '.json', '.png', '.jpg', '.jpeg', '.gif' ],
 			alias: {
 				config: path.resolve('./config.js'),
-				shared: path.resolve('./shared'),
-				jquery: process.env.NODE_ENV === 'production' ? 'jquery/dist/jquery.min' : 'jquery/src/jquery'
+				shared: path.resolve('./shared')
 			},
 			plugins: [
 				new PathsPlugin()
@@ -160,7 +165,7 @@ gulp.task('client.build.compile', function(done){
 							}
 						}
 					},
-					'angular2-template-loader?keepUrl=true',
+					'angular2-template-loader',
 					'angular2-router-loader'
 				]
 			}]
