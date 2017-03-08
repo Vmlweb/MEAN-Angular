@@ -5,6 +5,8 @@ import { Schema, Document, model } from 'mongoose'
 export const UserSchema = new Schema({
 	username: String,
 	email: String
+},{
+	timestamps: true	
 })
 
 //Typings
