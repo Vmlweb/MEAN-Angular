@@ -67,7 +67,7 @@ module.exports = {
 	//! Typescript Types
 	types: {
 		server: [ 'async', 'body-parser', 'compression', 'express', 'helmet', 'moment', 'mongoose', 'morgan', 'winston' ],
-		client: [ 'jquery', 'jasmine' ]
+		client: [ 'jquery' ]
 	},
 	
 	//! Test Plans
