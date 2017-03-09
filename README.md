@@ -47,7 +47,7 @@ cd MEAN-AngularJS-2
 
 ## Installation
 
-First add your IP address to `config.js` under `database.repl.nodes.hostname` for the database.
+First add your local IP address to `config.js` under `database.repl.nodes.hostname` for the database.
 
 Then install the project dependancies and setup the development environment.
 
