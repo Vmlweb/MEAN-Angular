@@ -10,12 +10,12 @@ const router = express.Router()
 
 //Find all endpoint files
 const epFiles = {}
-const requireContext = require.context('./', true, /\.ep.(ts|js)$/)
+const requireContext = require.context('./', true, /\.ep.ts$/)
 requireContext.keys().forEach(key => epFiles[key] = requireContext(key))
 
 //Loop through found endpoints
 const endpoints: Endpoint[] = []
-Object.keys(epFiles).forEach((file) => {
+Object.keys(epFiles).forEach(file => {
 	
 	//Cast endpoint and add to list
 	const endpoint = epFiles[file].endpoint as Endpoint

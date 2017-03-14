@@ -26,7 +26,7 @@ export class Collection{
 		})
 		
 		//Overide global mongoose model change hooks and mark collection as modified 
-		for (const hook of [ 'findByIdAndUpdate', 'findByIdAndRemove', 'findOneAndUpdate', 'findOneAndRemove', 'update', 'remove' ]){
+		for (const hook of [ 'findByIdAndUpdate', 'findByIdAndRemove', 'findOneAndUpdate', 'findOneAndRemove', 'update', 'remove', 'create' ]){
 			(model as any)['___' + hook] = model[hook]
 			model[hook] = (...args) => {
 				this.modified = true
@@ -38,7 +38,9 @@ export class Collection{
 	async reset(){
 		
 		//Drop collection contents silently
-		try{ await database.db.dropCollection(this.name) }catch(err){}
+		try{ 
+			await database.db.dropCollection(this.name)
+		}catch(err){}
 		
 		log.info('Clearing and populating ' + this.name + ' with test data')
 		
@@ -66,6 +68,7 @@ if (globals.beforeEachHooks && globals.afterEachHooks){
 				done()
 			})
 		}, (err) => {
+			log.error('Error executing test data reset endpoint', err)
 			res.json({})
 		})
 	})
@@ -84,11 +87,15 @@ export const modified = (model: Model<any>) => {
 
 //Populate all collections with default test data
 beforeAll(done => {
-	
+		
 	//Loop through each collection and reset
 	Promise.all(collections.map(col => col.reset()))
 		.then(() => { done() })
-		.catch((err) => { done() })
+		.catch((err) => {
+			log.error('Error resetting test data for all collections before tests', err)
+			done()
+		})
+		
 })
 
 //Reset all collections that have been changed with default data
@@ -97,5 +104,8 @@ beforeEach(done => {
 	//Loop through each modified collection and reset
 	Promise.all(collections.filter(col => col.modified).map(col => col.reset()))
 		.then(() => { done() })
-		.catch((err) => { done() })
+		.catch((err) => {
+			log.error('Error resetting test data for modified collections before test', err)
+			done()
+		})
 })
