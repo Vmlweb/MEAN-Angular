@@ -18,6 +18,7 @@ import { log } from 'app'
 
 //Attach request logger
 const app = express()
+app.enable('trust proxy')
 app.use(morgan(config.logs.format, { stream: {
 	write: (message) => { log.verbose(message.replace(/^\s+|\s+$/g, '')) }
 }}))
