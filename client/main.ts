@@ -1,3 +1,7 @@
+//Libraries
+import 'libs'
+import 'vendor'
+
 //Modules
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic'
 import { enableProdMode } from '@angular/core'

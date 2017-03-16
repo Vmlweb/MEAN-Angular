@@ -68,7 +68,6 @@ if (globals.beforeEachHooks && globals.afterEachHooks){
 				done()
 			})
 		}, (err) => {
-			log.error('Error executing test data reset endpoint', err)
 			res.json({})
 		})
 	})

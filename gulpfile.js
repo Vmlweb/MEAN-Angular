@@ -30,20 +30,21 @@ require('./tasks/server/watch.js')
 
 //! Main Task
 gulp.task('default', gulp.series('dev'))
- 
+
 //! Setup
 gulp.task('setup', gulp.series(
 	'stop',
 	'clean',
 	'install',
 	'certs',
-	'reset'
+	'reset',
+	'build'
 ))
 
 //! Database
 gulp.task('reset', gulp.series(
 	'stop',
-	'build.clean',
+	'clean',
 	'build.config.mongodb',
 	'database.clean',
 	'database.start',
@@ -56,7 +57,6 @@ gulp.task('dev', gulp.series(
 	'env.watch',
 	'env.dev',
 	'stop',
-	'build.clean',
 	'build',
 	'lint',
 	'start',
@@ -70,8 +70,6 @@ gulp.task('client', gulp.series(
 	'env.watch',
 	'env.test',
 	'stop',
-	'app.clean',
-	'build.clean',
 	'build',
 	'database.test',
 	'mock.start',
@@ -85,8 +83,6 @@ gulp.task('server', gulp.series(
 	'env.watch',
 	'env.test',
 	'stop',
-	'app.clean',
-	'build.clean',
 	'build.config',
 	'server.build',
 	'database.test',
@@ -100,8 +96,7 @@ gulp.task('server', gulp.series(
 gulp.task('test', gulp.series(
 	'env.test',
 	'stop',
-	'app.clean',
-	'build.clean',
+	'clean',
 	'build',
 	'database.test',
 	'server.test.execute',
@@ -119,7 +114,6 @@ gulp.task('test', gulp.series(
 gulp.task('mock', gulp.series(
 	'env.test',
 	'stop',
-	'build.clean',
 	'build.config',
 	'server.build',
 	'database.test',
@@ -130,11 +124,11 @@ gulp.task('mock', gulp.series(
 gulp.task('dist', gulp.series(
 	'env.dist',
 	'stop',
-	'build.clean',
+	'clean',
 	'build',
-	'dist.clean',
 	'dist.copy',
-	'dist.build'
+	'dist.build',
+	'build.clean'
 ))
 
 //! Process Convenience
@@ -143,7 +137,7 @@ gulp.task('stop', gulp.series('app.stop', 'database.stop'))
 gulp.task('wait', function(done){ setTimeout(done, 1000) })
 
 //! Setup Convenience
-gulp.task('clean', gulp.parallel('build.clean', 'app.clean', 'database.clean', 'dist.clean'))
+gulp.task('clean', gulp.parallel('build.clean', 'app.clean', 'dist.clean'))
 gulp.task('docker', gulp.parallel('install.nodejs', 'install.mongodb'))
 
 //! Build Convenience

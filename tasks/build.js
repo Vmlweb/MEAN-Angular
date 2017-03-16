@@ -18,7 +18,7 @@ const config = require('../config.js')
 */
 
 //Remove all build files
-gulp.task('build.clean', function(t){
+gulp.task('build.clean', function(){
 	return del('builds/**/*')
 })
 
