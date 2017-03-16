@@ -42,7 +42,7 @@
     "beepbeep": "^1.2.0",
     "compression-webpack-plugin": "^0.3.2",
     "core-js": "^2.4.1",
-    "css-loader": "^0.26.2",
+    "css-loader": "0.14.5",
     "decache": "^4.1.0",
     "del": "^2.2.2",
     "dockerode": "^2.3.2",
