@@ -129,9 +129,17 @@ gulp.task('client.build.compile', function(done){
 				test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
 				loader: 'url-loader?limit=10240&name=assets/[hash].[ext]'
 			},{ 
-				test: /\.(html|css)$/, 
+				test: /\.css$/, 
+				use: WebpackExtractText.extract('css-loader'),
+				exclude: /(\.async\.css$|client)/
+			},{ 
+				test: /\.html$/,
 				loader: 'html-loader',
-				exclude: /\.async\.(html|css)$/
+				exclude: /\.async\.html$/
+			},{
+				test: /\.css$/,
+				loaders: [ 'to-string-loader', 'css-loader' ],
+				exclude: /(\.async\.css$|node_modules)/
 			},{
 				test: /\.async\.(html|css)$/, 
 				loaders: [ 'file-loader?name=assets/[hash].[ext]', 'extract' ]
@@ -139,7 +147,7 @@ gulp.task('client.build.compile', function(done){
 				test: /\.less$/,
 				include: /[\/\\]node_modules[\/\\]semantic-ui-less[\/\\]/,
 				use: WebpackExtractText.extract({
-					use: [ 'css-loader?importLoaders=1', {
+					use: [ 'css-loader', {
 						loader: 'semantic-ui-less-module-loader',
 						options: {
 							siteFolder: path.join(__dirname, '../../semantic'),
@@ -165,7 +173,7 @@ gulp.task('client.build.compile', function(done){
 							}
 						}
 					},
-					'angular2-template-loader',
+					'angular2-template-loader?keepUrl=true',
 					'angular2-router-loader'
 				]
 			}]

@@ -2,8 +2,8 @@
 import { Component } from '@angular/core'
 
 @Component({
-	styleUrls: ['../app.style.css'],
-	templateUrl: 'work.template.html'
+	styles: [require('../app.style.css')],
+	template: require('./work.template.html')
 })
 
 export class WorkComponent {}
