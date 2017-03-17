@@ -19,6 +19,7 @@ const docker = require('dockerode')(config.docker)
 - dist.copy.client
 
 - dist.build
+- dist.build.packages
 - dist.build.tar
 - dist.build.docker
 - dist.build.save
@@ -66,12 +67,19 @@ gulp.task('dist.copy.client', function(){
 
 //! Build
 gulp.task('dist.build', gulp.series(
+	'dist.build.packages',
 	'dist.build.tar',
 	'dist.build.docker',
 	'dist.build.save',
 	'dist.build.zip',
 	'dist.build.clean'
 ))
+
+//Install production package dependancies
+gulp.task('dist.build.packages', shell.task('npm i --production', {
+	verbose: true,
+	cwd: 'dist'
+}))
 
 //Compress dockerfile and context into tar
 gulp.task('dist.build.tar', function(){
@@ -108,5 +116,9 @@ gulp.task('dist.build.zip', function(){
 
 //Remove large tar files used for building
 gulp.task('dist.build.clean', function(){
-	return del([ 'dist/' + config.name + '.tar', 'dist/Dockerfile.tar' ])
+	return del([
+		'dist/' + config.name + '.tar',
+		'dist/Dockerfile.tar',
+		'dist/node_modules'
+	])
 })

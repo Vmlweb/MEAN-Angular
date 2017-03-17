@@ -85,7 +85,7 @@ gulp.task('app.start', function(done){
 			
 			//Prepare container
 			docker.createContainer({
-				Image: 'node',
+				Image: 'node:alpine',
 				WorkingDir: '/home',
 				Cmd: [ 'node', '/home/server/main.js' ],
 				name: config.name + '_app',

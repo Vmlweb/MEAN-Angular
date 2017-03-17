@@ -97,8 +97,8 @@ gulp.task('install.mongodb', process.platform === 'win32' ? shell.task('docker p
 })
 
 //Install nodejs docker image
-gulp.task('install.nodejs', process.platform === 'win32' ? shell.task('docker pull node') : function(done){
-	docker.pull('node', function (err, stream) {
+gulp.task('install.nodejs', process.platform === 'win32' ? shell.task('docker pull node:alpine') : function(done){
+	docker.pull('node:alpine', function (err, stream) {
 		if (err){ throw err }
 		
 		//Attach to pull progress
