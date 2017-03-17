@@ -1,4 +1,4 @@
-FROM node:slim
+FROM node
 
 VOLUME /home/logs
 VOLUME /home/certs
