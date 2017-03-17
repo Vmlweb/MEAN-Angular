@@ -43,6 +43,11 @@ gulp.task('client.build.libs', function(done){
 //Setup webpack for compilation
 gulp.task('client.build.compile', function(done){
 	
+	//Default to development
+	if (!process.env.NODE_ENV){
+		process.env.NODE_ENV = 'development'
+	}
+	
 	//Check whether libs are built
 	const libsExist = fs.existsSync('./builds/client/libs.json') && fs.existsSync('./builds/client/vendor.json')
 	
@@ -64,7 +69,7 @@ gulp.task('client.build.compile', function(done){
 			}else{
 				entry = {
 					polyfills: './client/polyfills.ts',
-					main: './client/main.ts'
+					main: process.env.THEME ? [ './client/main.ts', 'semantic-ui-less/semantic.less' ] : './client/main.ts'
 				}
 			}
 		}else{
@@ -80,8 +85,10 @@ gulp.task('client.build.compile', function(done){
 		let jsDlls = []
 		let cssDlls = []
 		if (process.env.NODE_ENV === 'development' && !libs){
+			if (!process.env.THEME){
+				cssDlls.push('style.css')
+			}
 			jsDlls.push('libs.js', 'vendor.js')
-			cssDlls.push('style.css')
 		}
 		
 		//Create options
@@ -97,7 +104,7 @@ gulp.task('client.build.compile', function(done){
 					'process.env.URL': JSON.stringify(process.env.NODE_ENV === 'testing' ? ('http://' + config.http.url + ':' + config.http.port.internal) : '')
 				}),
 				new WebpackHTML({
-					title: config.name,
+					title: config.name.replace(/_/, ' '),
 					template: './client/index.ejs',
 					minify: {
 						removeComments: true,
@@ -176,7 +183,13 @@ gulp.task('client.build.compile', function(done){
 					test: /\.less$/,
 					include: /[\/\\]node_modules[\/\\]semantic-ui-less[\/\\]/,
 					use: WebpackExtractText.extract({
-						use: [ 'css-loader', {
+						use: [{
+							loader: 'css-loader',
+							options: {
+								importLoaders: 1,
+								minimize: true
+							}
+						},{
 							loader: 'semantic-ui-less-module-loader',
 							options: {
 								siteFolder: path.join(__dirname, '../../semantic'),
@@ -216,13 +229,20 @@ gulp.task('client.build.compile', function(done){
 				//Add dll creation plugins
 				setup.output.library = '[name]'
 				setup.plugins.push(
-					new WebpackExtractText('style.css'),
 					new webpack.DllPlugin({
 						name: '[name]', 
 						path: './builds/client/[name].json'
 					})
 				)
 			}else{
+				
+				//Load dll lib manifest
+				const dllLibs = require('../../builds/client/libs.json')
+				
+				//Remove semantic if in theme mode
+				if (process.env.THEME){
+					delete dllLibs.content['./node_modules/semantic-ui-less/semantic.less']
+				}
 				
 				//Add dll connection plugins
 				setup.plugins.push(
@@ -232,16 +252,20 @@ gulp.task('client.build.compile', function(done){
 					}),
 					new webpack.DllReferencePlugin({
 						context: '.',
-						manifest: require('../../builds/client/libs.json')
+						manifest: dllLibs
 					})
 				)
 			}
-		}else{
-			
-			//Add css collector
-			setup.plugins.push(new WebpackExtractText('style.css'))
 		}
 		
+		//Add css collectors
+		if (process.env.NODE_ENV === 'development' && !process.env.THEME && !libs){}else{
+			setup.plugins.push(new WebpackExtractText({
+				filename: 'style.css',
+				allChunks: true
+			}))
+		}
+				
 		//Add source map plugins for development
 		if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing'){
 			setup.plugins.push(

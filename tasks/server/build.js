@@ -19,6 +19,11 @@ module.exports = { setup: false, valid: false, webpack: undefined }
 //Setup webpack for compilation
 gulp.task('server.build', function(done){
 	
+	//Default to development
+	if (!process.env.NODE_ENV){
+		process.env.NODE_ENV = 'development'
+	}
+	
 	//Generate list of file paths to exclude from bundle
 	const nodeModules = {}
 	fs.readdirSync('node_modules').filter(function(x) { return ['.bin'].indexOf(x) === -1 }).forEach(function(mod) { nodeModules[mod] = 'commonjs ' + mod })

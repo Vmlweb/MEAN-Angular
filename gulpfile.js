@@ -52,6 +52,12 @@ gulp.task('reset', gulp.series(
 	'database.stop'
 ))
 
+//! Theme
+gulp.task('theme', gulp.series(
+	'env.theme',
+	'dev'
+))
+
 //! Development
 gulp.task('dev', gulp.series(
 	'env.watch',
@@ -107,6 +113,7 @@ gulp.task('test', gulp.series(
 	'mock.stop',
 	'stop',
 	'merge',
+	'build.clean',
 	'client.test.close'
 ))
 
@@ -147,6 +154,7 @@ gulp.task('lint', gulp.series('client.lint', 'server.lint'))
 //! Enviroment Variables
 process.env.MODE = 'single'
 gulp.task('env.watch', function(done) { process.env.MODE = 'watch'; done() })
+gulp.task('env.theme', function(done) { process.env.THEME = true; done() })
 gulp.task('env.dev', function(done) { process.env.NODE_ENV = 'development'; done() })
 gulp.task('env.test', function(done) { process.env.NODE_ENV = 'testing'; done() })
 gulp.task('env.dist', function(done) { process.env.NODE_ENV = 'production'; done() })

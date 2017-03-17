@@ -137,11 +137,29 @@ log.verbose('verbose'); //Access log file
 
 Logs will automatically be sorted by severity and bundled into date files.
 
-## Interface
+## Theming
 
-You can make customisations to the user interface and base themes in the `semantic` directory.
+You can make customisations to the site theme in the `semantic` directory.
+
+The development environment can be started in theme mode which will rebuild changes live.
+
+```
+gulp theme
+```
 
 Please see the [Semantic UI](http://semantic-ui.com/usage/theming.html) theme guide for more information on this.
+
+## Client Libraries
+
+Adding client libraries into `libs.ts` will included them in your libs bundle.
+
+Themes and libraries are cached so if changes are made to `libs.ts`, `vendor.ts` or the `semantic` directory you must clean the cache.
+
+```
+gulp clean
+```
+
+For traditional `index.html` style libraries or assets, add a glob expression to `config.js` under `libs` and they will be copied into the `/libs` directory.
 
 ## Testing
 
