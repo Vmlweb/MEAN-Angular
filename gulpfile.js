@@ -102,7 +102,8 @@ gulp.task('server', gulp.series(
 gulp.task('test', gulp.series(
 	'env.test',
 	'stop',
-	'clean',
+	'app.clean',
+	'build.clean',
 	'build',
 	'database.test',
 	'server.test.execute',
@@ -131,7 +132,8 @@ gulp.task('mock', gulp.series(
 gulp.task('dist', gulp.series(
 	'env.dist',
 	'stop',
-	'clean',
+	'dist.clean',
+	'build.clean',
 	'build',
 	'dist.copy',
 	'dist.build',
