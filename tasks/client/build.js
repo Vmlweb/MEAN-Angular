@@ -12,7 +12,6 @@ const WebpackCSSMinify = require('optimize-css-assets-webpack-plugin')
 const PathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin
 const CompressPlugin = require('compression-webpack-plugin')
-const InstallerPlugin = require('npm-install-webpack-plugin')
 
 //Config
 const config = require('../../config.js')
