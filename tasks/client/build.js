@@ -144,7 +144,7 @@ gulp.task('client.build.compile', function(done){
 				tls: 'empty'
 			},
 			output: {
-				path: './builds/client',
+				path: path.resolve('./builds/client'),
 				filename: '[name].js'
 			},
 			resolve: {
