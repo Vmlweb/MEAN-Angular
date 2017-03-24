@@ -1,6 +1,6 @@
 {
   "name": "mean",
-  "version": "1.0.0",
+  "version": "4.0.0",
   "description": "MEAN Stack Template for AngularJS 2 and Docker",
   "main": "server/main.ts",
   "author": "Victor Leach <mail@vmlweb.co.uk>",
@@ -14,14 +14,14 @@
     "url": "https://github.com/Vmlweb/MEAN-AngularJS-2/issues"
   },
   "devDependencies": {
-    "@angular/common": "^2.4.9",
-    "@angular/compiler": "^2.4.9",
-    "@angular/core": "^2.4.9",
-    "@angular/forms": "^2.4.9",
-    "@angular/http": "^2.4.9",
-    "@angular/platform-browser": "^2.4.9",
-    "@angular/platform-browser-dynamic": "^2.4.9",
-    "@angular/router": "^3.4.9",
+    "@angular/common": "^4.0.0",
+    "@angular/compiler": "^4.0.0",
+    "@angular/core": "^4.0.0",
+    "@angular/forms": "^4.0.0",
+    "@angular/http": "^4.0.0",
+    "@angular/platform-browser": "^4.0.0",
+    "@angular/platform-browser-dynamic": "^4.0.0",
+    "@angular/router": "^4.0.0",
     "@types/async": "^2.0.38",
     "@types/body-parser": "0.0.33",
     "@types/compression": "0.0.33",
@@ -94,7 +94,7 @@
     "url-loader": "^0.5.8",
     "webpack": "^2.2.1",
     "webpack-obfuscator": "^0.8.6",
-    "zone.js": "^0.7.2"
+    "zone.js": "^0.8.4"
   },
   "dependencies": {
     "async": "^2.1.5",

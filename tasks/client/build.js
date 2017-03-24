@@ -96,6 +96,7 @@ gulp.task('client.build.compile', function(done){
 			target: 'web',
 			plugins: [
 			    new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/, './client'),
+			    new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)@angular/, './client'),
 				new webpack.DefinePlugin({
 					'process.env.ENV': JSON.stringify(process.env.NODE_ENV),
 					'process.env.TEST': JSON.stringify(process.env.TEST),
