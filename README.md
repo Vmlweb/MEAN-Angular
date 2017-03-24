@@ -8,7 +8,7 @@ Quick and simple template to get up and running with a productive MEAN stack web
 
   * [NodeJS 7.x](https://nodejs.org) on Linux, Mac or Windows
   * [Docker](https://docker.com) & [Compose](https://docs.docker.com/compose)
-  * [Angular 2](https://angular.io) & [Typescript 2](https://www.typescriptlang.org)
+  * [Angular 4](https://angular.io) & [Typescript 2](https://www.typescriptlang.org)
   * [Gulp 4](http://gulpjs.com) & [Webpack 2](https://webpack.js.org)
   * [Semantic UI 2](http://semantic-ui.com)
   * [Jasmine](https://jasmine.github.io), [Karma](http://karma-runner.github.io) & [Istanbul](http://gotwarlost.github.io/istanbul)
