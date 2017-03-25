@@ -12,6 +12,7 @@ const WebpackCSSMinify = require('optimize-css-assets-webpack-plugin')
 const PathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin
 const CompressPlugin = require('compression-webpack-plugin')
+const AotPlugin = require('@ngtools/webpack').AotPlugin
 
 //Config
 const config = require('../../config.js')
@@ -53,6 +54,8 @@ gulp.task('client.build.compile', function(done){
 	//Build webpack with or without libs
 	const build = function(libs){
 		
+		process.env.NODE_ENV = 'development'
+		
 		//Define entry points for each enviroment
 		let entry
 		if (process.env.NODE_ENV === 'testing'){
@@ -79,6 +82,13 @@ gulp.task('client.build.compile', function(done){
 				main: './client/main.ts'
 			}
 		}
+		
+		entry = {
+				polyfills: './client/polyfills.ts',
+				//vendor: './client/vendor.ts',
+				libs: './client/libs.ts',
+				main: './client/main.ts'
+			}
 		
 		//Prepare variables for dll add-ons
 		let jsDlls = []
@@ -132,6 +142,10 @@ gulp.task('client.build.compile', function(done){
 				new webpack.ProvidePlugin({
 					$: 'jquery',
 					jQuery: 'jquery'
+				}),
+				new AotPlugin({
+					tsConfigPath: path.resolve(path.join(__dirname, '../../tsconfig.json')),
+					entryModule: path.resolve(path.join(__dirname, '../../client/app/index#AppModule'))
 				}),
 				new CheckerPlugin()
 			],
@@ -199,6 +213,9 @@ gulp.task('client.build.compile', function(done){
 					})
 				},{
 					test: /\.ts$/,
+					loader: '@ngtools/webpack',
+				}/*,{
+					test: /\.ts$/,
 					exclude: /(node_modules|bower_components)/,
 					use: [{
 							loader: 'awesome-typescript-loader',
@@ -218,10 +235,10 @@ gulp.task('client.build.compile', function(done){
 						'angular2-template-loader?keepUrl=true',
 						'angular2-router-loader'
 					]
-				}]
+				}*/]
 			}
 		}
-		
+		/*
 		//Add dll plugins for development
 		if (process.env.NODE_ENV === 'development'){
 			if (libs){
@@ -257,7 +274,7 @@ gulp.task('client.build.compile', function(done){
 				)
 			}
 		}
-		
+		*/
 		//Add css collectors
 		if (process.env.NODE_ENV === 'development' && !process.env.THEME && !libs){}else{
 			setup.plugins.push(new WebpackExtractText({
@@ -267,14 +284,14 @@ gulp.task('client.build.compile', function(done){
 		}
 				
 		//Add source map plugins for development
-		if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing'){
+		/*if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing'){
 			setup.plugins.push(
 				new webpack.SourceMapDevToolPlugin({
 					moduleFilenameTemplate: '/[resource-path]',
 					exclude: [ 'vendor', 'libs', 'polyfills' ]
 				})
 			)
-		}
+		}*/
 		
 		//Add coverage hook plugins for testing
 		if (process.env.NODE_ENV === 'testing'){

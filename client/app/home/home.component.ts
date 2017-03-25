@@ -3,12 +3,12 @@ import { wait } from 'promise-catcher'
 import { Component } from '@angular/core'
 
 //Includes
-import { ErrorMessage } from 'shared'
-import { IUserAction, User, UserService } from 'api'
+import { ErrorMessage } from '../../../shared'
+import { IUserAction, User, UserService } from '../../api'
 
 @Component({
-	styles: [require('../app.style.css')],
-	template: require('./home.template.html')
+	stylesUrl: '../app.style.css',//[require('../app.style.css')],
+	templateUrl: './home.template.html'//require('./home.template.html')
 })
 
 export class HomeComponent {
