@@ -41,7 +41,7 @@ npm install -g gulpjs/gulp.git#4.0 bower
 Next clone the repository from GitHub.
 
 ```bash
-git clone https://github.com/Vmlweb/MEAN-AngularJS-2.git
+git clone https://github.com/Vmlweb/MEAN-Angular.git
 cd MEAN-AngularJS-2
 ```
 
