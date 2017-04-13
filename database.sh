@@ -2,11 +2,11 @@
 
 if [ "$1" == "start" ]; then
 	
-	#Start database in Docker
+	# Start database in Docker
 	
 	docker stop @@NAME_db
 	docker rm @@NAME_db
-	docker run --name @@NAME_db -d --restart always -v @@DATABASE_PATH:/data/db -v @@CERTS_PATH:/home/certs -p @@DATABASE_REPL_NODES_PORT:27017 mongo --auth --keyFile /home/certs/@@DATABASE_REPL_KEY --replSet @@DATABASE_REPL_NAME @@MONGO_CONFIG
+	docker run --name @@NAME_db -d --restart always -v @@DATABASE_PATH:/data/db -v @@CERTS_PATH:/data/certs -p @@DATABASE_REPL_NODES_PORT:27017 mongo --auth --keyFile /data/certs/@@DATABASE_REPL_KEY --replSet @@DATABASE_REPL_NAME @@MONGO_CONFIG
 	
 elif [ "$1" == "stop" ]; then
 	
@@ -22,7 +22,7 @@ elif [ "$1" == "reset" ]; then
 	docker stop @@NAME_db
 	docker rm @@NAME_db
 	rm -r @@DATABASE_PATH
-	docker run --name @@NAME_db -d --restart always -v @@DATABASE_PATH:/data/db -v @@CERTS_PATH:/home/certs -p @@DATABASE_REPL_NODES_PORT:27017 mongo --auth --keyFile /home/certs/@@DATABASE_REPL_KEY --replSet @@DATABASE_REPL_NAME
+	docker run --name @@NAME_db -d --restart always -v @@DATABASE_PATH:/data/db -v @@CERTS_PATH:/data/certs -p @@DATABASE_REPL_NODES_PORT:27017 mongo --auth --keyFile /data/certs/@@DATABASE_REPL_KEY --replSet @@DATABASE_REPL_NAME
 	sleep 1
 	docker exec -i @@NAME_db mongo < ./mongodb.js
 	sleep 0.5
@@ -36,11 +36,11 @@ elif [ "$1" == "restart" ]; then
 	docker stop @@NAME_db
 	docker rm @@NAME_db
 
-	#Start database in Docker
+	# Start database in Docker
 	
 	docker stop @@NAME_db
 	docker rm @@NAME_db
-	docker run --name @@NAME_db -d --restart always -v @@DATABASE_PATH:/data/db -v @@CERTS_PATH:/home/certs -p @@DATABASE_REPL_NODES_PORT:27017 mongo --auth --keyFile /home/certs/@@DATABASE_REPL_KEY --replSet @@DATABASE_REPL_NAME @@MONGO_CONFIG
+	docker run --name @@NAME_db -d --restart always -v @@DATABASE_PATH:/data/db -v @@CERTS_PATH:/data/certs -p @@DATABASE_REPL_NODES_PORT:27017 mongo --auth --keyFile /data/certs/@@DATABASE_REPL_KEY --replSet @@DATABASE_REPL_NAME @@MONGO_CONFIG
 	
 else
 

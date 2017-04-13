@@ -30,7 +30,6 @@ First make sure you have the following dependancies installed on your machine.
 
 - `NodeJS` - Available for [All Platforms](https://nodejs.org/en/).
 - `Docker` - Available for [Linux](https://docs.docker.com/engine/installation/linux/), [Mac](https://docs.docker.com/docker-for-mac/), [Windows](https://docs.docker.com/docker-for-windows/).
-- `OpenSSL` - Available on Linux Package Managers, Bundled with Mac or [Windows](https://slproweb.com/products/Win32OpenSSL.html).
 
 Then install the Gulp 4 and Bower command line tools if you have not already.
 
@@ -41,8 +40,8 @@ npm install -g gulpjs/gulp.git#4.0 bower
 Next clone the repository from GitHub.
 
 ```bash
-git clone https://github.com/Vmlweb/MEAN-AngularJS-2.git
-cd MEAN-AngularJS-2
+git clone https://github.com/Vmlweb/MEAN-Angular.git
+cd MEAN-Angular
 ```
 
 ## Installation
@@ -111,6 +110,8 @@ You can start the development server which will rebuild any source file changes 
 ```bash
 gulp
 ```
+
+Then access your website on `http://127.0.0.1:58000` or `https://127.0.0.1:58001`.
 
 Use `control + c` to stop and exit the development server.
 

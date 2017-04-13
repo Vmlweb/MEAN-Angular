@@ -102,7 +102,7 @@ gulp.task('build.config.docker', function(){
 	//MongoDB ssl config
 	let mongoConfig = ''
 	if (config.database.ssl.enabled){
-		mongoConfig = '--sslMode requireSSL --sslPEMKeyFile ' + path.join('/home/certs/', config.database.ssl.pem)
+		mongoConfig = '--sslMode requireSSL --sslPEMKeyFile ' + path.join('/data/certs/', config.database.ssl.pem)
 	}
 	
 	//Build files

@@ -25,12 +25,12 @@ const cmd = ['mongod', '--auth']
 
 //Prepare replica parameters
 if (config.database.repl.enabled){
-	cmd.push('--keyFile', '/home/certs/' + config.database.repl.key, '--replSet', config.database.repl.name)
+	cmd.push('--keyFile', '/data/certs/' + config.database.repl.key, '--replSet', config.database.repl.name)
 }
 
 //Prepare ssl parameters
 if (config.database.ssl.enabled){
-	cmd.push('--sslMode', 'requireSSL', '--sslPEMKeyFile', '/home/certs/' + config.database.ssl.pem)
+	cmd.push('--sslMode', 'requireSSL', '--sslPEMKeyFile', '/data/certs/' + config.database.ssl.pem)
 }
 
 //Reset database volumes
@@ -79,9 +79,9 @@ gulp.task('database.start', function(done){
 			
 			//Prepare platform specific bindings
 			if (process.platform === 'win32'){
-				binds.push('//' + process.cwd().replace(/\\/g, '/').replace(':', '/') + '/certs' + ':/home/certs')
+				binds.push('//' + process.cwd().replace(/\\/g, '/').replace(':', '/') + '/certs' + ':/data/certs')
 			}else{
-				binds.push(process.cwd() + '/certs' + ':/home/certs')
+				binds.push(process.cwd() + '/certs' + ':/data/certs')
 			}
 			
 			//Prepare container
@@ -91,7 +91,7 @@ gulp.task('database.start', function(done){
 				Cmd: cmd,
 				name: config.name + '_db',
 				Volumes: {
-					'/home/certs': {}
+					'/data/certs': {}
 				},
 				HostConfig: {
 					Privileged: true,
@@ -115,44 +115,46 @@ gulp.task('database.start', function(done){
 
 //Setup database server configuration
 gulp.task('database.setup', function(done){
-	const container = docker.getContainer(config.name + '_db' + (process.env.NODE_ENV === 'testing' ? '_test' : ''))
-	
-	//Prepare command
-	const cmd = ['mongo']
-	
-	//Prepare ssl parameters
-	if (config.database.ssl.enabled){
-		cmd.push('--ssl', '--sslAllowInvalidCertificates')
-	}
-	
-	//Prepare command
-	container.exec({
-		Cmd: cmd,
-		AttachStdin: true,
-		AttachStdout: true,
-		Tty: process.platform === 'win32'
-	}, function(err, exec) {
-		if (err){ throw err }
+	setTimeout(function(){
+		const container = docker.getContainer(config.name + '_db' + (process.env.NODE_ENV === 'testing' ? '_test' : ''))
 		
-		//Execute command
-		exec.start({
-			hijack: true,
-			stdin: true,
-			stdout: true
-		}, function(err, stream) {
+		//Prepare command
+		const cmd = ['mongo']
+		
+		//Prepare ssl parameters
+		if (config.database.ssl.enabled){
+			cmd.push('--ssl', '--sslAllowInvalidCertificates')
+		}
+		
+		//Prepare command
+		container.exec({
+			Cmd: cmd,
+			AttachStdin: true,
+			AttachStdout: true,
+			Tty: process.platform === 'win32'
+		}, function(err, exec) {
 			if (err){ throw err }
-				
-			//Stream output to console
-	        container.modem.demuxStream(stream, process.stdout, process.stderr)
-				
-			//Stream file into container mongo cli
-			setTimeout(function(){
-				fs.createReadStream('./builds/mongodb.js', 'binary').pipe(stream).on('end', function(){
-					setTimeout(done, 500)
-				})
-			}, 500)
+			
+			//Execute command
+			exec.start({
+				hijack: true,
+				stdin: true,
+				stdout: true
+			}, function(err, stream) {
+				if (err){ throw err }
+					
+				//Stream output to console
+		        container.modem.demuxStream(stream, process.stdout, process.stderr)
+					
+				//Stream file into container mongo cli
+				setTimeout(function(){
+					fs.createReadStream('./builds/mongodb.js', 'binary').pipe(stream).on('end', function(){
+						setTimeout(done, 500)
+					})
+				}, 500)
+			})
 		})
-	})
+	}, 8000)
 })
 
 //Stop database server
@@ -219,9 +221,9 @@ gulp.task('database.test.start', function(done){
 			
 			//Prepare platform specific bindings
 			if (process.platform === 'win32'){
-				binds.push('//' + process.cwd().replace(/\\/g, '/').replace(':', '/') + '/certs' + ':/home/certs')
+				binds.push('//' + process.cwd().replace(/\\/g, '/').replace(':', '/') + '/certs' + ':/data/certs')
 			}else{
-				binds.push(process.cwd() + '/certs' + ':/home/certs')
+				binds.push(process.cwd() + '/certs' + ':/data/certs')
 			}
 			
 			//Prepare container
@@ -231,7 +233,7 @@ gulp.task('database.test.start', function(done){
 				Cmd: cmd,
 				name: config.name + '_db_test',
 				Volumes: {
-					'/home/certs': {}
+					'/data/certs': {}
 				},
 				HostConfig: {
 					Privileged: true,

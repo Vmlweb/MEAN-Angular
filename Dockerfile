@@ -1,14 +1,14 @@
 FROM node:alpine
 
-VOLUME /home/logs
-VOLUME /home/certs
+VOLUME /data/logs
+VOLUME /data/certs
 
-COPY node_modules /home/node_modules
-COPY server /home/server
-COPY client /home/client
+COPY node_modules /data/node_modules
+COPY server /data/server
+COPY client /data/client
 
 ENV NODE_ENV production
 
-WORKDIR /home
+WORKDIR /data
 
-CMD ["node_modules/pm2/bin/pm2", "start", "/home/server/main.js", "-i", "$(nproc)", "--no-daemon"]
+CMD ["node_modules/pm2/bin/pm2", "start", "/data/server/main.js", "-i", "$(nproc)", "--no-daemon"]
