@@ -41,7 +41,11 @@ Next clone the repository from GitHub.
 
 ```bash
 git clone https://github.com/Vmlweb/MEAN-Angular.git
+<<<<<<< HEAD
 cd MEAN-Angular
+=======
+cd MEAN-AngularJS-2
+>>>>>>> 2b9f9da5b0bab432a973b8372e64f11495b47583
 ```
 
 ## Installation
