@@ -3,7 +3,6 @@ import { Model } from 'mongoose'
 
 //Includes
 import { log, database } from 'app'
-import { CacheMonitor } from 'logic'
 
 export class Collection{
 	
@@ -46,11 +45,6 @@ export class Collection{
 		
 		//Populate collection with test data and without validation
 		await this.model.insertMany(this.data)
-		
-		//Reset state
-		if (CacheMonitor.instance.caches.hasOwnProperty(this.name)){
-			await CacheMonitor.instance.caches[this.name].reload()
-		}
 		
 		//Reset modified flag
 		this.modified = false

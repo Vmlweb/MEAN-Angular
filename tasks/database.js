@@ -154,7 +154,7 @@ gulp.task('database.setup', function(done){
 				}, 500)
 			})
 		})
-	}, 1000)
+	}, 2000)
 })
 
 //Stop database server
