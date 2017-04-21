@@ -1,5 +1,5 @@
 //Includes
-import { Collection } from 'tests'
+import { Collection } from './collection'
 
 //Models
 import { User } from 'models'
