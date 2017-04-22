@@ -3,6 +3,7 @@
 	<head>
 		<base href="/">
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title><%= htmlWebpackPlugin.options.title %></title>
 		<% for (key in htmlWebpackPlugin.options.css) { %>
 			<link rel="stylesheet" type="text/css" href="<%= htmlWebpackPlugin.options.css[key] %>">
