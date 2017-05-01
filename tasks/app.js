@@ -15,6 +15,12 @@ const docker = require('dockerode')(config.docker)
 
 //Remove app log files
 gulp.task('app.clean', function(){
+	
+	//Remove and create data volume
+	const container = docker.getContainer(config.name + '_app')
+	container.remove(function(err){})
+	
+	//Clear logs directory
 	return del('logs/**/*')
 })
 
@@ -68,6 +74,7 @@ gulp.task('app.start', function(done){
 			const binds = []
 			if (process.platform === 'win32'){
 				const prefix = '//' + process.cwd().replace(/\\/g, '/').replace(':','/')
+<<<<<<< HEAD
 				binds.push(prefix + '/builds/server' + ':/home/server')
 				binds.push(prefix + '/certs' + ':/home/certs')
 				binds.push(prefix + '/logs' + ':/home/logs')
@@ -79,13 +86,28 @@ gulp.task('app.start', function(done){
 				binds.push(process.cwd() + '/logs' + ':/home/logs')
 				binds.push(process.cwd() + '/node_modules' + ':/home/node_modules')
 				binds.push(process.cwd() + '/config.js' + ':/home/config.js')
+=======
+				binds.push(prefix + '/builds/server' + ':/data/server')
+				binds.push(prefix + '/builds/client' + ':/data/client')
+				binds.push(prefix + '/certs' + ':/data/certs')
+				binds.push(prefix + '/logs' + ':/data/logs')
+				binds.push(prefix + '/node_modules' + ':/data/node_modules')
+				binds.push(prefix + '/config.js' + ':/data/config.js')
+			}else{
+				binds.push(process.cwd() + '/builds/server' + ':/data/server')
+				binds.push(process.cwd() + '/builds/client' + ':/data/client')
+				binds.push(process.cwd() + '/certs' + ':/data/certs')
+				binds.push(process.cwd() + '/logs' + ':/data/logs')
+				binds.push(process.cwd() + '/node_modules' + ':/data/node_modules')
+				binds.push(process.cwd() + '/config.js' + ':/data/config.js')
+>>>>>>> master
 			}
 			
 			//Prepare container
 			docker.createContainer({
-				Image: 'node:slim',
-				WorkingDir: '/home',
-				Cmd: [ 'node', '/home/server/main.js' ],
+				Image: 'node:alpine',
+				WorkingDir: '/data',
+				Cmd: [ 'node', '/data/server/main.js' ],
 				name: config.name + '_app',
 				Tty: false,
 				ExposedPorts: internalPorts,

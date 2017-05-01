@@ -3,14 +3,14 @@
   ports:
 @@COMPOSE_CONFIG
   volumes:
-    - "@@CERTS_PATH:/home/certs"
-    - "@@LOGS_PATH:/home/logs"
-    - "@@CONFIG:/home/config.js"
+    - "@@CERTS_PATH:/data/certs"
+    - "@@LOGS_PATH:/data/logs"
+    - "@@CONFIG:/data/config.js"
 @@NAME_db:
   image: mongo
   ports:
     - @@DATABASE_REPL_NODES_PORT:@@DATABASE_REPL_NODES_PORT
   volumes:
-    - "@@CERTS_PATH:/home/certs"
+    - "@@CERTS_PATH:/data/certs"
     - "@@DATABASE_PATH:/data/db"
-  command: "--auth --keyFile /home/certs/@@DATABASE_REPL_KEY --replSet @@DATABASE_REPL_NAME @@MONGO_CONFIG"
+  command: "--auth --keyFile /data/certs/@@DATABASE_REPL_KEY --replSet @@DATABASE_REPL_NAME @@MONGO_CONFIG"

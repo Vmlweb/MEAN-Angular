@@ -24,20 +24,21 @@ require('./tasks/server/watch.js')
 
 //! Main Task
 gulp.task('default', gulp.series('dev'))
- 
+
 //! Setup
 gulp.task('setup', gulp.series(
 	'stop',
 	'clean',
 	'install',
 	'certs',
-	'reset'
+	'reset',
+	'build'
 ))
 
 //! Database
 gulp.task('reset', gulp.series(
 	'stop',
-	'build.clean',
+	'clean',
 	'build.config.mongodb',
 	'database.clean',
 	'database.start',
@@ -45,12 +46,17 @@ gulp.task('reset', gulp.series(
 	'database.stop'
 ))
 
+//! Theme
+gulp.task('theme', gulp.series(
+	'env.theme',
+	'dev'
+))
+
 //! Development
 gulp.task('dev', gulp.series(
 	'env.watch',
 	'env.dev',
 	'stop',
-	'build.clean',
 	'build',
 	'lint',
 	'start',
@@ -63,8 +69,6 @@ gulp.task('server', gulp.series(
 	'env.watch',
 	'env.test',
 	'stop',
-	'app.clean',
-	'build.clean',
 	'build.config',
 	'server.build',
 	'database.test',
@@ -90,7 +94,6 @@ gulp.task('test', gulp.series(
 gulp.task('mock', gulp.series(
 	'env.test',
 	'stop',
-	'build.clean',
 	'build.config',
 	'server.build',
 	'database.test',
@@ -101,11 +104,12 @@ gulp.task('mock', gulp.series(
 gulp.task('dist', gulp.series(
 	'env.dist',
 	'stop',
+	'dist.clean',
 	'build.clean',
 	'build',
-	'dist.clean',
 	'dist.copy',
-	'dist.build'
+	'dist.build',
+	'build.clean'
 ))
 
 //! Process Convenience
@@ -114,7 +118,7 @@ gulp.task('stop', gulp.series('app.stop', 'database.stop'))
 gulp.task('wait', function(done){ setTimeout(done, 1000) })
 
 //! Setup Convenience
-gulp.task('clean', gulp.parallel('build.clean', 'app.clean', 'database.clean', 'dist.clean'))
+gulp.task('clean', gulp.parallel('build.clean', 'app.clean', 'dist.clean'))
 gulp.task('docker', gulp.parallel('install.nodejs', 'install.mongodb'))
 
 //! Build Convenience
@@ -124,6 +128,7 @@ gulp.task('lint', gulp.series('server.lint'))
 //! Enviroment Variables
 process.env.MODE = 'single'
 gulp.task('env.watch', function(done) { process.env.MODE = 'watch'; done() })
+gulp.task('env.theme', function(done) { process.env.THEME = true; done() })
 gulp.task('env.dev', function(done) { process.env.NODE_ENV = 'development'; done() })
 gulp.task('env.test', function(done) { process.env.NODE_ENV = 'testing'; done() })
 gulp.task('env.dist', function(done) { process.env.NODE_ENV = 'production'; done() })

@@ -29,27 +29,34 @@ gulp.task('certs', gulp.series(
 //Prepare certificate subject string
 const subj = '"/C=' + config.certs.details.country + '/ST=' + config.certs.details.state + '/L=' + config.certs.details.city + '/O=' + config.certs.details.organisation + '/CN=' + config.certs.details.hostname + '"'
 
-//Prepare openssl location
-const openssl = process.platform === 'win32' ? 'C:\\OpenSSL-Win' + (process.arch.indexOf('64') > -1 ? '64' : '32') + '\\bin\\openssl.exe' : 'openssl'
-
 //Prepare shell commands
-const cmd = [
-	openssl + ' req -new -newkey rsa:2048 -days 1825 -nodes -x509 -subj ' + subj + ' -keyout ' + config.https.ssl.key + ' -out ' + config.https.ssl.cert,
-	openssl + ' req -new -newkey rsa:2048 -days 1825 -nodes -x509 -subj ' + subj + ' -keyout ' + config.database.ssl.key + ' -out ' + config.database.ssl.cert,
-	openssl + ' rand -base64 741 > ' + config.database.repl.key
-]
-
-//Prepare chown for linux only
-if (process.platform === 'linux'){
-	cmd.push('chown -R 999:999 ../certs')
-}
+const cmd = 'apt-get update; apt-get upgrade -y; apt-get install -y openssl; openssl req -new -newkey rsa:2048 -days 1825 -nodes -x509 -subj ' + subj + ' -keyout /data/certs/' + config.https.ssl.key + ' -out /data/certs/' + config.https.ssl.cert + '; openssl req -new -newkey rsa:2048 -days 1825 -nodes -x509 -subj ' + subj + ' -keyout /data/certs/' + config.database.ssl.key + ' -out /data/certs/' + config.database.ssl.cert + ';' + ' openssl rand -base64 741 > /data/certs/' + config.database.repl.key + '; ' + 'chown -R 999:999 /data/certs'
 
 //Generate ssl certificate files
-gulp.task('certs.generate', shell.task(cmd, {
-	ignoreErrors: true,
-	verbose: true,
-	cwd: 'certs'
-}))
+gulp.task('certs.generate', function(done){
+	
+	//Prepare platform specific bindings
+	const binds = []
+	if (process.platform === 'win32'){
+		binds.push('//' + process.cwd().replace(/\\/g, '/').replace(':', '/') + '/certs' + ':/data/certs')
+	}else{
+		binds.push(process.cwd() + '/certs' + ':/data/certs')
+	}
+	
+	//Execute container
+	docker.run('mongo', [ 'bash', '-c', cmd ], process.stdout, {
+		Volumes: {
+			'/data/certs': {}
+		},
+		HostConfig: {
+			Privileged: true,
+			Binds: binds
+		}
+	}, function (err) {
+		if (err){ throw err }
+		done()
+	})
+})
 
 //Merge database certs toggether for pem
 gulp.task('certs.merge', function(){
@@ -75,6 +82,12 @@ gulp.task('install', gulp.series(
 	'install.mongodb'
 ))
 
+<<<<<<< HEAD
+=======
+//Install bower dependancies
+gulp.task('install.bower', shell.task('bower install --config.analytics=false --allow-root', { verbose: true }))
+
+>>>>>>> master
 //Install mongodb docker image
 gulp.task('install.mongodb', process.platform === 'win32' ? shell.task('docker pull mongo:latest') : function(done){
 	docker.pull('mongo:latest', function (err, stream) {
@@ -92,8 +105,8 @@ gulp.task('install.mongodb', process.platform === 'win32' ? shell.task('docker p
 })
 
 //Install nodejs docker image
-gulp.task('install.nodejs', process.platform === 'win32' ? shell.task('docker pull node:slim') : function(done){
-	docker.pull('node:slim', function (err, stream) {
+gulp.task('install.nodejs', process.platform === 'win32' ? shell.task('docker pull node:alpine') : function(done){
+	docker.pull('node:alpine', function (err, stream) {
 		if (err){ throw err }
 		
 		//Attach to pull progress

@@ -24,7 +24,6 @@ gulp.task('server.test', gulp.series(
 	'env.test',
 	'stop',
 	'app.clean',
-	'build.clean',
 	'build.config',
 	'server.build',
 	'database.test',

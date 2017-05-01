@@ -2,7 +2,7 @@
 import * as validate from 'the-vladiator'
 
 //Includes
-import { IHandler, Method, Endpoint, log } from 'app'
+import { IHandler, Method, Endpoint } from 'app'
 import { ErrorCode, ErrorMessage } from 'shared'
 import { User } from 'models'
 

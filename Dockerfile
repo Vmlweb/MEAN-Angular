@@ -1,16 +1,13 @@
-FROM node:slim
+FROM node:alpine
 
-VOLUME /home/logs
-VOLUME /home/certs
+VOLUME /data/logs
+VOLUME /data/certs
 
-COPY package.json /home/package.json
-COPY server /home/server
+COPY node_modules /data/node_modules
+COPY server /data/server
 
 ENV NODE_ENV production
 
-WORKDIR /home
+WORKDIR /data
 
-RUN apt-get update && apt-get upgrade; exit 0
-RUN npm install -g pm2 && npm install --production && rm /home/package.json; exit 0
-
-CMD ["pm2", "start", "/home/server/main.js", "-i", "$(nproc)", "--no-daemon"]
+CMD ["node_modules/pm2/bin/pm2", "start", "/data/server/main.js", "-i", "$(nproc)", "--no-daemon"]

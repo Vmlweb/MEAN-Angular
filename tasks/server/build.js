@@ -19,6 +19,11 @@ module.exports = { setup: false, valid: false, webpack: undefined }
 //Setup webpack for compilation
 gulp.task('server.build', function(done){
 	
+	//Default to development
+	if (!process.env.NODE_ENV){
+		process.env.NODE_ENV = 'development'
+	}
+	
 	//Generate list of file paths to exclude from bundle
 	const nodeModules = {}
 	fs.readdirSync('node_modules').filter(function(x) { return ['.bin'].indexOf(x) === -1 }).forEach(function(mod) { nodeModules[mod] = 'commonjs ' + mod })
@@ -43,7 +48,7 @@ gulp.task('server.build', function(done){
 			hints: false
 		},
 		output: {
-			path: './builds/server',
+			path: path.resolve('./builds/server'),
 			filename: '[name].js'
 		},
 		resolve: {
@@ -58,20 +63,21 @@ gulp.task('server.build', function(done){
 		},
 		module: {
 			rules: [{
+				test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|txt)$/,
+				loader: 'file-loader?name=assets/[hash].[ext]'
+			},{
 				test: /\.ts$/,
 				exclude: /node_modules/,
 				loader: 'awesome-typescript-loader',
 				query: {
-					useTranspileModule: true,
-					transpileOnly: false,
 					instance: 'server',
 					lib: [ 'es6' ],
-					target: 'es5',
 					types: config.types.server.concat([ 'webpack', 'webpack-env', 'node', 'jasmine' ]),
 					baseUrl: './server',
 					cacheDirectory: './builds/.server',
 					useCache: true,
 					paths: {
+						config: [ path.resolve('./config.js') ],
 						shared: [ path.resolve('./shared') ]
 					}
 				}

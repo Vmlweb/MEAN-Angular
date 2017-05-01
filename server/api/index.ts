@@ -26,7 +26,12 @@ router.use((req, res, next) => {
 
 //Add exception handling middleware
 router.use((err, req, res, next) => {
-	if (typeof err === 'number'){
+	if (err.hasOwnProperty('error')){
+		
+		//Client error found
+		res.status(200).json(err)
+		
+	}else if (typeof err === 'number'){
 	
 		//Client error found
 		res.status(200).json({

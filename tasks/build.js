@@ -8,7 +8,11 @@ const replace = require('gulp-replace')
 //Includes
 const config = require('../config.js')
 
+<<<<<<< HEAD
 /*! Tasks 
+=======
+/*! Tasks
+>>>>>>> master
 - build.clean
 
 - build.config
@@ -18,7 +22,7 @@ const config = require('../config.js')
 */
 
 //Remove all build files
-gulp.task('build.clean', function(t){
+gulp.task('build.clean', function(){
 	return del('builds/**/*')
 })
 
@@ -102,7 +106,7 @@ gulp.task('build.config.docker', function(){
 	//MongoDB ssl config
 	let mongoConfig = ''
 	if (config.database.ssl.enabled){
-		mongoConfig = '--sslMode requireSSL --sslPEMKeyFile ' + path.join('/home/certs/', config.database.ssl.pem)
+		mongoConfig = '--sslMode requireSSL --sslPEMKeyFile ' + path.join('/data/certs/', config.database.ssl.pem)
 	}
 	
 	//Build files
@@ -116,9 +120,6 @@ gulp.task('build.config.docker', function(){
 		.pipe(replace('@@CONFIG', config.config))
 		.pipe(replace('@@LOGS_PATH', config.logs.path))
 		.pipe(replace('@@CERTS_PATH', config.certs.path))
-		.pipe(replace('@@SEARCH_PATH', config.search.path))
-		.pipe(replace('@@SEARCH_HOSTNAME', config.search.hostname))
-		.pipe(replace('@@SEARCH_PORT', config.search.port))
 		.pipe(replace('@@DATABASE_PATH', config.database.path))
 		.pipe(replace('@@DATABASE_REPL_ENABLED', config.database.repl.enabled || process.env.NODE_ENV === 'production'))
 		.pipe(replace('@@DATABASE_REPL_NAME', config.database.repl.name))

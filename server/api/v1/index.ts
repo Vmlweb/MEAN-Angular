@@ -15,7 +15,7 @@ requireContext.keys().forEach(key => epFiles[key] = requireContext(key))
 
 //Loop through found endpoints
 const endpoints: Endpoint[] = []
-Object.keys(epFiles).forEach((file) => {
+Object.keys(epFiles).forEach(file => {
 	
 	//Cast endpoint and add to list
 	const endpoint = epFiles[file].endpoint as Endpoint

@@ -5,14 +5,16 @@ import { Schema, Document, model } from 'mongoose'
 export const UserSchema = new Schema({
 	username: String,
 	email: String
+},{
+	timestamps: true	
 })
 
 //Typings
 export interface IUser extends Document {
-	id: Schema.Types.ObjectId,
-	username: string,
+	id: Schema.Types.ObjectId
+	username: string
 	email: string
 }
 
 //Model
-export const User = model<IUser>('User', UserSchema)
+export const User = model<IUser>('user', UserSchema)
