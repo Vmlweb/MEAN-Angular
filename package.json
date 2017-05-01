@@ -59,6 +59,7 @@
     "null-loader": "^0.1.1",
     "raw-loader": "^0.5.1",
     "remap-istanbul": "^0.8.4",
+    "request": "^2.81.0",
     "request-promise-native": "^1.0.3",
     "to-string-loader": "^1.1.5",
     "tslint": "^4.5.1",
