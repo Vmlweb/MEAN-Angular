@@ -8,11 +8,7 @@ Quick and simple template to get up and running with a productive MEAN stack web
 
   * [NodeJS 7.x](https://nodejs.org) on Linux, Mac or Windows
   * [Docker](https://docker.com) & [Compose](https://docs.docker.com/compose)
-<<<<<<< HEAD
   * [Typescript 2](https://www.typescriptlang.org)
-=======
-  * [Angular 4](https://angular.io) & [Typescript 2](https://www.typescriptlang.org)
->>>>>>> master
   * [Gulp 4](http://gulpjs.com) & [Webpack 2](https://webpack.js.org)
   * [Jasmine](https://jasmine.github.io), [Karma](http://karma-runner.github.io) & [Istanbul](http://gotwarlost.github.io/istanbul)
   * [Winston](https://github.com/winstonjs/winston) & [PM2](http://pm2.keymetrics.io)
@@ -34,7 +30,7 @@ First make sure you have the following dependancies installed on your machine.
 - `NodeJS` - Available for [All Platforms](https://nodejs.org/en/).
 - `Docker` - Available for [Linux](https://docs.docker.com/engine/installation/linux/), [Mac](https://docs.docker.com/docker-for-mac/), [Windows](https://docs.docker.com/docker-for-windows/).
 
-Then install the Gulp 4 command line tools if you have not already.
+Then install the Gulp 4 and Bower command line tools if you have not already.
 
 ```bash
 npm install -g gulpjs/gulp.git#4.0
@@ -67,22 +63,16 @@ Make sure to set a unique project name in `config.js` as it will stop docker con
 - `data` - Development database binary files.
 - `dist` - Production ready distribution builds.
 - `logs` - Access, info and error log files.
-<<<<<<< HEAD
 - `logs/tests/server` - Coverage and testing reports.
 - `logs/tests/server/html` - Coverage html report.
-=======
-- `logs/tests/server|client` - Coverage and testing reports.
-- `logs/tests/server|client/html` - Coverage html report.
 - `logs/tests/merged` - Merged coverage reports.
 - `logs/tests/merged/html` - Merged coverage html report.
-- `semantic` - User interface customisations.
->>>>>>> master
 - `server` - Server side application source.
 - `server/api` - REST API endpoints.
 - `server/app` - Core functions for server app.
 - `server/models` - Database models and schemas.
 - `server/tests` - Test data management.
-- `shared` - Shared modules used by server.
+- `shared` - Modules used by server.
 
 ## File Structure
 
@@ -103,13 +93,8 @@ Make sure to set a unique project name in `config.js` as it will stop docker con
 
 For development the primary working directories are.
 
-<<<<<<< HEAD
-=======
-- `client` - Client side website source.
-- `semantic` - User interface customisations.
->>>>>>> master
 - `server` - Server side application source.
-- `shared` - Shared module source files.
+- `shared` - Modules used by server.
 
 You can start the development server which will rebuild any source file changes live.
 
@@ -129,6 +114,8 @@ gulp reset
 
 The development server stores its logs in the local directory.
 
+To add non-standard browser libraries add the paths to `config.js` and they will be included in builds and testing.
+
 ## Logging
 
 Use the following commands to log messages directly to the console and `logs` directory.
@@ -142,38 +129,9 @@ log.verbose('verbose'); //Access log file
 
 Logs will automatically be sorted by severity and bundled into date files.
 
-<<<<<<< HEAD
-=======
-## Theming
-
-You can make customisations to the site theme in the `semantic` directory.
-
-The development environment can be started in theme mode which will rebuild changes live.
-
-```
-gulp theme
-```
-
-Please see the [Semantic UI](http://semantic-ui.com/usage/theming.html) theme guide for more information on this.
-
-## Client Libraries
-
-Adding client libraries into `libs.ts` will included them in your libs bundle.
-
-Themes and libraries are cached so if changes are made to `libs.ts`, `vendor.ts` or the `semantic` directory you must clean the cache.
-
-```
-gulp clean
-```
-
-For traditional `index.html` style libraries or assets, add a glob expression to `config.js` under `libs` and they will be copied into the `/libs` directory.
-
->>>>>>> master
 ## Testing
 
-Test files should be included in the `server` directory and use either `.test.ts` or `.test.js` extensions. 
-
-They can be executed using the following command.
+Test files should be included in the `server` directory and use either `.test.ts` or `.test.js` extensions.
 
 ```bash
 gulp test

@@ -74,33 +74,17 @@ gulp.task('app.start', function(done){
 			const binds = []
 			if (process.platform === 'win32'){
 				const prefix = '//' + process.cwd().replace(/\\/g, '/').replace(':','/')
-<<<<<<< HEAD
-				binds.push(prefix + '/builds/server' + ':/home/server')
-				binds.push(prefix + '/certs' + ':/home/certs')
-				binds.push(prefix + '/logs' + ':/home/logs')
-				binds.push(prefix + '/node_modules' + ':/home/node_modules')
-				binds.push(prefix + '/config.js' + ':/home/config.js')
-			}else{
-				binds.push(process.cwd() + '/builds/server' + ':/home/server')
-				binds.push(process.cwd() + '/certs' + ':/home/certs')
-				binds.push(process.cwd() + '/logs' + ':/home/logs')
-				binds.push(process.cwd() + '/node_modules' + ':/home/node_modules')
-				binds.push(process.cwd() + '/config.js' + ':/home/config.js')
-=======
 				binds.push(prefix + '/builds/server' + ':/data/server')
-				binds.push(prefix + '/builds/client' + ':/data/client')
 				binds.push(prefix + '/certs' + ':/data/certs')
 				binds.push(prefix + '/logs' + ':/data/logs')
 				binds.push(prefix + '/node_modules' + ':/data/node_modules')
 				binds.push(prefix + '/config.js' + ':/data/config.js')
 			}else{
 				binds.push(process.cwd() + '/builds/server' + ':/data/server')
-				binds.push(process.cwd() + '/builds/client' + ':/data/client')
 				binds.push(process.cwd() + '/certs' + ':/data/certs')
 				binds.push(process.cwd() + '/logs' + ':/data/logs')
 				binds.push(process.cwd() + '/node_modules' + ':/data/node_modules')
 				binds.push(process.cwd() + '/config.js' + ':/data/config.js')
->>>>>>> master
 			}
 			
 			//Prepare container

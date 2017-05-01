@@ -6,7 +6,7 @@ import { log, app, http, https, connections, database } from 'app'
 
 //Backend
 require.ensure([], (require) => {
-	app.use('/api', (require('api') as any).router)
+	app.use((require('api') as any).router)
 })
 
 log.info('Mounted REST API backend')

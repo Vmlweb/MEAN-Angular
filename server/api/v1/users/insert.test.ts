@@ -15,7 +15,7 @@ describe('Insert Users', () => {
 		it('create new user with details', catcher.jasmine(async done => {
 			
 			//Make request with body
-			const response = await request.post(process.env.URL + '/api/v1/users', {
+			const response = await request.post(process.env.URL + '/v1/users', {
 				json: true,
 				body: {
 					username: 'NewUsername',
@@ -44,7 +44,7 @@ describe('Insert Users', () => {
 		it('error USR_InvalidUsername if no username is specified', catcher.jasmine(async done => {
 			
 			//Make request with body
-			const response = await request.post(process.env.URL + '/api/v1/users', {
+			const response = await request.post(process.env.URL + '/v1/users', {
 				json: true,
 				body: {
 					email: 'NewEmail@NewEmail.com'
@@ -60,7 +60,7 @@ describe('Insert Users', () => {
 		it('error USR_InvalidEmail if no e-mail address is specified', catcher.jasmine(async done => {
 			
 			//Make request with body
-			const response = await request.post(process.env.URL + '/api/v1/users', {
+			const response = await request.post(process.env.URL + '/v1/users', {
 				json: true,
 				body: {
 					username: 'NewUsername'
@@ -76,7 +76,7 @@ describe('Insert Users', () => {
 		it('error USR_InvalidEmail if invalid e-mail address is specified', catcher.jasmine(async done => {
 			
 			//Make request with body
-			const response = await request.post(process.env.URL + '/api/v1/users', {
+			const response = await request.post(process.env.URL + '/v1/users', {
 				json: true,
 				body: {
 					username: 'NewUsername',

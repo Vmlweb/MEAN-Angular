@@ -14,7 +14,7 @@ describe('List Users', () => {
 		it('list all users when limit not specified', catcher.jasmine(async done => {
 			
 			//Make request and check output
-			const response = await request.get(process.env.URL + '/api/v1/users', { json: true })
+			const response = await request.get(process.env.URL + '/v1/users', { json: true })
 			expect(response.error).not.toBeDefined()
 			
 			//Check correct details were created
@@ -46,7 +46,7 @@ describe('List Users', () => {
 		it('list one user when limit of 1', catcher.jasmine(async done => {
 			
 			//Make request and check output
-			const response = await request.get(process.env.URL + '/api/v1/users?limit=1', { json: true })
+			const response = await request.get(process.env.URL + '/v1/users?limit=1', { json: true })
 			expect(response.error).not.toBeDefined()
 			
 			//Check correct details were created
@@ -61,7 +61,7 @@ describe('List Users', () => {
 		it('list three users when limit of 3', catcher.jasmine(async done => {
 			
 			//Make request and check output
-			const response = await request.get(process.env.URL + '/api/v1/users?limit=3', { json: true })
+			const response = await request.get(process.env.URL + '/v1/users?limit=3', { json: true })
 			expect(response.error).not.toBeDefined()
 			
 			//Check correct details were created
@@ -91,7 +91,7 @@ describe('List Users', () => {
 		it('error USR_InvalidLimit if invalid limit is specified', catcher.jasmine(async done => {
 			
 			//Make request and check output
-			const response = await request.get(process.env.URL + '/api/v1/users?limit=hello', { json: true })
+			const response = await request.get(process.env.URL + '/v1/users?limit=hello', { json: true })
 			expect(response.error).toBe(ErrorCode.USR_InvalidLimit)
 			
 			done()

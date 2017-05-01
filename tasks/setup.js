@@ -82,12 +82,6 @@ gulp.task('install', gulp.series(
 	'install.mongodb'
 ))
 
-<<<<<<< HEAD
-=======
-//Install bower dependancies
-gulp.task('install.bower', shell.task('bower install --config.analytics=false --allow-root', { verbose: true }))
-
->>>>>>> master
 //Install mongodb docker image
 gulp.task('install.mongodb', process.platform === 'win32' ? shell.task('docker pull mongo:latest') : function(done){
 	docker.pull('mongo:latest', function (err, stream) {

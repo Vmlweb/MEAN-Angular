@@ -8,11 +8,7 @@ const replace = require('gulp-replace')
 //Includes
 const config = require('../config.js')
 
-<<<<<<< HEAD
-/*! Tasks 
-=======
 /*! Tasks
->>>>>>> master
 - build.clean
 
 - build.config

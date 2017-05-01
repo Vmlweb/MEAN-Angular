@@ -9,8 +9,7 @@
     "experimentalDecorators": true
   },
   "exclude": [
-    "node_modules",
-    "bower_components"
+    "node_modules"
   ],
   "files": [ "node_modules/typescript/lib/typescriptServices.d.ts" ]
 }

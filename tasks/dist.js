@@ -15,6 +15,7 @@ const docker = require('dockerode')(config.docker)
 - dist.copy
 - dist.copy.certs
 - dist.copy.config
+- dist.copy.server
 
 - dist.build
 - dist.build.packages

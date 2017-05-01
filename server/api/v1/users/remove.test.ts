@@ -15,7 +15,7 @@ describe('Delete User', () => {
 		it('delete user with identifier', catcher.jasmine(async done => {
 			
 			//Make request and check output
-			const response = await request.delete(process.env.URL + '/api/v1/users/607f1f77bcf86cd799439013', { json: true })
+			const response = await request.delete(process.env.URL + '/v1/users/607f1f77bcf86cd799439013', { json: true })
 			expect(response.error).not.toBeDefined()
 			
 			//Check correct details were created
@@ -34,7 +34,7 @@ describe('Delete User', () => {
 		it('error USR_Invalid if invaid user id is specified', catcher.jasmine(async done => {
 			
 			//Make request and check error code
-			const response = await request.delete(process.env.URL + '/api/v1/users/UserId', { json: true })
+			const response = await request.delete(process.env.URL + '/v1/users/UserId', { json: true })
 			expect(response.error).toBe(ErrorCode.USR_Invalid)
 			
 			done()
@@ -43,7 +43,7 @@ describe('Delete User', () => {
 		it('error USR_NotFound if non existant user id is specified', catcher.jasmine(async done => {
 			
 			//Make request and check error code
-			const response = await request.delete(process.env.URL + '/api/v1/users/107f1f77bcf86cd799439013', { json: true })
+			const response = await request.delete(process.env.URL + '/v1/users/107f1f77bcf86cd799439013', { json: true })
 			expect(response.error).toBe(ErrorCode.USR_NotFound)
 			
 			done()
