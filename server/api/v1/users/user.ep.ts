@@ -4,7 +4,6 @@ import * as validate from 'the-vladiator'
 //Includes
 import { IHandler, Method, Endpoint } from 'app'
 import { ErrorCode, ErrorMessage } from 'shared'
-import { User } from 'models'
 
 const execute: IHandler = async (req, res, next) => {
 
@@ -14,14 +13,34 @@ const execute: IHandler = async (req, res, next) => {
 	//Validate parameter contents
 	validate(limit).isOptional().isNumber().isPositive().throws(ErrorCode.USR_InvalidLimit)
 	
-	//Create query to user
-	const query = User.find()
+	//Get users
+	const users = [{
+		id: '607f1f77bcf86cd799439011', 
+		username: 'FirstUser',
+		email: 'FirstUser@FirstUser.com'
+	},{ 
+		id: '607f1f77bcf86cd799439012',
+		username: 'SecondUser',
+		email: 'SecondUser@SecondUser.com'
+	},{ 
+		id: '607f1f77bcf86cd799439013',
+		username: 'ThirdUser', 
+		email: 'ThirdUser@ThirdUser.com'
+	},{
+		id: '607f1f77bcf86cd799439014', 
+		username: 'FourthUser', 
+		email: 'FourthUser@FourthUser.com'
+	},{
+		id: '607f1f77bcf86cd799439015',
+		username: 'FifthUser',
+		email: 'FifthUser@FifthUser.com'
+	}]
 	
 	//Limit users returned
-	if (limit){ query.limit(limit) }
-	
-	//Execute query
-	const users = await query.exec()
+	if (limit){
+		const remove = users.length - limit
+		users.splice(users.length - remove, remove)
+	}
 	
 	res.json({
 		users: users.map(user => {
@@ -43,7 +62,7 @@ export const endpoint = new Endpoint({
 
 	//! Documentation
 	title: 'List Users',
-	description: 'List users in the database sorted by user id.',
+	description: 'List users sorted by user id.',
 	errors: {
 		USR_InvalidLimit: ErrorMessage[ErrorCode.USR_InvalidLimit]
 	},

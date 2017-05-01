@@ -9,7 +9,6 @@ import * as morgan from 'morgan'
 import * as bodyParser from 'body-parser'
 import * as helmet from 'helmet'
 import * as compression from 'compression'
-import * as sanitize from 'express-mongo-sanitize'
 import * as express from 'express'
 
 //Includes
@@ -28,7 +27,6 @@ log.info('Express initialized')
 //Attach express middleware
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(sanitize({ replaceWith: '_' }))
 app.use(helmet())
 app.use(compression())
 

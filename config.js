@@ -33,37 +33,9 @@ module.exports = {
 		}
 	},
 	
-	//! Database
-	database: {
-		path: '/opt/mean/data',
-		auth: {
-			username: 'mean',
-			password: 'm3an',
-			database: 'mean'
-		},
-		ssl: {
-			enabled: true,
-			key: 'mongodb.key',
-			cert: 'mongodb.cert',
-			pem: 'mongodb.pem',
-			ca: '',
-			validate: false
-		},
-		repl: {
-			enabled: false,
-			name: 'rs0',
-			read: 'nearest',
-			key: 'repl.key',
-			nodes: [{
-				hostname: '192.168.0.69',
-				port: 58002 
-			}]
-		}
-	},
-	
 	//! Typescript Types
 	types: {
-		server: [ 'async', 'body-parser', 'compression', 'express', 'helmet', 'moment', 'mongoose', 'morgan', 'winston' ]
+		server: [ 'async', 'body-parser', 'compression', 'express', 'helmet', 'moment', 'morgan', 'winston' ]
 	},
 	
 	//! Test Plans

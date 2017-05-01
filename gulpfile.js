@@ -11,7 +11,6 @@ gulp.registry(reference())
 //! Tasks
 require('./tasks/app.js')
 require('./tasks/build.js')
-require('./tasks/database.js')
 require('./tasks/setup.js')
 require('./tasks/dist.js')
 require('./tasks/test.js')
@@ -31,19 +30,7 @@ gulp.task('setup', gulp.series(
 	'clean',
 	'install',
 	'certs',
-	'reset',
 	'build'
-))
-
-//! Database
-gulp.task('reset', gulp.series(
-	'stop',
-	'clean',
-	'build.config.mongodb',
-	'database.clean',
-	'database.start',
-	'database.setup',
-	'database.stop'
 ))
 
 //! Theme
@@ -71,7 +58,6 @@ gulp.task('server', gulp.series(
 	'stop',
 	'build.config',
 	'server.build',
-	'database.test',
 	'server.test.execute',
 	'server.lint',
 	'server.watch',
@@ -85,7 +71,6 @@ gulp.task('test', gulp.series(
 	'app.clean',
 	'build.clean',
 	'build',
-	'database.test',
 	'server.test.execute',
 	'server.test.coverage'
 ))
@@ -96,7 +81,6 @@ gulp.task('mock', gulp.series(
 	'stop',
 	'build.config',
 	'server.build',
-	'database.test',
 	'mock.start'
 ))
  
@@ -113,13 +97,13 @@ gulp.task('dist', gulp.series(
 ))
 
 //! Process Convenience
-gulp.task('start', gulp.series('database.start', 'app.start'))
-gulp.task('stop', gulp.series('app.stop', 'database.stop'))
+gulp.task('start', gulp.series('app.start'))
+gulp.task('stop', gulp.series('app.stop'))
 gulp.task('wait', function(done){ setTimeout(done, 1000) })
 
 //! Setup Convenience
 gulp.task('clean', gulp.parallel('build.clean', 'app.clean', 'dist.clean'))
-gulp.task('docker', gulp.parallel('install.nodejs', 'install.mongodb'))
+gulp.task('docker', gulp.parallel('install.nodejs', 'install.debian'))
 
 //! Build Convenience
 gulp.task('build', gulp.parallel('build.config', 'server.build'))
@@ -149,16 +133,13 @@ for (const i in config.tests.server){
 	}
 }
 
-//Stop database and app containers on exit
+//Stop app containers on exit
 const shutdown = function(){
 	const app = docker.getContainer(config.name + '_app')
-	const db = docker.getContainer(config.name + '_db')
 	const test = docker.getContainer(config.name + '_db_test')
 	app.stop({ t: 10 }, function(err, data){
-		db.stop({ t: 10 }, function(err, data){
-			test.stop({ t: 10 }, function(err, data){
-				process.exit()
-			})
+		test.stop({ t: 10 }, function(err, data){
+			process.exit()
 		})
 	})
 }

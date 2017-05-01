@@ -5,16 +5,6 @@ import * as minimatch from 'minimatch'
 //Includes
 const config = require('config')
 import { shutdown } from 'main'
-import { database } from 'app'
-
-//Wait for database connection
-beforeAll(done => {
-	database.once('open', done)
-	database.once('error', done)
-})
-
-//Load testing hooks
-import 'tests'
 
 //Find all test files
 const context = require.context('./', true, /\.test\.(ts|js)/)

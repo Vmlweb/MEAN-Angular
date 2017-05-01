@@ -2,11 +2,11 @@
 import * as async from 'async'
 
 //Includes
-import { log, app, http, https, connections, database } from 'app'
+import { log, app, http, https, connections } from 'app'
 
 //Backend
 require.ensure([], (require) => {
-	app.use((require('api') as any).router)
+	app.use('/', (require('api') as any).router)
 })
 
 log.info('Mounted REST API backend')
@@ -20,8 +20,8 @@ const shutdown = (done?: () => void) => {
 		connections[key].destroy()
 	})
 	
-	//Close web and database connections
-	async.each([ http, https, database ], (server, callback) => {
+	//Close web connections
+	async.each([ http, https ], (server, callback) => {
 		server.close(() => {
 			callback()
 		})

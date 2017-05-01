@@ -45,8 +45,6 @@ cd MEAN-Angular
 
 ## Installation
 
-First add your local IP address to `config.js` under `database.repl.nodes.hostname` for the database.
-
 Then install the project dependancies and setup the development environment.
 
 ```bash
@@ -60,7 +58,6 @@ Make sure to set a unique project name in `config.js` as it will stop docker con
 
 - `builds` - Temporary development build files.
 - `certs` - SSL certificate and key files.
-- `data` - Development database binary files.
 - `dist` - Production ready distribution builds.
 - `logs` - Access, info and error log files.
 - `logs/tests/server` - Coverage and testing reports.
@@ -70,21 +67,16 @@ Make sure to set a unique project name in `config.js` as it will stop docker con
 - `server` - Server side application source.
 - `server/api` - REST API endpoints.
 - `server/app` - Core functions for server app.
-- `server/models` - Database models and schemas.
-- `server/tests` - Test data management.
 - `shared` - Modules used by server.
 
 ## File Structure
 
 - `config.js` - Configurations for development, testing and distribution.
-- `database.js` - Start, stop and restart the production database container.
 - `docker-compose.yml` - Docker compose definition for the production server.
 - `Dockerfile` - Docker image definition for the distribution build.
-- `mongodb.js` - Executed to configure database settings.
 - `package.json` - Server based package dependancies.
 - `server/main.ts` - Entry point for development and distribution builds.
 - `server/test.ts` - Entry point for testing builds.
-- `server/tests/collections.ts` - List of database collections, models and test data.
 - `server.sh` - Start, stop and restart the production app container.
 - `tsconfig.json` - Typescript compilation options.
 - `tslint.json` - Linting rules and options.
@@ -105,12 +97,6 @@ gulp
 Then access your website on `http://127.0.0.1:58000` or `https://127.0.0.1:58001`.
 
 Use `control + c` to stop and exit the development server.
-
-Use the following to reset the development server database.
-
-```bash
-gulp reset
-```
 
 The development server stores its logs in the local directory.
 
@@ -155,24 +141,12 @@ gulp server.v1.test
 
 These can also be executed in watch mode.
 
-## Test Data
-
-When testing, the server database will be reset before each test with the data found in `server/tests` JSON files.
-
-You can add additional collections by specifying them in `server/collections.ts` with the model to use.
-
 ## Mock Server
 
 When testing external applications you can run the server in mock mode which allows you to use test data.
 
 ```
 gulp mock
-```
-
-You can use the following endpoint in mock mode to reset the test data in the server database.
-
-```
-DELETE /api
 ```
 
 When running in mock mode please note that internal http and https ports are used.
@@ -188,9 +162,7 @@ gulp dist
 These files will be generated into the `dist` directory.
 
 - `*.zip` - Docker image for distribution build.
-- `database.js` - Start, stop and restart the production database container.
 - `docker-compose.yml` - Docker compose definition for the production server.
-- `mongodb.js` - Executed to configure database settings.
 - `server.sh` - Start, stop and restart the production app container.
 
 ## Production
@@ -210,13 +182,6 @@ When using Linux make sure to set the correct file permissions for the certifica
 chown -R 999:999 /opt/mean/certs
 ```
 
-Then wipe and configure your production database using `database.sh`.
-
-```bash
-chmod +x database.sh
-./database.sh reset
-```
-
 When updating to a new build simply load in the new Docker image and restart the server. 
 
 ## Process
@@ -225,13 +190,9 @@ Use can then use `server.sh` or `docker-compose.yml` to start, stop and restart 
 
 ```bash
 cmod +x server.sh
-cmod +x database.sh
 
 ./server.sh start
 ./server.sh stop
-
-./database.sh start
-./database.sh stop
 
 docker-compose up
 docker-compose down
