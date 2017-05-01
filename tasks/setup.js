@@ -16,7 +16,7 @@ const docker = require('dockerode')(config.docker)
 
 - install
 - install.nodejs
-- install.debian
+- install.mongodb
 */
 
 //! Certs
@@ -44,7 +44,7 @@ gulp.task('certs.generate', function(done){
 	}
 	
 	//Execute container
-	docker.run('debian', [ 'bash', '-c', cmd ], process.stdout, {
+	docker.run('mongo', [ 'bash', '-c', cmd ], process.stdout, {
 		Volumes: {
 			'/data/certs': {}
 		},
@@ -79,12 +79,12 @@ gulp.task('certs.chmod', function(){
 //! Install
 gulp.task('install', gulp.series(
 	'install.nodejs',
-	'install.debian'
+	'install.mongodb'
 ))
 
-//Install debian docker image
-gulp.task('install.debian', process.platform === 'win32' ? shell.task('docker pull debian:latest') : function(done){
-	docker.pull('debian:latest', function (err, stream) {
+//Install mongodb docker image
+gulp.task('install.mongodb', process.platform === 'win32' ? shell.task('docker pull mongo:latest') : function(done){
+	docker.pull('mongo:latest', function (err, stream) {
 		if (err){ throw err }
 		
 		//Attach to pull progress
