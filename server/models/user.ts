@@ -11,7 +11,7 @@ export const UserSchema = new Schema({
 
 //Typings
 export interface IUser extends Document {
-	id: Schema.Types.ObjectId
+	id: string
 	username: string
 	email: string
 }
