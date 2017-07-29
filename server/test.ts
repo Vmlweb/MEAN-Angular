@@ -54,5 +54,5 @@ afterAll(done => {
 if (process.platform === 'win32'){
 	rl.createInterface({ input: process.stdin, output: process.stdout }).on('SIGINT', () => { shutdown() })
 }
-  
+
 export { shutdown }

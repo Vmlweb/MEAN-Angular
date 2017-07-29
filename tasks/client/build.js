@@ -133,7 +133,8 @@ gulp.task('client.build.compile', function(done){
 					$: 'jquery',
 					jQuery: 'jquery'
 				}),
-				new CheckerPlugin()
+				new CheckerPlugin(),
+				new webpack.optimize.ModuleConcatenationPlugin()
 			],
 			performance: {
 				hints: false
