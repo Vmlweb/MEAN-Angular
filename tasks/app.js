@@ -17,7 +17,7 @@ const docker = require('dockerode')(config.docker)
 gulp.task('app.clean', function(){
 	
 	//Remove and create data volume
-	const container = docker.getContainer(config.name + '_app')
+	const container = docker.getContainer(config.name)
 	container.remove(function(err){})
 	
 	//Clear logs directory
@@ -26,7 +26,7 @@ gulp.task('app.clean', function(){
 
 //Start app server
 gulp.task('app.start', function(done){
-	const container = docker.getContainer(config.name + '_app')
+	const container = docker.getContainer(config.name)
 	container.inspect(function(err, info){
 		if (info){
 			
@@ -94,7 +94,7 @@ gulp.task('app.start', function(done){
 				Image: 'node:alpine',
 				WorkingDir: '/data',
 				Cmd: [ 'node', '/data/server/main.js' ],
-				name: config.name + '_app',
+				name: config.name,
 				Tty: false,
 				ExposedPorts: internalPorts,
 				Env: [ 'NODE_ENV=development' ],
@@ -130,7 +130,7 @@ gulp.task('app.start', function(done){
 
 //Stop app server
 gulp.task('app.stop', function(done){
-	const container = docker.getContainer(config.name + '_app')
+	const container = docker.getContainer(config.name)
 	container.stop({ t: 10 }, function(err, data){
 		done()
 	})

@@ -284,7 +284,7 @@ for (const i in config.tests.client){
 
 //Stop database and app containers on exit
 const shutdown = function(){
-	const app = docker.getContainer(config.name + '_app')
+	const app = docker.getContainer(config.name)
 	const db = docker.getContainer(config.name + '_db')
 	const test = docker.getContainer(config.name + '_db_test')
 	app.stop({ t: 10 }, function(err, data){

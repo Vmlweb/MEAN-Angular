@@ -90,7 +90,7 @@ gulp.task('dist.build.tar', function(){
 
 //Generate docker image
 gulp.task('dist.build.docker', function(done){
-	docker.buildImage('./dist/Dockerfile.tar', { t: config.name + '_app' }, function (err, stream){
+	docker.buildImage('./dist/Dockerfile.tar', { t: config.name }, function (err, stream){
 		if (err){ throw err }
 		
 		//Attach to pull progress
@@ -105,7 +105,7 @@ gulp.task('dist.build.docker', function(done){
 })
 
 //Save docker image to file
-gulp.task('dist.build.save', shell.task('docker save ' + config.name + '_app > ' + config.name + '.tar', { cwd: 'dist' }))
+gulp.task('dist.build.save', shell.task('docker save ' + config.name + ' > ' + config.name + '.tar', { cwd: 'dist' }))
 
 //Compress docker image to zip
 gulp.task('dist.build.zip', function(){

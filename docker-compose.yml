@@ -1,5 +1,5 @@
-@@NAME_app:
-  image: @@NAME_app
+@@NAME:
+  image: @@NAME
   ports:
 @@COMPOSE_CONFIG
   volumes:
