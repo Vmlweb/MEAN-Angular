@@ -107,7 +107,7 @@ gulp.task('server.build', function(done){
 	//Add coverage hooks for testing
 	if (process.env.NODE_ENV === 'testing'){
 		module.exports.webpack.module.rules.splice(0, 0, {
-			test: /^((?!test).)*\.ts$/,
+			test: /^((?!unit|spec).)*\.ts$/,
 			exclude: /node_modules/,
 			loader: 'istanbul-instrumenter-loader'
 		})
