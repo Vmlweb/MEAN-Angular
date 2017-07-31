@@ -287,7 +287,7 @@ gulp.task('client.build.compile', function(done){
 		//Add coverage hook plugins for testing
 		if (process.env.NODE_ENV === 'testing'){
 			setup.module.rules.splice(0, 0, {
-				test: /^((?!unit|spec).)*\.ts$/,
+				test: /^((?!unit|step).)*\.ts$/,
 				exclude: /(node_modules|bower_components)/,
 				loader: 'istanbul-instrumenter-loader'
 			})
