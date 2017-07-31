@@ -43,6 +43,7 @@
     "compression-webpack-plugin": "^1.0.0",
     "core-js": "^2.4.1",
     "css-loader": "0.28.4",
+    "cucumber": "^2.3.1",
     "cucumber-junit": "^1.7.0",
     "decache": "^4.1.0",
     "del": "^3.0.0",
