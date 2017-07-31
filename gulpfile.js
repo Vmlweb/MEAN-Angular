@@ -135,9 +135,9 @@ gulp.task('test', gulp.series(
 	'server.test.feature.execute',
 	'server.test.feature.coverage',
 	
-	'mock.start',	
 	'env.test.unit',
 	'build',
+	'mock.start',	
 	'client.test.unit.execute',
 	'client.test.unit.coverage',
 	'mock.stop',
