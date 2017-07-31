@@ -19,13 +19,15 @@ require('./tasks/test.js')
 //Client
 require('./tasks/client/build.js')
 require('./tasks/client/lint.js')
-require('./tasks/client/test.js')
+require('./tasks/client/test-unit.js')
+require('./tasks/client/test-feature.js')
 require('./tasks/client/watch.js')
 
 //Server
 require('./tasks/server/build.js')
 require('./tasks/server/lint.js')
-require('./tasks/server/test.js')
+require('./tasks/server/test-unit.js')
+require('./tasks/server/test-feature.js')
 require('./tasks/server/watch.js')
 
 //! Main Task
@@ -84,39 +86,107 @@ gulp.task('client', gulp.series(
 	'client.watch'
 ))
 
-//! Server
-gulp.task('server', gulp.series(
+//! Server Unit
+gulp.task('server.unit', gulp.series(
 	'env.watch',
 	'env.test',
+	'env.test.unit',
 	'stop',
 	'build.config',
 	'server.build',
 	'database.test',
-	'server.test.execute',
+	'server.test.unit.execute',
 	'server.lint',
 	'server.watch',
-	'server.watch.test'
+	'server.watch.test.unit'
+))
+
+//! Server Feature
+gulp.task('server.feature', gulp.series(
+	'env.watch',
+	'env.test',
+	'env.test.feature',
+	'stop',
+	'build.config',
+	'server.build',
+	'database.test',
+	'server.test.feature.execute',
+	'server.lint',
+	'server.watch',
+	'server.watch.test.feature'
 ))
 
 //! Testing
 gulp.task('test', gulp.series(
 	'env.test',
+	'env.test.unit',
 	'stop',
 	'app.clean',
 	'build.clean',
 	'build',
 	'database.test',
-	'server.test.execute',
-	'server.test.coverage',
-	'mock.start',
-	'client.test.execute',
-	'client.test.coverage',
+	
+	'server.test.unit.execute',
+	'server.test.unit.coverage',
+	
+	'env.test.feature',
+	'build',
+	'server.test.feature.execute',
+	'server.test.feature.coverage',
+	
+	'mock.start',	
+	'env.test.unit',
+	'build',
+	'client.test.unit.execute',
+	'client.test.unit.coverage',
+	'mock.stop',
+	
+	'stop',
+	'merge',
+	'build.clean',
+	'client.test.unit.close'
+))
+
+//! Server Testing
+gulp.task('server.test', gulp.series(
+	'env.test',
+	'env.test.unit',
+	'stop',
+	'app.clean',
+	'build.clean',
+	'build',
+	'database.test',
+	'server.test.unit.execute',
+	'server.test.unit.coverage',
+	'env.test.feature',
+	'build',
+	'server.test.feature.execute',
+	'server.test.feature.coverage',
+	'stop',
+	'merge'
+))
+
+//! Client Testing
+gulp.task('client.test', gulp.series(
+	'env.test',
+	'env.test.unit',
+	'stop',
+	'app.clean',
+	'build.clean',
+	'build',
+	'database.test',
+	'mock.start',	
+	'env.test.unit',
+	'build',
+	'client.test.unit.execute',
+	'client.test.unit.coverage',
 	'mock.stop',
 	'stop',
 	'merge',
 	'build.clean',
-	'client.test.close'
+	'client.test.unit.close'
 ))
+
 
 //! Mocking
 gulp.task('mock', gulp.series(
@@ -160,35 +230,53 @@ gulp.task('env.theme', function(done) { process.env.THEME = true; done() })
 gulp.task('env.dev', function(done) { process.env.NODE_ENV = 'development'; done() })
 gulp.task('env.test', function(done) { process.env.NODE_ENV = 'testing'; done() })
 gulp.task('env.dist', function(done) { process.env.NODE_ENV = 'production'; done() })
+gulp.task('env.test.unit', function(done) { process.env.TEST = 'unit'; done() })
+gulp.task('env.test.feature', function(done) { process.env.TEST = 'feature'; done() })
 
-//! Server Test Plans
+//! Server Test Unit Plans
 for (const i in config.tests.server){
 	if (config.tests.server.hasOwnProperty(i)){
 		(function(i) {
-			gulp.task('server.' + i + '.test', gulp.series(function(done){
-				process.env.TEST = i
+			gulp.task('server.' + i + '.test.unit', gulp.series(function(done){
+				process.env.TEST_PLAN = i
 				done()
-			}, 'server.test'))
-			gulp.task('server.' + i, gulp.series(function(done){
-				process.env.TEST = i
+			}, 'server.test.unit'))
+			gulp.task('server.' + i + '.unit', gulp.series(function(done){
+				process.env.TEST_PLAN = i
 				done()
-			}, 'server'))
+			}, 'server.unit'))
 		})(i)
 	}
 }
 
-//! Client Test Plans
+//! Server Test Feature Plans
+for (const i in config.tests.server){
+	if (config.tests.server.hasOwnProperty(i)){
+		(function(i) {
+			gulp.task('server.' + i + '.test.feature', gulp.series(function(done){
+				process.env.TEST_PLAN = i
+				done()
+			}, 'server.test.feature'))
+			gulp.task('server.' + i + '.feature', gulp.series(function(done){
+				process.env.TEST_PLAN = i
+				done()
+			}, 'server.feature'))
+		})(i)
+	}
+}
+
+//! Client Test Unit Plans
 for (const i in config.tests.client){
 	if (config.tests.client.hasOwnProperty(i)){
 		(function(i) {
-			gulp.task('client.' + i + '.test', gulp.series(function(done){
-				process.env.TEST = i
+			gulp.task('client.' + i + '.test.unit', gulp.series(function(done){
+				process.env.TEST_PLAN = i
 				done()
-			}, 'client.test'))
-			gulp.task('client.' + i, gulp.series(function(done){
-				process.env.TEST = i
+			}, 'client.test.unit'))
+			gulp.task('client.' + i + '.unit', gulp.series(function(done){
+				process.env.TEST_PLAN = i
 				done()
-			}, 'client'))
+			}, 'client.unit'))
 		})(i)
 	}
 }

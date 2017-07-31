@@ -1,6 +1,7 @@
 //Modules
 const gulp = require('gulp')
 const path = require('path')
+const fs = require('fs')
 const async = require('async')
 const decache = require('decache')
 const istanbul = require('istanbul')
@@ -18,10 +19,11 @@ const config = require('../config.js')
 //Merge coverage reports
 gulp.task('merge', function(done){
 	
-    //Collect coverage json files
+	//Collect coverage json files
     const collector = new istanbul.Collector()
-	collector.add(require('../logs/tests/client/coverage.json'))
-    collector.add(require('../logs/tests/server/coverage.json'))
+	if (fs.existsSync('./logs/tests/client/unit/coverage.json')){ collector.add(require('../logs/tests/client/unit/coverage.json')) }
+    if (fs.existsSync('./logs/tests/server/unit/coverage.json')){ collector.add(require('../logs/tests/server/unit/coverage.json')) }
+    if (fs.existsSync('./logs/tests/server/feature/coverage.json')){ collector.add(require('../logs/tests/server/feature/coverage.json')) }
 	
 	//Output stats to console
 	istanbul.Report.create('text-summary').writeReport(collector, true)

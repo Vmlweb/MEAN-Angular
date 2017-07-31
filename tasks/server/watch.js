@@ -23,10 +23,21 @@ gulp.task('server.watch.build', function(done){
 	done()
 })
 
-//! Watch Tests
-gulp.task('server.watch.test', function(done){
+//! Watch Unit Tests
+gulp.task('server.watch.test.unit', function(done){
 	gulp.watch('builds/server/**/*.js', gulp.series(
-		'server.test.execute'
+		'server.test.unit.execute'
+	))
+	done()
+})
+
+//! Watch Feature Tests
+gulp.task('server.watch.test.feature', function(done){
+	gulp.watch('builds/server/**/*.js', gulp.series(
+		'server.test.feature.execute'
+	))
+	gulp.watch('server/**/*.feature', gulp.series(
+		'server.test.feature.execute'
 	))
 	done()
 })

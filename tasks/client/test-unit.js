@@ -12,29 +12,30 @@ const config = require('../../config.js')
 const build = require('./build.js')
 
 /*! Tasks 
-- client.test
-- client.test.execute
-- client.test.coverage
-- client.test.close
+- client.test.unit
+- client.test.unit.execute
+- client.test.unit.coverage
+- client.test.unit.close
 */
 
 //! Client Test
-gulp.task('client.test', gulp.series(
+gulp.task('client.test.unit', gulp.series(
 	'env.test',
+	'env.test.unit',
 	'stop',
 	'app.clean',
 	'build',
 	'database.test',
 	'mock.start',
-	'client.test.execute',
-	'client.test.coverage',
+	'client.test.unit.execute',
+	'client.test.unit.coverage',
 	'mock.stop',
 	'stop',
-	'client.test.close'
+	'client.test.unit.close'
 ))
 
 //Execute tests and collect coverage
-gulp.task('client.test.execute', function(done){
+gulp.task('client.test.unit.execute', function(done){
 	
 	//Clear node require cache
 	decache(path.resolve('builds/server/main.js'))
@@ -102,13 +103,13 @@ gulp.task('client.test.execute', function(done){
 		coverageReporter: {
 			reporters: [{
 				type: 'json',
-				dir:'../logs/tests/client',
+				dir:'../logs/tests/client/unit',
 				file: 'coverage.json',
 				subdir: '.'
 			}]
 		},
 		junitReporter: {
-			outputDir: '../logs/tests/client'
+			outputDir: '../logs/tests/client/unit'
 		}
 
 	}, function(){
@@ -121,20 +122,20 @@ gulp.task('client.test.execute', function(done){
 })
 
 //Remap and log coverage reports 
-gulp.task('client.test.coverage', function(){
-	return gulp.src('logs/tests/client/coverage.json')
+gulp.task('client.test.unit.coverage', function(){
+	return gulp.src('logs/tests/client/unit/coverage.json')
 		.pipe(remap({
 			reports: {
 				'text-summary': null,
-				json: 'logs/tests/client/coverage.json',
-				html: 'logs/tests/client/html',
-				clover: 'logs/tests/client/coverage.clover'
+				json: 'logs/tests/client/unit/coverage.json',
+				html: 'logs/tests/client/unit/html',
+				clover: 'logs/tests/client/unit/coverage.clover'
 			}
 		}))
 })
 
 //Finish testing and end process
-gulp.task('client.test.close', function(done){
+gulp.task('client.test.unit.close', function(done){
 	done()
 	setTimeout(process.exit, 100)
 })

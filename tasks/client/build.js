@@ -56,8 +56,14 @@ gulp.task('client.build.compile', function(done){
 		//Define entry points for each enviroment
 		let entry
 		if (process.env.NODE_ENV === 'testing'){
-			entry = {
-				main: './client/test.ts'
+			if (process.env.TEST === 'unit'){
+				entry = {
+					main: './client/tests/test-unit.ts'
+				}
+			}else if (process.env.TEST === 'feature'){
+				entry = {
+					main: './client/tests/test-feature.ts'
+				}
 			}
 		}else if (process.env.NODE_ENV === 'development'){
 			if (libs){
@@ -100,6 +106,7 @@ gulp.task('client.build.compile', function(done){
 				new webpack.DefinePlugin({
 					'process.env.ENV': JSON.stringify(process.env.NODE_ENV),
 					'process.env.TEST': JSON.stringify(process.env.TEST),
+					'process.env.TEST_PLAN': JSON.stringify(process.env.TEST_PLAN),
 					'process.env.MODE': JSON.stringify(process.env.MODE),
 					'process.env.URL': JSON.stringify(process.env.NODE_ENV === 'testing' ? ('http://' + config.http.url + ':' + config.http.port.internal) : '')
 				}),

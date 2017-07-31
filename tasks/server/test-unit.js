@@ -3,36 +3,42 @@ const gulp = require('gulp')
 const path = require('path')
 const decache = require('decache')
 const beep = require('beepbeep')
+const fs = require('fs')
 const jasmine = require('gulp-jasmine')
 const sreporter = require('jasmine-spec-reporter')
 const reporters = require('jasmine-reporters')
 const istanbul = require('gulp-istanbul')
 const remap = require('remap-istanbul/lib/gulpRemapIstanbul')
+const gutil = require('gulp-util')
+const through = require('through2')
+const cucumberJunit = require('cucumber-junit')
+const childProcess = require('child_process')
 
 //Config
 const config = require('../../config.js')
 const build = require('./build.js')
 
 /*! Tasks 
-- server.test
-- server.test.execute
-- server.test.coverage
+- server.test.unit
+- server.test.unit.execute
+- server.test.unit.coverage
 */
 
 //! Server Test
-gulp.task('server.test', gulp.series(
+gulp.task('server.test.unit', gulp.series(
 	'env.test',
+	'env.test.unit',
 	'stop',
 	'app.clean',
 	'build.config',
 	'server.build',
 	'database.test',
-	'server.test.execute',
-	'server.test.coverage'
+	'server.test.unit.execute',
+	'server.test.unit.coverage'
 ))
 
 //Execute tests and collect coverage
-gulp.task('server.test.execute', function(done){
+gulp.task('server.test.unit.execute', function(done){
 	
 	//Clear node require cache
 	decache(path.resolve('builds/server/main.js'))
@@ -53,7 +59,7 @@ gulp.task('server.test.execute', function(done){
 				new sreporter.SpecReporter(),
 				new reporters.JUnitXmlReporter({
 					filePrefix: '',
-					savePath: 'logs/tests/server',
+					savePath: 'logs/tests/server/unit',
 					consolidateAll: false
 				})
 			]
@@ -68,7 +74,7 @@ gulp.task('server.test.execute', function(done){
 			reportOpts: {
 				json: {
 					file: 'coverage.json',
-					dir: 'logs/tests/server'
+					dir: 'logs/tests/server/unit'
 				}
 			}
 		}))
@@ -79,14 +85,14 @@ gulp.task('server.test.execute', function(done){
 })
 
 //Remap and log coverage reports 
-gulp.task('server.test.coverage', function(){
-	return gulp.src('logs/tests/server/coverage.json')
+gulp.task('server.test.unit.coverage', function(){
+	return gulp.src('logs/tests/server/unit/coverage.json')
 		.pipe(remap({
 			reports: {
 				'text-summary': null,
-				json: 'logs/tests/server/coverage.json',
-				html: 'logs/tests/server/html',
-				clover: 'logs/tests/server/coverage.clover'
+				json: 'logs/tests/server/unit/coverage.json',
+				html: 'logs/tests/server/unit/html',
+				clover: 'logs/tests/server/unit/coverage.clover'
 			}
 		}))
 })

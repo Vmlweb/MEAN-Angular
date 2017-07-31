@@ -19,20 +19,20 @@ import { platformBrowserDynamicTesting, BrowserDynamicTestingModule } from '@ang
 const config = require('config')
 
 //Find all test files
-const context = (require as any).context('./', true, /\.test\.(ts|js)/)
+const context = (require as any).context('../', true, /\.unit\.+(ts|js)/)
 
 //Check whether test plan is in used
-if (process.env.hasOwnProperty('TEST')){
+if (process.env.hasOwnProperty('TEST_PLAN')){
 	
 	//Create default test
-	describe('Client Testing', () => { it(process.env.TEST + ' tests', () => {}) })
+	describe('Client Testing', () => { it(process.env.TEST_PLAN + ' tests', () => {}) })
 	
 	//Loop through each test and plan matcher
 	testLoop: for (const test of context.keys()){
-		for (const matcher of config.tests.client[process.env.TEST]){
+		for (const matcher of config.tests.client[process.env.TEST_PLAN]){
 			
 			//Check for match and execute test
-			if (minimatch(test.slice(2), matcher + '.test.+(ts|js)')){
+			if (minimatch(test.slice(2), matcher + '.unit.+(ts|js)')){
 				context(test)
 				continue testLoop
 			}

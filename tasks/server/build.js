@@ -29,9 +29,17 @@ gulp.task('server.build', function(done){
 	fs.readdirSync('node_modules').filter(function(x) { return ['.bin'].indexOf(x) === -1 }).forEach(function(mod) { nodeModules[mod] = 'commonjs ' + mod })
 	nodeModules['config'] = 'commonjs ../config.js'
 	
+	//Decide entry file
+	let entry = './server/main.ts'
+	if (process.env.TEST === 'unit'){
+		entry = './server/tests/test-unit.ts'
+	}else if (process.env.TEST === 'feature'){
+		entry = './server/tests/test-feature.ts'
+	}
+	
 	//Create webpack options
 	module.exports.webpack = {
-		entry: process.env.NODE_ENV === 'testing' ? './server/test.ts' : './server/main.ts',
+		entry: entry,
 		target: 'node',
 		externals: nodeModules,
 		watch: true,
@@ -39,6 +47,7 @@ gulp.task('server.build', function(done){
 			new webpack.DefinePlugin({
 				'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
 				'process.env.TEST': JSON.stringify(process.env.TEST),
+				'process.env.TEST_PLAN': JSON.stringify(process.env.TEST_PLAN),
 				'process.env.MODE': JSON.stringify(process.env.MODE),
 				'process.env.URL': JSON.stringify('http://' + config.http.url + ':' + (process.env.NODE_ENV === 'testing' ? config.http.port.internal : config.http.port.external))
 			}),
@@ -64,7 +73,7 @@ gulp.task('server.build', function(done){
 		},
 		module: {
 			rules: [{
-				test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|txt)$/,
+				test: /\.(feature|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|txt)$/,
 				loader: 'file-loader?name=assets/[hash].[ext]'
 			},{
 				test: /\.ts$/,
