@@ -74,14 +74,15 @@ gulp.task('dev', gulp.series(
 ))
 
 //! Client
-gulp.task('client', gulp.series(
+gulp.task('client.unit', gulp.series(
 	'env.watch',
 	'env.test',
+	'env.test.unit',
 	'stop',
 	'build',
 	'database.test',
 	'mock.start',
-	'client.test.execute',
+	'client.test.unit.execute',
 	'client.lint',
 	'client.watch'
 ))
