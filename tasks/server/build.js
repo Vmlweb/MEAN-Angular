@@ -51,8 +51,8 @@ gulp.task('server.build', function(done){
 				'process.env.MODE': JSON.stringify(process.env.MODE),
 				'process.env.URL': JSON.stringify('http://' + config.http.url + ':' + (process.env.NODE_ENV === 'testing' ? config.http.port.internal : config.http.port.external))
 			}),
-			new CheckerPlugin(),
-			new webpack.optimize.ModuleConcatenationPlugin()
+			new CheckerPlugin()//,
+			//new webpack.optimize.ModuleConcatenationPlugin()
 		],
 		performance: {
 			hints: false
@@ -116,8 +116,8 @@ gulp.task('server.build', function(done){
 	//Add optimization plugins for distribution
 	if (process.env.NODE_ENV === 'production'){
 		module.exports.webpack.plugins.push(
-			new webpack.optimize.UglifyJsPlugin(),
-			new WebpackObfuscator()
+			new webpack.optimize.UglifyJsPlugin()//,
+			//new WebpackObfuscator()
 		)
 	}
 	

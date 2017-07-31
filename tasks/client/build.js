@@ -140,8 +140,8 @@ gulp.task('client.build.compile', function(done){
 					$: 'jquery',
 					jQuery: 'jquery'
 				}),
-				new CheckerPlugin(),
-				new webpack.optimize.ModuleConcatenationPlugin()
+				new CheckerPlugin()//,
+				//new webpack.optimize.ModuleConcatenationPlugin()
 			],
 			performance: {
 				hints: false
@@ -325,10 +325,10 @@ gulp.task('client.build.compile', function(done){
 				}),
 				new WebpackCSSMinify({
 					cssProcessorOptions: { discardComments: { removeAll: true } }
-				}),
+				})/*,
 				new WebpackObfuscator({}, 
 					[ 'vendor.js', 'polyfills.js', 'libs.js' ]
-				)
+				)*/
 			)
 		}
 		
