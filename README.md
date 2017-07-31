@@ -11,7 +11,8 @@ Quick and simple template to get up and running with a productive MEAN stack web
   * [Angular 4](https://angular.io) & [Typescript 2](https://www.typescriptlang.org)
   * [Gulp 4](http://gulpjs.com) & [Webpack 2](https://webpack.js.org)
   * [Semantic UI 2](http://semantic-ui.com)
-  * [Jasmine](https://jasmine.github.io), [Karma](http://karma-runner.github.io) & [Istanbul](http://gotwarlost.github.io/istanbul)
+  * [Cucumber](http://cucumber.io) & [Jasmine](https://jasmine.github.io)
+  * [Karma](http://karma-runner.github.io) & [Istanbul](http://gotwarlost.github.io/istanbul)
   * [Winston](https://github.com/winstonjs/winston) & [PM2](http://pm2.keymetrics.io)
   
 ## Features
@@ -19,6 +20,7 @@ Quick and simple template to get up and running with a productive MEAN stack web
   * Dev, Test & Dist Modes
   * Linting & Type Checking
   * Minification & Obfuscation
+  * Unit & Behaviour Driven Tests
   * Test Plans & Test Data Reset
   * Coverage & Test Reporting
   * Multi-Core & Load Balancing
@@ -67,9 +69,7 @@ Make sure to set a unique project name in `config.js` as it will stop docker con
 - `dist` - Production ready distribution builds.
 - `logs` - Access, info and error log files.
 - `logs/tests/server|client` - Coverage and testing reports.
-- `logs/tests/server|client/html` - Coverage html report.
 - `logs/tests/merged` - Merged coverage reports.
-- `logs/tests/merged/html` - Merged coverage html report.
 - `semantic` - User interface customisations.
 - `server` - Server side application source.
 - `server/api` - REST API endpoints.
@@ -82,7 +82,7 @@ Make sure to set a unique project name in `config.js` as it will stop docker con
 
 - `bower.json` - Browser based package dependancies.
 - `client/main.ts` - Entry point for development and distribution builds.
-- `client/test.ts` - Entry point for testing builds.
+- `client/tests/test-__.ts` - Entry point for testing builds.
 - `config.js` - Configurations for development, testing and distribution.
 - `database.js` - Start, stop and restart the production database container.
 - `docker-compose.yml` - Docker compose definition for the production server.
@@ -90,7 +90,7 @@ Make sure to set a unique project name in `config.js` as it will stop docker con
 - `mongodb.js` - Executed to configure database settings.
 - `package.json` - Server based package dependancies.
 - `server/main.ts` - Entry point for development and distribution builds.
-- `server/test.ts` - Entry point for testing builds.
+- `server/tests/test-__.ts` - Entry point for testing builds.
 - `server/tests/collections.ts` - List of database collections, models and test data.
 - `server.sh` - Start, stop and restart the production app container.
 - `tsconfig.json` - Typescript compilation options.
@@ -118,7 +118,7 @@ Use `control + c` to stop and exit the development server.
 Use the following to reset the development server database.
 
 ```bash
-gulp reset
+sudo gulp reset
 ```
 
 The development server stores its logs in the local directory.
@@ -164,21 +164,29 @@ For traditional `index.html` style libraries or assets, add a glob expression to
 
 ## Testing
 
-Test files should be included in the `server` and `client` directories and use either `.test.ts` or `.test.js` extensions.
+Test files should be included in the `server` and `client` directories and use the following extensions.
+
+- `.unit.ts|js` - Jasmine unit tests.
+- `.step.ts|js` - Cucumber step definiton.
+- `.feature` - Cucumber feature specification.
 
 You can execute tests either combined or individually for the server and client.
 
 ```bash
 gulp test
+
 gulp server.test
 gulp client.test
+
+gulp server.test.unit
+gulp server.test.feature
 ```
 
 You can also execute them in watch mode which will rebuild and test any source file changes live.
 
 ```bash
-gulp server
-gulp client
+gulp server.unit
+gulp server.feature
 ```
 
 Testing and coverage reports will be generated in the `logs/tests` directory.
@@ -190,9 +198,17 @@ You can create test plans in `config.js` which will only execute tests in a spec
 ```
 gulp server.v1.test
 gulp client.services.test
+
+gulp server.v1.test.unit
+gulp server.v1.test.feature
 ```
 
 These can also be executed in watch mode.
+
+```
+gulp server.v1.unit
+gulp server.v1.feature
+```
 
 ## Test Data
 
