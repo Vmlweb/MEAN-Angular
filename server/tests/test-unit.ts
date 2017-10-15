@@ -53,7 +53,7 @@ const context = require.context('../', true, /\.unit\.+(ts|js)/)
 if (process.env.hasOwnProperty('TEST_PLAN')){
 	
 	//Create default test
-	describe('Server Tests', () => { it(process.env.TEST_PLAN + ' tests', () => {}) })
+	describe('Server Tests', () => { it(process.env.TEST_PLAN + ' tests', (done) => { setTimeout(done, 1000)  }) })
 	
 	//Loop through each test and plan matcher
 	testLoop: for (const test of context.keys()){
@@ -69,7 +69,7 @@ if (process.env.hasOwnProperty('TEST_PLAN')){
 }else{
 	
 	//Create default test
-	describe('Server Tests', () => { it('all tests', () => {}) })
+	describe('Server Tests', () => { it('all tests', (done) => { setTimeout(done, 1000)  }) })
 	
 	//Execute all tests
 	context.keys().forEach(context)
