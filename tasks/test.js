@@ -5,6 +5,7 @@ const fs = require('fs')
 const async = require('async')
 const decache = require('decache')
 const istanbul = require('istanbul')
+const mongoose = require('mongoose')
 
 //Includes
 const config = require('../config.js')
@@ -59,6 +60,10 @@ gulp.task('mock.start', function(done){
 	
 	//Clear node require cache
 	decache(path.resolve('builds/server/main.js'))
+	
+	//Reset mongoose model cache
+	mongoose.models = []
+	mongoose.modelSchemas = []
 	
 	//Overide jasmine hooks and collect test functions
 	beforeAll = function(func){ beforeAllHooks.push(func) }
