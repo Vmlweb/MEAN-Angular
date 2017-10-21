@@ -6,8 +6,8 @@ import { defineSupportCode } from 'cucumber'
 
 //Includes
 const config = require('config')
-import { shutdown, startup, database, log } from 'app'
-import { CacheManager } from 'models'
+import { shutdown } from 'main'
+import { database, log } from 'app'
 import { collections } from './collection-list'
 
 //Load collections management
@@ -27,7 +27,6 @@ defineSupportCode(({ registerHandler }) => {
 			
 		//Loop through each collection and reset
 		Promise.all(collections.map(col => col.reset()))
-			.then(async () => { await CacheManager.instance.setup() })
 			.then(() => { done() })
 			.catch((err) => {
 				log.error('Error resetting test data for all collections before tests', err)
@@ -40,7 +39,6 @@ defineSupportCode(({ registerHandler }) => {
 		
 		//Loop through each modified collection and reset
 		Promise.all(collections.filter(col => col.modified).map(col => col.reset()))
-			.then(async () => { await CacheManager.instance.setup() })
 			.then(() => { done() })
 			.catch((err) => {
 				log.error('Error resetting test data for modified collections before test', err)
