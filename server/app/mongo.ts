@@ -17,20 +17,22 @@ if (config.database.repl.enabled){
 	params.push('replicaSet=' + config.database.repl.name)
 }
 
+//Specify connection info
+const uri = 'mongodb://' + auth + '@' + nodes.join(',') + '/' + config.database.auth.database + '?' + params.join('&')
+const options = { 
+	useMongoClient: true,
+	sslValidate: config.database.ssl.validate,
+	sslKey: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.key)) : undefined,
+	sslCert: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.cert)) : undefined,
+	sslCA: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.ca)) : undefined,
+	readPreference: config.database.repl.read || 'nearest',
+	keepAlive: true
+}
+
 //Create connection to database
 setTimeout(() => {
-	mongoose.connect('mongodb://' + auth + '@' + nodes.join(',') + '/' + config.database.auth.database + '?' + params.join('&'), { 
-		useMongoClient: true,
-		sslValidate: config.database.ssl.validate,
-		sslKey: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.key)) : undefined,
-		sslCert: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.cert)) : undefined,
-		sslCA: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.ca)) : undefined,
-		readPreference: config.database.repl.read || 'nearest',
-		keepAlive: 3000,
-		socketTimeoutMS: 30000,
-		connectTimeoutMS: 30000
-	} as any)
-}, process.env.NODE_ENV === 'production' ? 3000 : 100)
+	mongoose.connect(uri, options as any)
+}, process.env.NODE_ENV === 'production' ? 3000 : 500)
 
 //Listen for connection changes
 const connection = mongoose.connection
@@ -42,6 +44,10 @@ connection.once('open', () => {
 })
 connection.on('close', () => {
 	log.info('Database connection closed')
+})
+connection.on('disconnect', () => {
+	log.warn('Database disconnected, reconnecting...')
+	mongoose.connect(uri, options as any)
 })
 
 export { connection as database }
