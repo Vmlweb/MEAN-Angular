@@ -20,14 +20,16 @@ if (config.database.repl.enabled){
 //Create connection to database
 setTimeout(() => {
 	mongoose.connect('mongodb://' + auth + '@' + nodes.join(',') + '/' + config.database.auth.database + '?' + params.join('&'), { 
-		replset: {
-			sslValidate: config.database.ssl.validate,
-			sslKey: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.key)) : undefined,
-			sslCert: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.cert)) : undefined,
-			sslCA: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.ca)) : undefined,
-			readPreference: config.database.repl.read || 'nearest'
-		}
-	})
+		useMongoClient: true,
+		sslValidate: config.database.ssl.validate,
+		sslKey: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.key)) : undefined,
+		sslCert: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.cert)) : undefined,
+		sslCA: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.ca)) : undefined,
+		readPreference: config.database.repl.read || 'nearest',
+		keepAlive: 3000,
+		socketTimeoutMS: 30000,
+		connectTimeoutMS: 30000
+	} as any)
 }, process.env.NODE_ENV === 'production' ? 3000 : 100)
 
 //Listen for connection changes

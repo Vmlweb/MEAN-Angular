@@ -2,9 +2,13 @@
 import * as path from 'path'
 import * as async from 'async'
 import * as express from 'express'
+import * as mongoose from 'mongoose'
 
 //Includes
 import { log, app, http, https, connections, database } from 'app'
+
+//Use ES6 for mongoose promise
+(mongoose.Promise as any) = Promise
 
 //Frontend
 app.use(express.static('./client'))
