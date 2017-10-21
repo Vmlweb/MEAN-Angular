@@ -8,7 +8,7 @@ import * as mongoose from 'mongoose'
 import { log, app, http, https, connections, database } from 'app'
 
 //Use ES6 for mongoose promise
-(mongoose.Promise as any) = Promise
+(mongoose as any).Promise = Promise
 
 //Frontend
 app.use(express.static('./client'))
