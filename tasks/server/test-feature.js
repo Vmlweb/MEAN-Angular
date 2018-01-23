@@ -111,6 +111,7 @@ gulp.task('server.test.feature.execute', function(done){
 gulp.task('server.test.feature.coverage', function(){
 	return gulp.src('logs/tests/server/feature/coverage.json')
 		.pipe(remap({
+			allowEmpty: true,
 			reports: {
 				'text-summary': null,
 				json: 'logs/tests/server/feature/coverage.json',
