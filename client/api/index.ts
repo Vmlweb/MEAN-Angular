@@ -1,13 +1,13 @@
 //Modules
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { HttpModule } from '@angular/http'
+import { HttpClientModule } from '@angular/common/http'
 
 //Imports
 import { UserService } from './user.service'
 
 @NgModule({
-	imports: [ CommonModule, HttpModule ],
+	imports: [ CommonModule, HttpClientModule ],
 	providers: [ UserService ]
 })
 

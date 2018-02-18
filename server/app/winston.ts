@@ -67,6 +67,14 @@ const log = new winston.Logger({
 	exitOnError: false
 })
 
+//Create log function
+const logger: any = log
+logger.___error = log.error
+logger.error = (...args) => {
+	args = args.map(arg => { return arg instanceof Error && arg.hasOwnProperty('stack') ? arg.toString() + '\n' + arg.stack : arg })
+	logger.___error(...args)
+}
+
 //TELL THE WORLD IT'S READY!!!!!!!!!!!
 log.info('Logger initialized')
 

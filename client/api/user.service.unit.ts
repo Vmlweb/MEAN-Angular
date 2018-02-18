@@ -2,7 +2,7 @@
 import * as catcher from 'promise-catcher'
 import * as request from 'request-promise-native'
 import { TestBed, async, inject } from '@angular/core/testing'
-import { HttpModule } from '@angular/http'
+import { HttpClientModule } from '@angular/common/http'
 
 //Includes
 import { ErrorCode } from 'shared'
@@ -14,10 +14,8 @@ describe('User Service', () => {
 	
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [ HttpModule ],
-			providers: [
-				UserService
-			]
+			imports: [ HttpClientModule ],
+			providers: [ UserService ]
 		})
 	})
 	

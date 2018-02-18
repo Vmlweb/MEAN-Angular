@@ -31,7 +31,7 @@ router.use((err, req, res, next) => {
 		//Client error found
 		res.status(200).json(err)
 		
-	}else if (typeof err === 'number'){
+	}else if (typeof err === 'string'){
 	
 		//Client error found
 		res.status(200).json({

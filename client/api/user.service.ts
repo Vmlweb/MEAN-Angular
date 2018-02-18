@@ -1,6 +1,6 @@
 //Modules
 import { Injectable } from '@angular/core'
-import { Http, Headers } from '@angular/http'
+import { HttpClient } from '@angular/common/http'
 
 //Includes
 import { IUserAction, User } from './user.model'
@@ -8,39 +8,35 @@ import { IUserAction, User } from './user.model'
 @Injectable()
 export class UserService {
 	
-	constructor(private http: Http){}
+	constructor(private http: HttpClient){}
 	
 	async list(limit: number = -1){
 		
 		//Perform http request
-		const response = await this.http.get(process.env.URL + '/api/v1/users?' + (limit > 0 ? 'limit=' + limit : '')).toPromise()
+		const response: any = await this.http.get(process.env.URL + '/api/v1/users?' + (limit > 0 ? 'limit=' + limit : '')).toPromise()
 		
 		//Check json for error
-		const json = response.json()
-		if (json.error){
-			throw json.error
+		if (response.error){
+			throw response.error
 		}
 		
 		//Parse and return users
-		return json.users.map(user => new User(user))
+		return response.users.map(user => new User(user))
 	}
 	
 	async insert(options: IUserAction){
 		
 		//Perform http request
-		const response = await this.http.post(process.env.URL + '/api/v1/users', JSON.stringify(options), {
-			headers: new Headers({ 'Content-Type': 'application/json' })
-		}).toPromise()
+		const response: any = await this.http.post(process.env.URL + '/api/v1/users', options).toPromise()
 		
 		//Check json for error
-		const json = response.json()
-		if (json.error){
-			throw json.error
+		if (response.error){
+			throw response.error
 		}
 		
 		//Return user object
 		return new User({
-			userId: json.userId,
+			userId: response.userId,
 			username: options.username,
 			email: options.email
 		})
@@ -49,14 +45,11 @@ export class UserService {
 	async update(user: User, options: IUserAction){
 		
 		//Perform http request
-		const response = await this.http.put(process.env.URL + '/api/v1/users/' + user.userId, JSON.stringify(options), {
-			headers: new Headers({ 'Content-Type': 'application/json' })
-		}).toPromise()
+		const response: any = await this.http.put(process.env.URL + '/api/v1/users/' + user.userId, options).toPromise()
 		
 		//Check json for error
-		const json = response.json()
-		if (json.error){
-			throw json.error
+		if (response.error){
+			throw response.error
 		}
 		
 		//Return user object
@@ -70,12 +63,11 @@ export class UserService {
 	async remove(user: User){
 		
 		//Perform http request
-		const response = await this.http.delete(process.env.URL + '/api/v1/users/' + user.userId).toPromise()
+		const response: any = await this.http.delete(process.env.URL + '/api/v1/users/' + user.userId).toPromise()
 		
 		//Check json for error
-		const json = response.json()
-		if (json.error){
-			throw json.error
+		if (response.error){
+			throw response.error
 		}
 	}
 }

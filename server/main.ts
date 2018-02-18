@@ -46,7 +46,7 @@ const shutdown = (done?: () => void) => {
 		process.removeListener('SIGINT', shutdown)
 		
 		//Execute callback or close process
-		if (done){
+		if (done instanceof Function){
 			done()
 		}else{
 			process.exit(0)
@@ -55,7 +55,7 @@ const shutdown = (done?: () => void) => {
 }
 
 //Intercept kill and end signals
-process.once('SIGTERM', shutdown)
-process.once('SIGINT', shutdown)
+process.once('SIGTERM', shutdown as any)
+process.once('SIGINT', shutdown as any)
 
 export { shutdown }

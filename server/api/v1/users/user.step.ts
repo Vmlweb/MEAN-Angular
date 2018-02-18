@@ -1,12 +1,12 @@
 //Modules
-import { defineSupportCode } from 'cucumber'
+import { Given, Then, When } from 'cucumber'
 import { expect } from 'xolvio-jasmine-expect'
 
 //Includes
 import * as userList from './user.ep'
 import * as userInsert from './insert.ep'
 
-defineSupportCode(({ Given, Then, When }) => {
+//defineSupportCode(({ Given, Then, When }) => {
 	
 	//! Listing Users
 	
@@ -66,4 +66,4 @@ defineSupportCode(({ Given, Then, When }) => {
 	Then('return identifier', async () => {
 		expect(this.userId).toBeDefined()
 	})
-})
+//})

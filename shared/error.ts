@@ -1,21 +1,21 @@
 export enum ErrorCode{
 	
 	//Core
-	Unknown = 1000,
-	Server = 1001,
-	NotFound = 1002,
-	Connection = 1003,
+	Unknown = 'Unknown',
+	Server = 'Server',
+	NotFound = 'NotFound',
+	Connection = 'Connection',
 	
 	//Users
-	USR_Invalid = 2000,
-	USR_NotFound = 2001,
-	USR_Disabled = 2002,
+	USR_Invalid = 'USR_Invalid',
+	USR_NotFound = 'USR_NotFound',
+	USR_Disabled = 'USR_Disabled',
 	
-	USR_InvalidLogin = 2003,
-	USR_InvalidUsername = 2004,
-	USR_InvalidEmail = 2005,
-	USR_InvalidPassword = 2006,
-	USR_InvalidLimit = 2005
+	USR_InvalidLogin = 'USR_InvalidLogin',
+	USR_InvalidUsername = 'USR_InvalidUsername',
+	USR_InvalidEmail = 'USR_InvalidEmail',
+	USR_InvalidPassword = 'USR_InvalidPassword',
+	USR_InvalidLimit = 'USR_InvalidLimit'
 }
 
 export const ErrorMessage: string[] = []
