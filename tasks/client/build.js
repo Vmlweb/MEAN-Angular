@@ -3,6 +3,7 @@ const gulp = require('gulp')
 const path = require('path')
 const beep = require('beepbeep')
 const fs = require('fs')
+const request = require('request')
 const webpack = require('webpack')
 const WebpackObfuscator = require('webpack-obfuscator')
 const WebpackHTML = require('html-webpack-plugin')
@@ -12,6 +13,7 @@ const WebpackCSSMinify = require('optimize-css-assets-webpack-plugin')
 const PathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin
 const CompressPlugin = require('compression-webpack-plugin')
+const BrowserSync = require('browser-sync')
 
 //Config
 const config = require('../../config.js')
@@ -49,6 +51,32 @@ gulp.task('client.build.compile', function(done){
 	
 	//Check whether libs are built
 	const libsExist = fs.existsSync('./builds/client/libs.json') && fs.existsSync('./builds/client/vendor.json')
+	
+	//Setup browser sync
+	let bs
+	if (process.env.MODE === 'watch'){
+		const check = setInterval(() => {
+			
+			//Check whether test server is live
+			request('http://' + config.http.url + ':' + config.http.port.internal, (err, response, body) => {
+				if (!err){
+					
+					//Setup browsersync
+					bs = BrowserSync.create()
+					bs.init({
+						proxy: {
+							target: config.http.url + ':' + config.http.port.external,
+							ws: true
+						}
+					})
+					
+					//Stop timer
+					clearInterval(check)
+				}
+			})
+			
+		}, 1000)
+	}
 	
 	//Build webpack with or without libs
 	const build = function(libs){
@@ -333,6 +361,11 @@ gulp.task('client.build.compile', function(done){
 		
 		//Prepare callback for compilation completion
 		const callback = function(err, stats){
+			
+			//Reload browser
+			if (bs){
+				bs.reload()
+			}
 			
 			//Log stats from build
 			console.log(stats.toString({

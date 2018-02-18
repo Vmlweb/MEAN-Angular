@@ -25,6 +25,7 @@ Quick and simple template to get up and running with a productive MEAN stack web
   * Coverage & Test Reporting
   * Multi-Core & Load Balancing
   * Compatible with CI Tools
+  * Automatic Browser Reload
 
 ## Prequisitions
 
