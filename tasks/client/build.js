@@ -64,6 +64,7 @@ gulp.task('client.build.compile', function(done){
 					//Setup browsersync
 					bs = BrowserSync.create()
 					bs.init({
+						port: 58003,
 						proxy: {
 							target: config.http.url + ':' + config.http.port.external,
 							ws: true
