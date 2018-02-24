@@ -88,6 +88,8 @@ gulp.task('server.build', function(done){
 					baseUrl: './server',
 					cacheDirectory: './builds/.server',
 					useCache: true,
+			  		module: "commonjs",
+			   	moduleResolution: "node",
 					paths: {
 						config: [ path.resolve('./config.js') ],
 						shared: [ path.resolve('./shared') ],

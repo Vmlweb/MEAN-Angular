@@ -246,6 +246,7 @@ gulp.task('client.build.compile', function(done){
 								baseUrl: './client',
 								cacheDirectory: './builds/.client',
 								useCache: true,
+						  		module: "commonjs",
 								paths: {
 									config: [ path.resolve('./config.js') ],
 									shared: [ path.resolve('./shared') ],

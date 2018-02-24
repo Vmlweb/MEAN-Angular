@@ -19,12 +19,10 @@ app.get(/^(?!\/api).*/, (req, res) => {
 log.info('Mounted static frontend')
 
 //Backend
-const reqEnsure: any = require
-reqEnsure.ensure([], (require) => {
-	app.use('/api', (require('api') as any).router)
+import('server/api').then(api => {
+	app.use('/api', api.router)
+	log.info('Mounted REST API backend')
 })
-
-log.info('Mounted REST API backend')
 
 //Shutdown services
 const shutdown = (done?: () => void) => {
