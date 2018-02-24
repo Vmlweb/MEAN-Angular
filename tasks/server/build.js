@@ -18,17 +18,17 @@ module.exports = { setup: false, valid: false, webpack: undefined }
 
 //Setup webpack for compilation
 gulp.task('server.build', function(done){
-	
+
 	//Default to development
 	if (!process.env.NODE_ENV){
 		process.env.NODE_ENV = 'development'
 	}
-	
+
 	//Generate list of file paths to exclude from bundle
 	const nodeModules = {}
 	fs.readdirSync('node_modules').filter(function(x) { return ['.bin'].indexOf(x) === -1 }).forEach(function(mod) { nodeModules[mod] = 'commonjs ' + mod })
 	nodeModules['config'] = 'commonjs ../config.js'
-	
+
 	//Decide entry file
 	let entry = './server/main.ts'
 	if (process.env.TEST === 'unit'){
@@ -36,7 +36,7 @@ gulp.task('server.build', function(done){
 	}else if (process.env.TEST === 'feature'){
 		entry = './server/tests/test-feature.ts'
 	}
-	
+
 	//Create webpack options
 	module.exports.webpack = {
 		entry: entry,
@@ -65,7 +65,9 @@ gulp.task('server.build', function(done){
 			modules: [ './server', './node_modules' ],
 			extensions: [ '.js', '.ts', '.json' ],
 			alias: {
-				shared: path.resolve('./shared')
+				config: path.resolve('./config.js'),
+				shared: path.resolve('./shared'),
+				server: path.resolve('./server')
 			},
 			plugins: [
 				new PathsPlugin()
@@ -88,13 +90,14 @@ gulp.task('server.build', function(done){
 					useCache: true,
 					paths: {
 						config: [ path.resolve('./config.js') ],
-						shared: [ path.resolve('./shared') ]
+						shared: [ path.resolve('./shared') ],
+						'server/*': [ path.resolve('./server/*') ]
 					}
 				}
 			}]
 		}
 	}
-	
+
 	//Add inline source maps for development or testing
 	if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing'){
 		module.exports.webpack.plugins.push(
@@ -103,7 +106,7 @@ gulp.task('server.build', function(done){
 			})
 		)
 	}
-	
+
 	//Add coverage hooks for testing
 	if (process.env.NODE_ENV === 'testing'){
 		module.exports.webpack.module.rules.splice(0, 0, {
@@ -112,7 +115,7 @@ gulp.task('server.build', function(done){
 			loader: 'istanbul-instrumenter-loader'
 		})
 	}
-	
+
 	//Add optimization plugins for distribution
 	if (process.env.NODE_ENV === 'production'){
 		module.exports.webpack.plugins.push(
@@ -120,16 +123,16 @@ gulp.task('server.build', function(done){
 			//new WebpackObfuscator()
 		)
 	}
-	
+
 	//Prepare callback for compilation completion
 	const callback = function(err, stats){
-		
+
 		//Log stats from build
 		console.log(stats.toString({
 			chunkModules: false,
 			assets: false
 		}))
-		
+
 		//Beep for success or errors
 		if (module.exports.setup && process.env.NODE_ENV === 'development' && process.env.MODE === 'watch'){
 			if (stats.hasErrors()){
@@ -138,14 +141,14 @@ gulp.task('server.build', function(done){
 				beep()
 			}
 		}
-		
+
 		//Set build status variables
-		module.exports.setup = true		
+		module.exports.setup = true
 		module.exports.valid = !stats.hasErrors()
-		
+
 		done(err)
 	}
-	
+
 	//Compile webpack and watch if developing
 	if (process.env.MODE === 'watch'){
 		webpack(module.exports.webpack).watch({

@@ -4,7 +4,7 @@ import { Component } from '@angular/core'
 
 //Includes
 import { ErrorMessage } from 'shared'
-import { IUserAction, User, UserService } from 'api'
+import { IUserAction, User, UserService } from 'client/api'
 
 @Component({
 	styles: [require('../app.style.css')],
@@ -12,27 +12,27 @@ import { IUserAction, User, UserService } from 'api'
 })
 
 export class HomeComponent {
-	
+
 	limit = ''
 	removing = -1
 	updating = -1
 	creating = false
-	
+
 	users: User[] = []
-	
+
 	model: IUserAction = {
 		username: '',
 		email: ''
 	}
-	
+
 	constructor(private userService: UserService){}
-	
+
 	ngAfterViewInit(){
 		this.load()
 	}
-	
+
 	async load(){
-		
+
 		//Load users
 		try{
 			this.users = await this.userService.list(+this.limit || undefined)
@@ -40,10 +40,10 @@ export class HomeComponent {
 			alert(ErrorMessage[err])
 		}
 	}
-	
+
 	async insert(){
 		this.creating = true
-		
+
 		//Insert user and wait
 		try{
 			await wait(500)
@@ -51,10 +51,10 @@ export class HomeComponent {
 		}catch(err){
 			alert(ErrorMessage[err])
 		}
-		
+
 		//Reload list of users
 		await this.load()
-		
+
 		//Reset state
 		this.creating = false
 		this.model = {
@@ -62,28 +62,28 @@ export class HomeComponent {
 			email: ''
 		}
 	}
-	
+
 	async update(user: User, username: string){
-		
+
 		//Update user in background
 		try{
 			await this.userService.update(user, { username, email: user.email })
 		}catch(err){
 			alert(ErrorMessage[err])
 		}
-		
+
 		//Reset state
 		this.updating = -1
 	}
-	
+
 	async remove(user: User){
-		
+
 		//Ask user to confirm
 		if (!confirm('Are you sure you would like to remove ' + user.username)){
 			this.removing = -1
 			return
 		}
-		
+
 		//Remove user and wait
 		try{
 			await wait(500)
@@ -91,7 +91,7 @@ export class HomeComponent {
 		}catch(err){
 			alert(ErrorMessage[err])
 		}
-		
+
 		//Reload list of users
 		await this.load()
 		this.removing = -1

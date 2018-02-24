@@ -6,8 +6,8 @@ import { defineSupportCode } from 'cucumber'
 
 //Includes
 const config = require('config')
-import { shutdown } from 'main'
-import { database, log } from 'app'
+import { shutdown } from 'server/main'
+import { database, log } from 'server/app'
 import { collections } from './collection-list'
 
 //Load collections management
@@ -21,10 +21,10 @@ defineSupportCode(({ registerHandler }) => {
 		database.once('open', done)
 		database.once('error', done)
 	})
-	
+
 	//Populate all collections with default test data
 	registerHandler('BeforeFeatures', (feature, done) => {
-			
+
 		//Loop through each collection and reset
 		Promise.all(collections.map(col => col.reset()))
 			.then(() => { done() })
@@ -33,10 +33,10 @@ defineSupportCode(({ registerHandler }) => {
 				done()
 			})
 	})
-	
+
 	//Reset all collections that have been changed with default data
 	registerHandler('BeforeScenario', (scen, done) => {
-		
+
 		//Loop through each modified collection and reset
 		Promise.all(collections.filter(col => col.modified).map(col => col.reset()))
 			.then(() => { done() })
@@ -45,7 +45,7 @@ defineSupportCode(({ registerHandler }) => {
 				done()
 			})
 	})
-	
+
 	//Shutdown when tests finished
 	registerHandler('AfterFeatures', (features, done) => {
 		shutdown(done)

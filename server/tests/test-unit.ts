@@ -4,8 +4,8 @@ import * as minimatch from 'minimatch'
 
 //Includes
 const config = require('config')
-import { shutdown } from 'main'
-import { database, log } from 'app'
+import { shutdown } from 'server/main'
+import { database, log } from 'server/app'
 import { collections } from './collection-list'
 
 //Load collections management
@@ -19,7 +19,7 @@ beforeAll(done => {
 
 //Populate all collections with default test data
 beforeAll(done => {
-		
+
 	//Loop through each collection and reset
 	Promise.all(collections.map(col => col.reset()))
 		.then(() => { done() })
@@ -31,7 +31,7 @@ beforeAll(done => {
 
 //Reset all collections that have been changed with default data
 beforeEach(done => {
-	
+
 	//Loop through each modified collection and reset
 	Promise.all(collections.filter(col => col.modified).map(col => col.reset()))
 		.then(() => { done() })
@@ -51,14 +51,14 @@ const context = require.context('../', true, /\.unit\.+(ts|js)/)
 
 //Check whether test plan is in used
 if (process.env.hasOwnProperty('TEST_PLAN')){
-	
+
 	//Create default test
 	describe('Server Tests', () => { it(process.env.TEST_PLAN + ' tests', (done) => { setTimeout(done, 1000)  }) })
-	
+
 	//Loop through each test and plan matcher
 	testLoop: for (const test of context.keys()){
 		for (const matcher of config.tests.server[process.env.TEST_PLAN]){
-			
+
 			//Check for match and execute test
 			if (minimatch(test.slice(2), matcher + '.unit.+(ts|js)')){
 				context(test)
@@ -67,10 +67,10 @@ if (process.env.hasOwnProperty('TEST_PLAN')){
 		}
 	}
 }else{
-	
+
 	//Create default test
 	describe('Server Tests', () => { it('all tests', (done) => { setTimeout(done, 1000)  }) })
-	
+
 	//Execute all tests
 	context.keys().forEach(context)
 }

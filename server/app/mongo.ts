@@ -5,7 +5,7 @@ import * as fs from 'fs'
 
 //Includes
 const config = require('config')
-import { log } from 'app'
+import { log } from 'server/app'
 
 //Prepare connection string
 const auth = config.database.auth.username + ':' + config.database.auth.password
@@ -19,7 +19,7 @@ if (config.database.repl.enabled){
 
 //Specify connection info
 const uri = 'mongodb://' + auth + '@' + nodes.join(',') + '/' + config.database.auth.database + '?' + params.join('&')
-const options = { 
+const options = {
 	sslValidate: config.database.ssl.validate,
 	sslKey: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.key)) : undefined,
 	sslCert: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.cert)) : undefined,

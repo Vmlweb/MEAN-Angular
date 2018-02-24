@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 
 //Includes
-import { ApiModule } from 'api'
+import { ApiModule } from 'client/api'
 import { routing } from './router'
 import { AppComponent } from './app.component'
 

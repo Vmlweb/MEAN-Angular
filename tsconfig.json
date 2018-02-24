@@ -1,16 +1,19 @@
 {
   "compilerOptions": {
     "target": "es5",
-	"module": "commonjs",
+	 "module": "commonjs",
     "moduleResolution": "node",
     "allowJs": true,
     "strictNullChecks": false,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "lib": [ "dom", "es6" ],
+    "baseUrl": "./"
   },
   "exclude": [
     "node_modules",
     "bower_components"
   ],
-  "files": [ "node_modules/typescript/lib/typescriptServices.d.ts" ]
+  "files": [ "node_modules/typescript/lib/typescriptServices.d.ts" ],
+  "includes": [ "server/**/*.ts", "client/**/*.ts" ]
 }

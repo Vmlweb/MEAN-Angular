@@ -43,24 +43,24 @@ gulp.task('client.build.libs', function(done){
 
 //Setup webpack for compilation
 gulp.task('client.build.compile', function(done){
-	
+
 	//Default to development
 	if (!process.env.NODE_ENV){
 		process.env.NODE_ENV = 'development'
 	}
-	
+
 	//Check whether libs are built
 	const libsExist = fs.existsSync('./builds/client/libs.json') && fs.existsSync('./builds/client/vendor.json')
-	
+
 	//Setup browser sync
 	let bs
 	if (process.env.MODE === 'watch'){
 		const check = setInterval(() => {
-			
+
 			//Check whether test server is live
 			request('http://' + config.http.url + ':' + config.http.port.internal, (err, response, body) => {
 				if (!err){
-					
+
 					//Setup browsersync
 					bs = BrowserSync.create()
 					bs.init({
@@ -70,18 +70,18 @@ gulp.task('client.build.compile', function(done){
 							ws: true
 						}
 					})
-					
+
 					//Stop timer
 					clearInterval(check)
 				}
 			})
-			
+
 		}, 1000)
 	}
-	
+
 	//Build webpack with or without libs
 	const build = function(libs){
-		
+
 		//Define entry points for each enviroment
 		let entry
 		if (process.env.NODE_ENV === 'testing'){
@@ -114,7 +114,7 @@ gulp.task('client.build.compile', function(done){
 				main: './client/main.ts'
 			}
 		}
-		
+
 		//Prepare variables for dll add-ons
 		let jsDlls = []
 		let cssDlls = []
@@ -124,14 +124,14 @@ gulp.task('client.build.compile', function(done){
 			}
 			jsDlls.push('libs.js', 'vendor.js')
 		}
-		
+
 		//Create options
 		const setup = {
 			entry: entry,
 			target: 'web',
 			plugins: [
-			    new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/, './client'),
-			    new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)@angular/, './client'),
+				new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/, './client'),
+				new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)@angular/, './client'),
 				new webpack.DefinePlugin({
 					'process.env.ENV': JSON.stringify(process.env.NODE_ENV),
 					'process.env.TEST': JSON.stringify(process.env.TEST),
@@ -186,11 +186,12 @@ gulp.task('client.build.compile', function(done){
 			},
 			resolve: {
 				unsafeCache: true,
-				modules: [ './client', './node_modules', './bower_components' ],
+				modules: [ './node_modules', './bower_components' ],
 				extensions: [ '.js', '.ts', '.json', '.png', '.jpg', '.jpeg', '.gif' ],
 				alias: {
 					config: path.resolve('./config.js'),
-					shared: path.resolve('./shared')
+					shared: path.resolve('./shared'),
+					client: path.resolve('./client')
 				},
 				plugins: [
 					new PathsPlugin()
@@ -200,11 +201,11 @@ gulp.task('client.build.compile', function(done){
 				rules: [{
 					test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
 					loader: 'url-loader?limit=10240&name=assets/[hash].[ext]'
-				},{ 
-					test: /\.css$/, 
+				},{
+					test: /\.css$/,
 					use: WebpackExtractText.extract('css-loader'),
 					exclude: /(\.async\.css$|client)/
-				},{ 
+				},{
 					test: /\.html$/,
 					loader: 'html-loader',
 					exclude: /\.async\.html$/
@@ -213,7 +214,7 @@ gulp.task('client.build.compile', function(done){
 					loaders: [ 'to-string-loader', 'css-loader' ],
 					exclude: /(\.async\.css$|node_modules)/
 				},{
-					test: /\.async\.(html|css)$/, 
+					test: /\.async\.(html|css)$/,
 					loaders: [ 'file-loader?name=assets/[hash].[ext]', 'extract' ]
 				},{
 					test: /\.less$/,
@@ -247,7 +248,8 @@ gulp.task('client.build.compile', function(done){
 								useCache: true,
 								paths: {
 									config: [ path.resolve('./config.js') ],
-									shared: [ path.resolve('./shared') ]
+									shared: [ path.resolve('./shared') ],
+									'client/*': [ path.resolve('./client/*') ]
 								}
 							}
 						},
@@ -257,29 +259,29 @@ gulp.task('client.build.compile', function(done){
 				}]
 			}
 		}
-		
+
 		//Add dll plugins for development
 		if (process.env.NODE_ENV === 'development'){
 			if (libs){
-				
+
 				//Add dll creation plugins
 				setup.output.library = '[name]'
 				setup.plugins.push(
 					new webpack.DllPlugin({
-						name: '[name]', 
+						name: '[name]',
 						path: './builds/client/[name].json'
 					})
 				)
 			}else{
-				
+
 				//Load dll lib manifest
 				const dllLibs = require('../../builds/client/libs.json')
-				
+
 				//Remove semantic if in theme mode
 				if (process.env.THEME){
 					delete dllLibs.content['./node_modules/semantic-ui-less/semantic.less']
 				}
-				
+
 				//Add dll connection plugins
 				setup.plugins.push(
 					new webpack.DllReferencePlugin({
@@ -293,7 +295,7 @@ gulp.task('client.build.compile', function(done){
 				)
 			}
 		}
-		
+
 		//Add css collectors
 		if (process.env.NODE_ENV === 'development' && !process.env.THEME && !libs){}else{
 			setup.plugins.push(new WebpackExtractText({
@@ -301,7 +303,7 @@ gulp.task('client.build.compile', function(done){
 				allChunks: true
 			}))
 		}
-				
+
 		//Add source map plugins for development
 		if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing'){
 			setup.plugins.push(
@@ -311,7 +313,7 @@ gulp.task('client.build.compile', function(done){
 				})
 			)
 		}
-		
+
 		//Add coverage hook plugins for testing
 		if (process.env.NODE_ENV === 'testing'){
 			setup.module.rules.splice(0, 0, {
@@ -320,7 +322,7 @@ gulp.task('client.build.compile', function(done){
 				loader: 'istanbul-instrumenter-loader'
 			})
 		}
-		
+
 		//Add partial optimization plugins for development
 		if ((process.env.NODE_ENV === 'development' && !libs) || process.env.NODE_ENV === 'production'){
 			setup.plugins.push(
@@ -329,7 +331,7 @@ gulp.task('client.build.compile', function(done){
 				})
 			)
 		}
-		
+
 		//Add full optimization plugins for distribution
 		if (process.env.NODE_ENV === 'production'){
 			setup.plugins.push(
@@ -354,26 +356,26 @@ gulp.task('client.build.compile', function(done){
 				new WebpackCSSMinify({
 					cssProcessorOptions: { discardComments: { removeAll: true } }
 				})/*,
-				new WebpackObfuscator({}, 
+				new WebpackObfuscator({},
 					[ 'vendor.js', 'polyfills.js', 'libs.js' ]
 				)*/
 			)
 		}
-		
+
 		//Prepare callback for compilation completion
 		const callback = function(err, stats){
-			
+
 			//Reload browser
 			if (bs){
 				bs.reload()
 			}
-			
+
 			//Log stats from build
 			console.log(stats.toString({
 				chunkModules: false,
 				assets: false
 			}))
-			
+
 			//Beep for success or errors
 			if (module.exports.setup && process.env.NODE_ENV === 'development' && process.env.MODE === 'watch' && !libs){
 				if (stats.hasErrors()){
@@ -382,20 +384,20 @@ gulp.task('client.build.compile', function(done){
 					beep()
 				}
 			}
-			
+
 			//Direct build for client when libs complete
 			if (libs){
-				build(false)		
+				build(false)
 			}else{
-			
+
 				//Set build status variables
 				module.exports.webpack = setup
 				module.exports.setup = true
-				
+
 				done(err)
 			}
 		}
-		
+
 		//Compile webpack and watch if developing
 		if (process.env.MODE === 'watch' && !libs){
 			webpack(setup).watch({
@@ -405,7 +407,7 @@ gulp.task('client.build.compile', function(done){
 			webpack(setup).run(callback)
 		}
 	}
-	
+
 	//Direct build for libs or client
 	if (process.env.NODE_ENV === 'development' && !libsExist){
 		build(true)

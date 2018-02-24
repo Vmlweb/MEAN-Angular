@@ -5,7 +5,7 @@ import * as express from 'express'
 import * as mongoose from 'mongoose'
 
 //Includes
-import { log, app, http, https, connections, database } from 'app'
+import { log, app, http, https, connections, database } from 'server/app'
 
 //Use ES6 for mongoose promise
 (mongoose as any).Promise = Promise
@@ -19,7 +19,8 @@ app.get(/^(?!\/api).*/, (req, res) => {
 log.info('Mounted static frontend')
 
 //Backend
-require.ensure([], (require) => {
+const reqEnsure: any = require
+reqEnsure.ensure([], (require) => {
 	app.use('/api', (require('api') as any).router)
 })
 
@@ -28,23 +29,23 @@ log.info('Mounted REST API backend')
 //Shutdown services
 const shutdown = (done?: () => void) => {
 	log.info('Graceful shutdown...')
-	
+
 	//Destroy client connection sockets
 	Object.keys(connections).forEach((key) => {
 		connections[key].destroy()
 	})
-	
+
 	//Close web and database connections
 	async.each([ http, https, database ], (server, callback) => {
 		server.close(() => {
 			callback()
 		})
 	}, () => {
-		
+
 		//Remove kill and end listeners
 		process.removeListener('SIGTERM', shutdown)
 		process.removeListener('SIGINT', shutdown)
-		
+
 		//Execute callback or close process
 		if (done instanceof Function){
 			done()

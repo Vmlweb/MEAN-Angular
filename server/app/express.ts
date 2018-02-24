@@ -14,7 +14,7 @@ import * as express from 'express'
 
 //Includes
 const config = require('config')
-import { log } from 'app'
+import { log } from 'server/app'
 
 //Attach request logger
 const app = express()
@@ -41,11 +41,11 @@ const connections: { [key: string]: net.Socket } = {}
 
 //Check whether http hotname was given
 if (config.http.hostname.length > 0){
-	
+
 	//Create server and listen
 	httpServer = http.createServer(app).listen(config.http.port.internal, config.http.hostname, () => {
 		log.info('HTTP listening at ' + config.http.hostname + ':' + config.http.port.internal)
-		
+
 		//Keep connections list up to date
 		httpServer.on('connection', (con) => {
 			const key = crypto.randomBytes(32).toString('hex')
@@ -54,7 +54,7 @@ if (config.http.hostname.length > 0){
 				delete connections[key]
 			})
 		})
-		
+
 		//Log connection closed
 		httpServer.on('close', () => {
 			log.info('HTTP server closed')
@@ -64,14 +64,14 @@ if (config.http.hostname.length > 0){
 
 //Check whether https hotname was given
 if (config.https.hostname.length > 0 && config.https.ssl.key.length > 0 && config.https.ssl.cert.length > 0){
-	
+
 	//Create server and listen
 	httpsServer = https.createServer({
 		key: fs.readFileSync(path.join('./certs', config.https.ssl.key)) || '',
 		cert: fs.readFileSync(path.join('./certs', config.https.ssl.cert)) || ''
 	}, app).listen(config.https.port.internal, config.https.hostname, () => {
 		log.info('HTTPS listening at ' + config.https.hostname + ':' + config.https.port.internal)
-		
+
 		//Keep connections list up to date
 		httpsServer.on('connection', (con) => {
 			const key = crypto.randomBytes(32).toString('hex')
@@ -80,7 +80,7 @@ if (config.https.hostname.length > 0 && config.https.ssl.key.length > 0 && confi
 				delete connections[key]
 			})
 		})
-		
+
 		//Log connection closed
 		httpsServer.on('close', () => {
 			log.info('HTTPS server closed')

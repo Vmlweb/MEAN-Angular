@@ -100,6 +100,7 @@
     "undertaker-forward-reference": "^1.0.2",
     "url-loader": "^0.6.2",
     "webpack": "^3.8.1",
+    "webpack-env": "^0.8.0",
     "webpack-obfuscator": "^0.14.2",
     "xolvio-jasmine-expect": "^1.1.0",
     "zone.js": "^0.8.18"

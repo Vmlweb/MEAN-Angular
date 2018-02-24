@@ -3,15 +3,15 @@ import * as async from 'async'
 import { Model } from 'mongoose'
 
 //Includes
-import { log, app } from 'app'
+import { log, app } from 'server/app'
 
 //Load list of collections to process
 import { collections } from './collection-list'
-	
+
 //Add delete endpoint to express app
 if (global['afterEachHooks'] && global['beforeEachHooks']){
 	app.delete('/api', (req, res) => {
-		
+
 		//Execute jasmine after and before hooks
 		async.eachSeries(global['afterEachHooks'].concat(global['beforeEachHooks']), (item: any, done) => {
 			item(() => {
@@ -24,7 +24,7 @@ if (global['afterEachHooks'] && global['beforeEachHooks']){
 			res.json({})
 		})
 	})
-	
+
 	log.info('Created reset test data endpoint')
 }
 
