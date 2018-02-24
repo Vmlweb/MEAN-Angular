@@ -58,7 +58,7 @@ gulp.task('client.build.compile', function(done){
 		const check = setInterval(() => {
 
 			//Check whether test server is live
-			request('http://' + config.http.url + ':' + config.http.port.internal, (err, response, body) => {
+			request('http://' + config.http.url + ':' + config.http.port.external, (err, response, body) => {
 				if (!err){
 
 					//Setup browsersync
