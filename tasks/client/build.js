@@ -41,6 +41,9 @@ gulp.task('client.build.libs', function(done){
 	}
 })
 
+//Timer
+let checkTimer
+
 //Setup webpack for compilation
 gulp.task('client.build.compile', function(done){
 
@@ -55,11 +58,14 @@ gulp.task('client.build.compile', function(done){
 	//Setup browser sync
 	let bs
 	if (process.env.MODE === 'watch'){
-		const check = setInterval(() => {
+		checkTimer = setInterval(() => {
 
 			//Check whether test server is live
 			request('http://' + config.http.url + ':' + config.http.port.external, (err, response, body) => {
 				if (!err){
+
+					//Stop timer
+					clearInterval(checkTimer)
 
 					//Setup browsersync
 					bs = BrowserSync.create()
@@ -70,9 +76,6 @@ gulp.task('client.build.compile', function(done){
 							ws: true
 						}
 					})
-
-					//Stop timer
-					clearInterval(check)
 				}
 			})
 
