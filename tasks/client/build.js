@@ -239,7 +239,7 @@ gulp.task('client.build.compile', function(done){
 					})
 				},{
 					test: /\.ts$/,
-					exclude: 'node_modules',
+					exclude: /node_modules/,
 					use: typescriptLoaders
 				}]
 			}
@@ -306,7 +306,7 @@ gulp.task('client.build.compile', function(done){
 		if (process.env.NODE_ENV === 'testing'){
 			setup.module.rules.splice(0, 0, {
 				test: /^((?!unit|step).)*\.ts$/,
-				exclude: 'node_modules',
+				exclude: /node_module/,
 				loader: 'istanbul-instrumenter-loader'
 			})
 		}
