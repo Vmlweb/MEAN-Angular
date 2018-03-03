@@ -15,7 +15,6 @@ const docker = require('dockerode')(config.docker)
 - certs.chmod
 
 - install
-- install.bower
 - install.nodejs
 - install.mongodb
 */
@@ -35,7 +34,7 @@ const cmd = 'apt-get update; apt-get upgrade -y; apt-get install -y openssl; ope
 
 //Generate ssl certificate files
 gulp.task('certs.generate', function(done){
-	
+
 	//Prepare platform specific bindings
 	const binds = []
 	if (process.platform === 'win32'){
@@ -43,7 +42,7 @@ gulp.task('certs.generate', function(done){
 	}else{
 		binds.push(process.cwd() + '/certs' + ':/data/certs')
 	}
-	
+
 	//Execute container
 	docker.run('mongo', [ 'bash', '-c', cmd ], process.stdout, {
 		Volumes: {
@@ -79,22 +78,18 @@ gulp.task('certs.chmod', function(){
 
 //! Install
 gulp.task('install', gulp.series(
-	'install.bower',
 	'install.nodejs',
 	'install.mongodb'
 ))
-
-//Install bower dependancies
-gulp.task('install.bower', shell.task('bower install --config.analytics=false --allow-root', { verbose: true }))
 
 //Install mongodb docker image
 gulp.task('install.mongodb', process.platform === 'win32' ? shell.task('docker pull mongo:latest') : function(done){
 	docker.pull('mongo:latest', function (err, stream) {
 		if (err){ throw err }
-		
+
 		//Attach to pull progress
 		stream.pipe(process.stdout)
-		
+
 		//Track pull progress
 		docker.modem.followProgress(stream, function (err, output){
 			if (err){ throw err }
@@ -107,10 +102,10 @@ gulp.task('install.mongodb', process.platform === 'win32' ? shell.task('docker p
 gulp.task('install.nodejs', process.platform === 'win32' ? shell.task('docker pull node:alpine') : function(done){
 	docker.pull('node:alpine', function (err, stream) {
 		if (err){ throw err }
-		
+
 		//Attach to pull progress
 		stream.pipe(process.stdout)
-		
+
 		//Track pull progress
 		docker.modem.followProgress(stream, function (err, output){
 			if (err){ throw err }

@@ -1,7 +1,7 @@
 {
   "name": "mean",
   "version": "4.0.0",
-  "description": "MEAN Stack Template for AngularJS 2 and Docker",
+  "description": "MEAN Stack Template for Angular 2 and Docker",
   "main": "server/main.ts",
   "author": "Victor Leach <mail@vmlweb.co.uk>",
   "license": "MIT",

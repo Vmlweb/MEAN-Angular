@@ -37,7 +37,7 @@ First make sure you have the following dependancies installed on your machine.
 Then install the Gulp 4 and Bower command line tools if you have not already.
 
 ```bash
-npm install -g gulpjs/gulp.git#4.0 bower
+npm install -g gulpjs/gulp.git#4.0
 ```
 
 Next clone the repository from GitHub.
@@ -81,7 +81,6 @@ Make sure to set a unique project name in `config.js` as it will stop docker con
 
 ## File Structure
 
-- `bower.json` - Browser based package dependancies.
 - `client/main.ts` - Entry point for development and distribution builds.
 - `client/tests/test-__.ts` - Entry point for testing builds.
 - `config.js` - Configurations for development, testing and distribution.
@@ -89,7 +88,7 @@ Make sure to set a unique project name in `config.js` as it will stop docker con
 - `docker-compose.yml` - Docker compose definition for the production server.
 - `Dockerfile` - Docker image definition for the distribution build.
 - `mongodb.js` - Executed to configure database settings.
-- `package.json` - Server based package dependancies.
+- `package.json` - Package dependancies.
 - `server/main.ts` - Entry point for development and distribution builds.
 - `server/tests/test-__.ts` - Entry point for testing builds.
 - `server/tests/collections.ts` - List of database collections, models and test data.
