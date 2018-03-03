@@ -34,6 +34,20 @@ app.use(compression())
 
 log.info('Express middleware attached')
 
+//Frontend
+app.use(express.static('./client'))
+app.get(/^(?!\/api).*/, (req, res) => {
+	res.sendFile(path.resolve('./client/index.html'))
+})
+
+log.info('Mounted static frontend')
+
+//Backend
+import('server/api').then(api => {
+	app.use('/api', api.router)
+	log.info('Mounted REST API backend')
+})
+
 //Prepare server variables
 let httpServer
 let httpsServer

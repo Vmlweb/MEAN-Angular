@@ -7,6 +7,9 @@ import * as fs from 'fs'
 const config = require('config')
 import { log } from 'server/app'
 
+//Use ES6 for mongoose promise
+(mongoose as any).Promise = Promise
+
 //Prepare connection string
 const auth = config.database.auth.username + ':' + config.database.auth.password
 const nodes = config.database.repl.nodes.map(node => node.hostname + ':' + node.port)
