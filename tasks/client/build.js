@@ -3,8 +3,10 @@ const gulp = require('gulp')
 const path = require('path')
 const beep = require('beepbeep')
 const fs = require('fs')
+const http = require('http')
 const request = require('request')
 const webpack = require('webpack')
+const WebpackDevServer = require('webpack-dev-server')
 const WebpackObfuscator = require('webpack-obfuscator')
 const WebpackHTML = require('html-webpack-plugin')
 const WebpackExtractText = require("extract-text-webpack-plugin")
@@ -13,7 +15,7 @@ const WebpackCSSMinify = require('optimize-css-assets-webpack-plugin')
 const PathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin
 const CompressPlugin = require('compression-webpack-plugin')
-const BrowserSync = require('browser-sync')
+const OpenURL = require('openurl')
 
 //Config
 const config = require('../../config.js')
@@ -41,9 +43,6 @@ gulp.task('client.build.libs', function(done){
 	}
 })
 
-//Timer
-let checkTimer
-
 //Setup webpack for compilation
 gulp.task('client.build.compile', function(done){
 
@@ -54,33 +53,6 @@ gulp.task('client.build.compile', function(done){
 
 	//Check whether libs are built
 	const libsExist = fs.existsSync('./builds/client/libs.json') && fs.existsSync('./builds/client/vendor.json')
-
-	//Setup browser sync
-	let bs
-	if (process.env.MODE === 'watch'){
-		checkTimer = setInterval(() => {
-
-			//Check whether test server is live
-			request('http://' + config.http.url + ':' + config.http.port.external, (err, response, body) => {
-				if (!err){
-
-					//Stop timer
-					clearInterval(checkTimer)
-
-					//Setup browsersync
-					bs = BrowserSync.create()
-					bs.init({
-						port: 58003,
-						proxy: {
-							target: config.http.url + ':' + config.http.port.external,
-							ws: true
-						}
-					})
-				}
-			})
-
-		}, 1000)
-	}
 
 	//Build webpack with or without libs
 	const build = function(libs){
@@ -126,6 +98,34 @@ gulp.task('client.build.compile', function(done){
 				cssDlls.push('style.css')
 			}
 			jsDlls.push('libs.js', 'vendor.js')
+		}
+
+		//Create typescript loaders
+		const typescriptLoaders = [
+			{
+				loader: 'awesome-typescript-loader',
+				query: {
+					instance: 'client',
+					lib: [ 'dom', 'es6' ],
+					types: config.types.client.concat([ 'webpack', 'node', 'jasmine' ]),
+					baseUrl: './client',
+					cacheDirectory: './builds/.client',
+					useCache: true,
+						module: "commonjs",
+					paths: {
+						config: [ path.resolve('./config.js') ],
+						shared: [ path.resolve('./shared') ],
+						'client/*': [ path.resolve('./client/*') ]
+					}
+				}
+			},
+			'angular2-template-loader?keepUrl=true',
+			'angular2-router-loader'
+		]
+
+		//Add hmr loader
+		if (process.env.NODE_ENV === 'development'){
+			typescriptLoaders.push('@angularclass/hmr-loader')
 		}
 
 		//Create options
@@ -240,26 +240,7 @@ gulp.task('client.build.compile', function(done){
 				},{
 					test: /\.ts$/,
 					exclude: /(node_modules|bower_components)/,
-					use: [{
-							loader: 'awesome-typescript-loader',
-							query: {
-								instance: 'client',
-								lib: [ 'dom', 'es6' ],
-								types: config.types.client.concat([ 'webpack', 'node', 'jasmine' ]),
-								baseUrl: './client',
-								cacheDirectory: './builds/.client',
-								useCache: true,
-						  		module: "commonjs",
-								paths: {
-									config: [ path.resolve('./config.js') ],
-									shared: [ path.resolve('./shared') ],
-									'client/*': [ path.resolve('./client/*') ]
-								}
-							}
-						},
-						'angular2-template-loader?keepUrl=true',
-						'angular2-router-loader'
-					]
+					use: typescriptLoaders
 				}]
 			}
 		}
@@ -276,6 +257,7 @@ gulp.task('client.build.compile', function(done){
 						path: './builds/client/[name].json'
 					})
 				)
+
 			}else{
 
 				//Load dll lib manifest
@@ -288,6 +270,8 @@ gulp.task('client.build.compile', function(done){
 
 				//Add dll connection plugins
 				setup.plugins.push(
+					new webpack.HotModuleReplacementPlugin(),
+					new webpack.NamedModulesPlugin(),
 					new webpack.DllReferencePlugin({
 						context: '.',
 						manifest: require('../../builds/client/vendor.json')
@@ -301,7 +285,7 @@ gulp.task('client.build.compile', function(done){
 		}
 
 		//Add css collectors
-		if (process.env.NODE_ENV === 'development' && !process.env.THEME && !libs){}else{
+		if (!(process.env.NODE_ENV === 'development' && !process.env.THEME && !libs)){
 			setup.plugins.push(new WebpackExtractText({
 				filename: 'style.css',
 				allChunks: true
@@ -369,11 +353,6 @@ gulp.task('client.build.compile', function(done){
 		//Prepare callback for compilation completion
 		const callback = function(err, stats){
 
-			//Reload browser
-			if (bs){
-				bs.reload()
-			}
-
 			//Log stats from build
 			console.log(stats.toString({
 				chunkModules: false,
@@ -398,15 +377,69 @@ gulp.task('client.build.compile', function(done){
 				module.exports.webpack = setup
 				module.exports.setup = true
 
-				done(err)
+				done()
 			}
 		}
 
 		//Compile webpack and watch if developing
 		if (process.env.MODE === 'watch' && !libs){
-			webpack(setup).watch({
-				ignored: /(node_modules|bower_components)/
-			}, callback)
+
+			//Create webpack compiler
+			const compiler = webpack(setup)
+			compiler.plugin('done', function(stats){
+				callback(null, stats)
+			})
+
+			//Initial compilation then start dev server
+			compiler.run(function(){
+
+				//Dev server options
+				const options = {
+					hot: true,
+					https: true,
+					inline: true,
+					host: config.http.url,
+					contentBase: path.resolve("./builds/client"),
+					historyApiFallback: {
+					  rewrites: [{ from: /^(?!\/api).*/, to: '/index.html' }]
+					},
+					proxy: {
+						'/api': 'http://' + config.http.url + ':' + config.http.port.external
+					}
+				}
+
+				//Create and listen https webpack dev server
+				WebpackDevServer.addDevServerEntrypoints(setup, options)
+				const server = new WebpackDevServer(compiler, options);
+				server.listen(config.https.port.dev, config.https.hostname, function(){
+
+					//Create and listen http server
+					http.createServer(server.app).listen(config.http.port.dev, config.http.hostname, function(){
+
+						//Repeated test to check whether api server is running
+						const checkTimer = setInterval(function(){
+
+							//Check whether test server is live
+							request('http://' + config.http.url + ':' + config.http.port.external, function(err, response, body){
+								if (!err){
+
+									//Stop timer
+									clearInterval(checkTimer)
+
+									//Log dev server urls
+									console.log('Start development HTTP server on http://' + config.http.url + ':' + config.http.port.dev)
+									console.log('Start development HTTPS server on https://' + config.https.url + ':' + config.https.port.dev)
+
+									//Open default browser with dev server
+									OpenURL.open('http://' + config.http.url + ':' + config.http.port.dev)
+								}
+							})
+
+						}, 2000)
+					})
+				})
+			})
+
 		}else{
 			webpack(setup).run(callback)
 		}

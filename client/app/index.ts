@@ -1,6 +1,7 @@
 //Modules
-import { NgModule } from '@angular/core'
+import { NgModule, ApplicationRef } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
+import { HMRModule } from '../hmr'
 
 //Includes
 import { ApiModule } from 'client/api'
@@ -17,4 +18,10 @@ import { AppComponent } from './app.component'
 	bootstrap: [ AppComponent ]
 })
 
-export class AppModule {}
+export class AppModule extends HMRModule {
+
+	constructor(public appRef: ApplicationRef){
+		super(appRef)
+	}
+
+}

@@ -14,7 +14,7 @@ Quick and simple template to get up and running with a productive MEAN stack web
   * [Cucumber 2](http://cucumber.io) & [Jasmine](https://jasmine.github.io)
   * [Karma](http://karma-runner.github.io) & [Istanbul](http://gotwarlost.github.io/istanbul)
   * [Winston](https://github.com/winstonjs/winston) & [PM2](http://pm2.keymetrics.io)
-  
+
 ## Features
 
   * Dev, Test & Dist Modes
@@ -25,7 +25,7 @@ Quick and simple template to get up and running with a productive MEAN stack web
   * Coverage & Test Reporting
   * Multi-Core & Load Balancing
   * Compatible with CI Tools
-  * Automatic Browser Reload
+  * Hot Module Replacement
 
 ## Prequisitions
 
@@ -273,7 +273,7 @@ chmod +x database.sh
 ./database.sh reset
 ```
 
-When updating to a new build simply load in the new Docker image and restart the server. 
+When updating to a new build simply load in the new Docker image and restart the server.
 
 ## Process
 

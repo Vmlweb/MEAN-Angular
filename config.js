@@ -1,38 +1,40 @@
 module.exports = {
-	
+
 	//! Process
 	name: 'mean',
 	config: '/opt/mean/config.js',
-	
+
 	//! Docker
 	docker: {
 		socketPath: process.platform === 'win32' ? '//./pipe/docker_engine' : '/var/run/docker.sock'
 	},
-	
+
 	//! HTTP
 	http: {
 		hostname: '::',
 		url: '127.0.0.1',
 		port: {
 			internal: '58000',
-			external: '58000'
+			external: '58000',
+			dev: 58003
 		}
 	},
-	
+
 	//! HTTPS
 	https: {
 		hostname: '::',
 		url: '127.0.0.1',
 		port: {
 			internal: '58001',
-			external: '58001'
+			external: '58001',
+			dev: 58004
 		},
 		ssl: {
 			key: 'https.key',
 			cert: 'https.cert'
 		}
 	},
-	
+
 	//! Database
 	database: {
 		path: '/opt/mean/data',
@@ -56,20 +58,20 @@ module.exports = {
 			key: 'repl.key',
 			nodes: [{
 				hostname: '192.168.0.69',
-				port: 58002 
+				port: 58002
 			}]
 		}
 	},
-	
+
 	//! Client Libraries
 	libs: [],
-	
+
 	//! Typescript Types
 	types: {
 		server: [ 'async', 'body-parser', 'compression', 'express', 'helmet', 'moment', 'mongoose', 'morgan', 'winston' ],
 		client: [ 'jquery' ]
 	},
-	
+
 	//! Test Plans
 	tests: {
 		server: {
@@ -80,7 +82,7 @@ module.exports = {
 			client: [ '**/*' ]
 		}
 	},
-	
+
 	//! Certificates
 	certs: {
 		path: '/opt/mean/certs',
@@ -92,11 +94,11 @@ module.exports = {
 			city: 'London'
 		}
 	},
-	
+
 	//! Logs
 	logs: {
 		path: '/opt/mean/logs',
 		format: ':remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] :referrer :user-agent'
 	}
-	
+
 }
