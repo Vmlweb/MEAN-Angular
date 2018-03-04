@@ -1,7 +1,7 @@
 //Modules
 const gulp = require('gulp')
 
-/*! Tasks 
+/*! Tasks
 - client.watch
 */
 

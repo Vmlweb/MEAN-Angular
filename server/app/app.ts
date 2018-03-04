@@ -24,6 +24,7 @@ export class App{
 		//Add end process listeners
 		process.on('SIGTERM', this.destroyTrigger)
 		process.on('SIGINT', this.destroyTrigger)
+		process.on('SIGUSR2', this.destroyTrigger)
 
 		//Start app
 		this.winston = new Winston()
@@ -33,7 +34,7 @@ export class App{
 
 	destroy(done?: () => void){
 		log.info('Graceful shutdown...')
-		
+
 		//Destroy client connection sockets
 		Object.keys(this.express.connections).forEach((key) => {
 			this.express.connections[key].destroy()
@@ -50,10 +51,13 @@ export class App{
 			//Remove end process listeners
 			process.removeListener('SIGTERM', this.destroyTrigger)
 			process.removeListener('SIGINT', this.destroyTrigger)
+			process.removeListener('SIGUSR2', this.destroyTrigger)
 
 			//Execute callback or close process
 			if (done instanceof Function){
 				done()
+			}else if (process.env.NODE_ENV === 'development'){
+				process.kill(process.pid, 'SIGUSR2')
 			}else{
 				process.exit(0)
 			}

@@ -1,7 +1,7 @@
 //Modules
 const gulp = require('gulp')
 
-/*! Tasks 
+/*! Tasks
 - server.watch
 - server.watch.test
 */
@@ -16,10 +16,6 @@ gulp.task('server.watch', function(done){
 
 //! Watch Builds
 gulp.task('server.watch.build', function(done){
-	gulp.watch('builds/server/**/*.js', gulp.series(
-		'app.stop',
-		'app.start'
-	))
 	done()
 })
 

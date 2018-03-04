@@ -12,6 +12,7 @@ const name = config.name.replace(' ', '_').toLowerCase()
 - app.clean
 - app.start
 - app.stop
+- app.restart
 */
 
 //Remove app log files
@@ -40,7 +41,7 @@ gulp.task('app.start', function(done){
 				if (err){ throw err }
 
 				//Stream output to console
-		        container.modem.demuxStream(stream, process.stdout, process.stderr)
+        container.modem.demuxStream(stream, process.stdout, process.stderr)
 			})
 
 			//Start container
@@ -94,7 +95,7 @@ gulp.task('app.start', function(done){
 			docker.createContainer({
 				Image: 'node:alpine',
 				WorkingDir: '/data',
-				Cmd: [ 'node', '/data/server/main.js' ],
+				Cmd: [ 'node', 'node_modules/nodemon/bin/nodemon', '-q', '-w', 'server/', 'server/main.js' ],
 				name: name,
 				Tty: false,
 				ExposedPorts: internalPorts,
