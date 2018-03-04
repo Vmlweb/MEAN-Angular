@@ -7,7 +7,7 @@ export class HMRModule {
 	constructor(public appRef: ApplicationRef){}
 
 	hmrOnInit(store) {
-		if (store && store.state){
+		if (process.env.NODE_ENV === 'development' && store && store.state){
 
 			//Restore state
 			//AppStore = store.state
@@ -22,18 +22,22 @@ export class HMRModule {
 	}
 
 	hmrOnDestroy(store) {
-		const cmpLocation = this.appRef.components.map(cmp => cmp.location.nativeElement)
-		store.disposeOldHosts = createNewHosts(cmpLocation)
+		if (process.env.NODE_ENV === 'development'){
+			const cmpLocation = this.appRef.components.map(cmp => cmp.location.nativeElement)
+			store.disposeOldHosts = createNewHosts(cmpLocation)
 
-		//Save state
-		//store.state = AppStore
+			//Save state
+			//store.state = AppStore
 
-		store.restoreInputValues  = createInputTransfer()
-		removeNgStyles()
+			store.restoreInputValues  = createInputTransfer()
+			removeNgStyles()
+		}
 	}
 
 	hmrAfterDestroy(store) {
-		store.disposeOldHosts()
-		delete store.disposeOldHosts
+		if (process.env.NODE_ENV === 'development'){
+			store.disposeOldHosts()
+			delete store.disposeOldHosts
+		}
 	}
 }

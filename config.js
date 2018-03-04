@@ -14,9 +14,9 @@ module.exports = {
 		hostname: '::',
 		url: '127.0.0.1',
 		port: {
-			internal: 58000,
-			external: 58000,
-			dev: 58001
+			internal: 58001,
+			external: 58001,
+			dev: 58003
 		}
 	},
 
@@ -27,7 +27,7 @@ module.exports = {
 		port: {
 			internal: 58002,
 			external: 58002,
-			dev: 58003
+			dev: 58004
 		},
 		ssl: {
 			key: 'https.key',
@@ -58,7 +58,7 @@ module.exports = {
 			key: 'repl.key',
 			nodes: [{
 				hostname: '192.168.0.69',
-				port: 58004
+				port: 58005
 			}]
 		}
 	},

@@ -55,6 +55,7 @@
     "favicons-webpack-plugin": "0.0.7",
     "file-loader": "^1.1.5",
     "glob": "^7.1.2",
+    "gulp": "gulpjs/gulp#4.0",
     "gulp-chmod": "^2.0.0",
     "gulp-chown": "^2.0.0",
     "gulp-concat": "^2.6.1",
