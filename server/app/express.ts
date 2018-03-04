@@ -16,90 +16,94 @@ import * as express from 'express'
 const config = require('config')
 import { log } from 'server/app'
 
-//Attach request logger
-const app = express()
-app.enable('trust proxy')
-app.use(morgan(config.logs.format, { stream: {
-	write: (message) => { log.verbose(message.replace(/^\s+|\s+$/g, '')) }
-}}))
+export class Express{
 
-log.info('Express initialized')
+	app: express.Application
+	http: http.Server
+	https: https.Server
+	connections: { [key: string]: net.Socket } = {}
 
-//Attach express middleware
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(sanitize({ replaceWith: '_' }))
-app.use(helmet())
-app.use(compression())
+	constructor(){
 
-log.info('Express middleware attached')
+		//Attach request logger
+		const app = express()
+		app.enable('trust proxy')
+		app.use(morgan(config.logs.format, { stream: {
+			write: (message) => { log.verbose(message.replace(/^\s+|\s+$/g, '')) }
+		}}))
 
-//Frontend
-app.use(express.static('./client'))
-app.get(/^(?!\/api).*/, (req, res) => {
-	res.sendFile(path.resolve('./client/index.html'))
-})
+		log.info('Express initialized')
 
-log.info('Mounted static frontend')
+		//Attach express middleware
+		app.use(bodyParser.json())
+		app.use(bodyParser.urlencoded({ extended: true }))
+		app.use(sanitize({ replaceWith: '_' }))
+		app.use(helmet())
+		app.use(compression())
 
-//Backend
-import('server/api').then(api => {
-	app.use('/api', api.router)
-	log.info('Mounted REST API backend')
-})
+		log.info('Express middleware attached')
 
-//Prepare server variables
-let httpServer
-let httpsServer
-const connections: { [key: string]: net.Socket } = {}
+		//Frontend
+		app.use(express.static('./client'))
+		app.get(/^(?!\/api).*/, (req, res) => {
+			res.sendFile(path.resolve('./client/index.html'))
+		})
 
-//Check whether http hotname was given
-if (config.http.hostname.length > 0){
+		log.info('Mounted static frontend')
 
-	//Create server and listen
-	httpServer = http.createServer(app).listen(config.http.port.internal, config.http.hostname, () => {
-		log.info('HTTP listening at ' + config.http.hostname + ':' + config.http.port.internal)
+		//Backend
+		import('server/api').then(api => {
+			app.use('/api', api.router)
+			log.info('Mounted REST API backend')
+		})
 
-		//Keep connections list up to date
-		httpServer.on('connection', (con) => {
-			const key = crypto.randomBytes(32).toString('hex')
-			connections[key] = con
-			con.on('close', () => {
-				delete connections[key]
+		//Check whether http hotname was given
+		if (config.http.hostname.length > 0){
+
+			//Create server and listen
+			this.http = http.createServer(app).listen(config.http.port.internal, config.http.hostname, () => {
+				log.info('HTTP listening at ' + config.http.hostname + ':' + config.http.port.internal)
+
+				//Keep connections list up to date
+				this.http.on('connection', (con) => {
+					const key = crypto.randomBytes(32).toString('hex')
+					this.connections[key] = con
+					con.on('close', () => {
+						delete this.connections[key]
+					})
+				})
+
+				//Log connection closed
+				this.http.on('close', () => {
+					log.info('HTTP server closed')
+				})
 			})
-		})
+		}
 
-		//Log connection closed
-		httpServer.on('close', () => {
-			log.info('HTTP server closed')
-		})
-	})
-}
+		//Check whether https hotname was given
+		if (config.https.hostname.length > 0 && config.https.ssl.key.length > 0 && config.https.ssl.cert.length > 0){
 
-//Check whether https hotname was given
-if (config.https.hostname.length > 0 && config.https.ssl.key.length > 0 && config.https.ssl.cert.length > 0){
+			//Create server and listen
+			this.https = https.createServer({
+				key: fs.readFileSync(path.join('./certs', config.https.ssl.key)) || '',
+				cert: fs.readFileSync(path.join('./certs', config.https.ssl.cert)) || ''
+			}, app).listen(config.https.port.internal, config.https.hostname, () => {
+				log.info('HTTPS listening at ' + config.https.hostname + ':' + config.https.port.internal)
 
-	//Create server and listen
-	httpsServer = https.createServer({
-		key: fs.readFileSync(path.join('./certs', config.https.ssl.key)) || '',
-		cert: fs.readFileSync(path.join('./certs', config.https.ssl.cert)) || ''
-	}, app).listen(config.https.port.internal, config.https.hostname, () => {
-		log.info('HTTPS listening at ' + config.https.hostname + ':' + config.https.port.internal)
+				//Keep connections list up to date
+				this.https.on('connection', (con) => {
+					const key = crypto.randomBytes(32).toString('hex')
+					this.connections[key] = con
+					con.on('close', () => {
+						delete this.connections[key]
+					})
+				})
 
-		//Keep connections list up to date
-		httpsServer.on('connection', (con) => {
-			const key = crypto.randomBytes(32).toString('hex')
-			connections[key] = con
-			con.on('close', () => {
-				delete connections[key]
+				//Log connection closed
+				this.https.on('close', () => {
+					log.info('HTTPS server closed')
+				})
 			})
-		})
-
-		//Log connection closed
-		httpsServer.on('close', () => {
-			log.info('HTTPS server closed')
-		})
-	})
+		}
+	}
 }
-
-export { app, httpServer as http, httpsServer as https, connections }

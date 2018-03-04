@@ -1,10 +1,4 @@
 //Incudes
-import { startup, shutdown } from 'server/app'
+import { App } from 'server/app'
 
-startup()
-
-//Intercept kill and end signals
-process.once('SIGTERM', shutdown as any)
-process.once('SIGINT', shutdown as any)
-
-export { shutdown }
+const app = new App()
