@@ -56,17 +56,17 @@ gulp.task('app.start', function(done){
 			const externalPorts = {}
 
 			//HTTP ports
-			if (config.http.port.internal.length > 0){
+			if (config.http.port.internal.toString().length > 0){
 				internalPorts[config.http.port.internal.toString() + '/tcp'] = {}
-				if (config.http.port.external.length > 0){
+				if (config.http.port.external.toString().length > 0){
 					externalPorts[config.http.port.internal.toString() + '/tcp'] = [{ HostPort: config.http.port.external.toString()}]
 				}
 			}
 
 			//HTTPS ports
-			if (config.https.port.internal.length > 0){
+			if (config.https.port.internal.toString().length > 0){
 				internalPorts[config.https.port.internal.toString() + '/tcp'] = {}
-				if (config.https.port.external.length > 0){
+				if (config.https.port.external.toString().length > 0){
 					externalPorts[config.https.port.internal.toString() + '/tcp'] = [{ HostPort: config.https.port.external.toString()}]
 				}
 			}
@@ -116,7 +116,7 @@ gulp.task('app.start', function(done){
 					if (err){ throw err }
 
 					//Stream output to console
-			        container.modem.demuxStream(stream, process.stdout, process.stderr)
+	        container.modem.demuxStream(stream, process.stdout, process.stderr)
 				})
 
 				//Start container
