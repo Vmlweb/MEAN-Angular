@@ -16,6 +16,7 @@ const PathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin
 const CompressPlugin = require('compression-webpack-plugin')
 const OpenURL = require('openurl')
+const commandExists = require('command-exists').sync
 
 //Config
 const config = require('../../config.js')
@@ -439,10 +440,24 @@ gulp.task('client.build.compile', function(done){
 									console.log('Start development HTTP server on http://' + config.http.url + ':' + config.http.port.dev)
 									console.log('Start development HTTPS server on https://' + config.https.url + ':' + config.https.port.dev)
 
+									//Check whether browser exists
+									let command
+									switch(process.platform) {
+								    case 'darwin':
+							        command = 'open'
+							        break
+								    case 'win32':
+							        command = 'explorer.exe'
+							        break
+								    case 'linux':
+							        command = 'xdg-open'
+							        break
+									}
+
 									//Open default browser with dev server
-									try{
+									if (command && commandExists(command)){
 										OpenURL.open('http://' + config.http.url + ':' + config.http.port.dev)
-									}catch(err){}
+									}
 								}
 							})
 
