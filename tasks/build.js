@@ -7,6 +7,7 @@ const replace = require('gulp-replace')
 
 //Includes
 const config = require('../config.js')
+const name = config.name.replace(' ', '_').toLowerCase()
 
 /*! Tasks
 - build.clean
@@ -37,11 +38,11 @@ gulp.task('build.config.nodejs', function(){
 
 //Copy and replace mongodb files
 gulp.task('build.config.mongodb', function(){
-	
+
 	//Generate random password
 	const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 	const password = Array.apply(null, Array(70)).map(function() { return chars.charAt(Math.floor(Math.random() * chars.length)) }).join('')
-	
+
 	//Copy and replace mongodb config
 	return gulp.src('mongodb.js')
 		.pipe(replace('@@DATABASE_ADMIN_PASSWORD', password))
@@ -57,57 +58,58 @@ gulp.task('build.config.mongodb', function(){
 
 //Copy and replace docker files
 gulp.task('build.config.docker', function(){
-	
+
 	//Prepare port dumps
 	const mappedPorts = []
-	
+
 	//HTTP port mappings
 	if (config.http.port.internal.length > 0){
 		if (config.http.port.external.length > 0){
-			
+
 			//Internal and external port mappings
 			mappedPorts.push(config.http.port.external.toString() + ':' + config.http.port.internal.toString())
 		}else{
-			
+
 			//Only internal port mappings
 			mappedPorts.push(config.http.port.external.toString() + ':' + config.http.port.internal.toString())
 		}
 	}
-	
+
 	//HTTPS port mappings
 	if (config.https.port.internal.length > 0){
-		if (config.https.port.external.length > 0){		
-				
+		if (config.https.port.external.length > 0){
+
 			//Internal and external port mappings
 			mappedPorts.push(config.https.port.external.toString() + ':' + config.https.port.internal.toString())
 		}else{
-			
+
 			//Only internal port mappings
 			mappedPorts.push(config.https.port.external.toString() + ':' + config.https.port.internal.toString())
 		}
 	}
-	
+
 	//Docker run commands
 	let dockerConfig = ''
 	if (mappedPorts.length > 0){
 		dockerConfig = '-p ' + mappedPorts.join(' -p ')
 	}
-	
+
 	//Compose port cofig
 	let composeConfig = ''
 	if (mappedPorts.length > 0){
 		composeConfig = '    - ' + mappedPorts.join('\r\n    - ')
 	}
-	
+
 	//MongoDB ssl config
 	let mongoConfig = ''
 	if (config.database.ssl.enabled){
 		mongoConfig = '--sslMode requireSSL --sslPEMKeyFile ' + path.join('/data/certs/', config.database.ssl.pem)
 	}
-	
+
 	//Build files
 	return gulp.src([ 'Dockerfile', 'docker-compose.yml', 'database.sh', 'server.sh' ])
-		.pipe(replace('@@NAME', config.name))
+		.pipe(replace('@@NAME', name))
+		.pipe(replace('@@NAME_FULL', config.name))
 		.pipe(replace('@@VERSION', config.version))
 		.pipe(replace('@@BUILD', config.build))
 		.pipe(replace('@@MONGO_CONFIG', mongoConfig))

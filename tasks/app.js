@@ -6,8 +6,9 @@ const del = require('del')
 //Includes
 const config = require('../config.js')
 const docker = require('dockerode')(config.docker)
+const name = config.name.replace(' ', '_').toLowerCase()
 
-/*! Tasks 
+/*! Tasks
 - app.clean
 - app.start
 - app.stop
@@ -15,21 +16,21 @@ const docker = require('dockerode')(config.docker)
 
 //Remove app log files
 gulp.task('app.clean', function(){
-	
+
 	//Remove and create data volume
-	const container = docker.getContainer(config.name)
+	const container = docker.getContainer(name)
 	container.remove(function(err){})
-	
+
 	//Clear logs directory
 	return del('logs/**/*')
 })
 
 //Start app server
 gulp.task('app.start', function(done){
-	const container = docker.getContainer(config.name)
+	const container = docker.getContainer(name)
 	container.inspect(function(err, info){
 		if (info){
-			
+
 			//Attach to container
 			container.attach({
 				stream: true,
@@ -37,23 +38,23 @@ gulp.task('app.start', function(done){
 				stderr: true
 			}, function (err, stream) {
 				if (err){ throw err }
-				
+
 				//Stream output to console
 		        container.modem.demuxStream(stream, process.stdout, process.stderr)
 			})
-			
+
 			//Start container
 			container.start(function(err, data){
 				if (err){ throw err }
 				done()
 			})
-			
+
 		}else{
-	
+
 			//Prepare ports
 			const internalPorts = {}
 			const externalPorts = {}
-			
+
 			//HTTP ports
 			if (config.http.port.internal.length > 0){
 				internalPorts[config.http.port.internal.toString() + '/tcp'] = {}
@@ -61,7 +62,7 @@ gulp.task('app.start', function(done){
 					externalPorts[config.http.port.internal.toString() + '/tcp'] = [{ HostPort: config.http.port.external.toString()}]
 				}
 			}
-			
+
 			//HTTPS ports
 			if (config.https.port.internal.length > 0){
 				internalPorts[config.https.port.internal.toString() + '/tcp'] = {}
@@ -69,7 +70,7 @@ gulp.task('app.start', function(done){
 					externalPorts[config.https.port.internal.toString() + '/tcp'] = [{ HostPort: config.https.port.external.toString()}]
 				}
 			}
-			
+
 			//Prepare volume bindings
 			const binds = []
 			if (process.platform === 'win32'){
@@ -88,13 +89,13 @@ gulp.task('app.start', function(done){
 				binds.push(process.cwd() + '/node_modules' + ':/data/node_modules')
 				binds.push(process.cwd() + '/config.js' + ':/data/config.js')
 			}
-			
+
 			//Prepare container
 			docker.createContainer({
 				Image: 'node:alpine',
 				WorkingDir: '/data',
 				Cmd: [ 'node', '/data/server/main.js' ],
-				name: config.name,
+				name: name,
 				Tty: false,
 				ExposedPorts: internalPorts,
 				Env: [ 'NODE_ENV=development' ],
@@ -105,7 +106,7 @@ gulp.task('app.start', function(done){
 				}
 			}, function(err, container) {
 				if (err){ throw err }
-				
+
 				//Attach to container
 				container.attach({
 					stream: true,
@@ -113,11 +114,11 @@ gulp.task('app.start', function(done){
 					stderr: true
 				}, function (err, stream) {
 					if (err){ throw err }
-					
+
 					//Stream output to console
 			        container.modem.demuxStream(stream, process.stdout, process.stderr)
 				})
-				
+
 				//Start container
 				container.start(function(err, data){
 					if (err){ throw err }
@@ -130,7 +131,7 @@ gulp.task('app.start', function(done){
 
 //Stop app server
 gulp.task('app.stop', function(done){
-	const container = docker.getContainer(config.name)
+	const container = docker.getContainer(name)
 	container.stop({ t: 10 }, function(err, data){
 		done()
 	})

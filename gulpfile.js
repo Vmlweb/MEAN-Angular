@@ -6,6 +6,7 @@ const rl = require("readline")
 //Includes
 const config = require('./config.js')
 const docker = require('dockerode')(config.docker)
+const name = config.name.replace(' ', '_').toLowerCase()
 gulp.registry(reference())
 
 //! Tasks
@@ -126,22 +127,22 @@ gulp.task('test', gulp.series(
 	'build.clean',
 	'build',
 	'database.test',
-	
+
 	'server.test.unit.execute',
 	'server.test.unit.coverage',
-	
+
 	'env.test.feature',
 	'build',
 	'server.test.feature.execute',
 	'server.test.feature.coverage',
-	
+
 	'env.test.unit',
 	'build',
-	'mock.start',	
+	'mock.start',
 	'client.test.unit.execute',
 	'client.test.unit.coverage',
 	'mock.stop',
-	
+
 	'stop',
 	'merge',
 	'build.clean',
@@ -176,7 +177,7 @@ gulp.task('client.test', gulp.series(
 	'build.clean',
 	'build',
 	'database.test',
-	'mock.start',	
+	'mock.start',
 	'env.test.unit',
 	'build',
 	'client.test.unit.execute',
@@ -198,7 +199,7 @@ gulp.task('mock', gulp.series(
 	'database.test',
 	'mock.start'
 ))
- 
+
 //! Distribution
 gulp.task('dist', gulp.series(
 	'env.dist',
@@ -284,9 +285,9 @@ for (const i in config.tests.client){
 
 //Stop database and app containers on exit
 const shutdown = function(){
-	const app = docker.getContainer(config.name)
-	const db = docker.getContainer(config.name + '_db')
-	const test = docker.getContainer(config.name + '_db_test')
+	const app = docker.getContainer(name)
+	const db = docker.getContainer(name + '_db')
+	const test = docker.getContainer(name + '_db_test')
 	app.stop({ t: 10 }, function(err, data){
 		db.stop({ t: 10 }, function(err, data){
 			test.stop({ t: 10 }, function(err, data){

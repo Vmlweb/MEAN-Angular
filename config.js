@@ -1,7 +1,7 @@
 module.exports = {
 
 	//! Process
-	name: 'mean',
+	name: 'MEAN Stack',
 	config: '/opt/mean/config.js',
 
 	//! Docker

@@ -143,7 +143,7 @@ gulp.task('client.build.compile', function(done){
 					'process.env.URL': JSON.stringify(process.env.NODE_ENV === 'testing' ? ('http://' + config.http.url + ':' + config.http.port.internal) : '')
 				}),
 				new WebpackHTML({
-					title: config.name.replace(/_/, ' '),
+					title: config.name,
 					template: './client/index.ejs',
 					minify: {
 						removeComments: true,

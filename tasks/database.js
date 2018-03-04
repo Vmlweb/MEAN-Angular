@@ -8,8 +8,9 @@ const path = require('path')
 //Includes
 const config = require('../config.js')
 const docker = require('dockerode')(config.docker)
+const name = config.name.replace(' ', '_').toLowerCase()
 
-/*! Tasks 
+/*! Tasks
 - database.clean
 - database.start
 - database.setup
@@ -35,19 +36,19 @@ if (config.database.ssl.enabled){
 
 //Reset database volumes
 gulp.task('database.clean', function(done){
-	const container = docker.getContainer(config.name + '_db')
-	const data = docker.getVolume(config.name + '_data')
-	const conf = docker.getVolume(config.name + '_config')
-	
+	const container = docker.getContainer(name + '_db')
+	const data = docker.getVolume(name + '_data')
+	const conf = docker.getVolume(name + '_config')
+
 	//Remove and create data volume
 	container.remove(function(err){
 		data.remove(function(err){
-			docker.createVolume({ name: config.name + '_data' }, function(err){
+			docker.createVolume({ name: name + '_data' }, function(err){
 				if (err){ throw err }
-				
+
 				//Remove and create config volume
 				conf.remove(function(err){
-					docker.createVolume({ name: config.name + '_config' }, function(err){
+					docker.createVolume({ name: name + '_config' }, function(err){
 						if (err){ throw err }
 						done()
 					})
@@ -59,37 +60,37 @@ gulp.task('database.clean', function(done){
 
 //Start database server
 gulp.task('database.start', function(done){
-	const container = docker.getContainer(config.name + '_db')
+	const container = docker.getContainer(name + '_db')
 	container.inspect(function(err, info){
 		if (info){
-			
+
 			//Start container
 			container.start(function(err, data){
 				if (err){ throw err }
 				setTimeout(done, 1000)
 			})
-			
+
 		}else{
-			
+
 			//Prepare volume bindings
 			const binds = [
-				config.name + '_data' + ':/data/db',
-				config.name + '_config' + ':/data/configdb'
+				name + '_data' + ':/data/db',
+				name + '_config' + ':/data/configdb'
 			]
-			
+
 			//Prepare platform specific bindings
 			if (process.platform === 'win32'){
 				binds.push('//' + process.cwd().replace(/\\/g, '/').replace(':', '/') + '/certs' + ':/data/certs')
 			}else{
 				binds.push(process.cwd() + '/certs' + ':/data/certs')
 			}
-			
+
 			//Prepare container
 			docker.createContainer({
 				Hostname: config.database.repl.nodes[0].hostname,
 				Image: 'mongo',
 				Cmd: cmd,
-				name: config.name + '_db',
+				name: name + '_db',
 				Volumes: {
 					'/data/certs': {}
 				},
@@ -102,7 +103,7 @@ gulp.task('database.start', function(done){
 				}
 			}, function(err, container){
 				if (err){ throw err }
-				
+
 				//Start container
 				container.start(function(err, data){
 					if (err){ throw err }
@@ -116,16 +117,16 @@ gulp.task('database.start', function(done){
 //Setup database server configuration
 gulp.task('database.setup', function(done){
 	setTimeout(function(){
-		const container = docker.getContainer(config.name + '_db' + (process.env.NODE_ENV === 'testing' ? '_test' : ''))
-		
+		const container = docker.getContainer(name + '_db' + (process.env.NODE_ENV === 'testing' ? '_test' : ''))
+
 		//Prepare command
 		const cmd = ['mongo']
-		
+
 		//Prepare ssl parameters
 		if (config.database.ssl.enabled){
 			cmd.push('--ssl', '--sslAllowInvalidCertificates')
 		}
-		
+
 		//Prepare command
 		container.exec({
 			Cmd: cmd,
@@ -134,7 +135,7 @@ gulp.task('database.setup', function(done){
 			Tty: process.platform === 'win32'
 		}, function(err, exec) {
 			if (err){ throw err }
-			
+
 			//Execute command
 			exec.start({
 				hijack: true,
@@ -142,10 +143,10 @@ gulp.task('database.setup', function(done){
 				stdout: true
 			}, function(err, stream) {
 				if (err){ throw err }
-					
+
 				//Stream output to console
 		        container.modem.demuxStream(stream, process.stdout, process.stderr)
-					
+
 				//Stream file into container mongo cli
 				setTimeout(function(){
 					fs.createReadStream('./builds/mongodb.js', 'binary').pipe(stream).on('end', function(){
@@ -159,8 +160,8 @@ gulp.task('database.setup', function(done){
 
 //Stop database server
 gulp.task('database.stop', function(done){
-	const container = docker.getContainer(config.name + '_db')
-	const testing = docker.getContainer(config.name + '_db_test')
+	const container = docker.getContainer(name + '_db')
+	const testing = docker.getContainer(name + '_db_test')
 	container.stop({ t: 10 }, function(err, data){
 		testing.stop({ t: 10 }, function(err, data){
 			done()
@@ -177,19 +178,19 @@ gulp.task('database.test', gulp.series(
 
 //Reset testing database volumes
 gulp.task('database.test.clean', function(done){
-	const container = docker.getContainer(config.name + '_db_test')
-	const data = docker.getVolume(config.name + '_data_test')
-	const conf = docker.getVolume(config.name + '_config_test')
-	
+	const container = docker.getContainer(name + '_db_test')
+	const data = docker.getVolume(name + '_data_test')
+	const conf = docker.getVolume(name + '_config_test')
+
 	//Remove and create data volume
 	container.remove(function(err){
 		data.remove(function(err){
-			docker.createVolume({ name: config.name + '_data_test' }, function(err){
+			docker.createVolume({ name: name + '_data_test' }, function(err){
 				if (err){ throw err }
-				
+
 				//Remove and create config volume
 				conf.remove(function(err){
-					docker.createVolume({ name: config.name + '_config_test' }, function(err){
+					docker.createVolume({ name: name + '_config_test' }, function(err){
 						if (err){ throw err }
 						done()
 					})
@@ -201,37 +202,37 @@ gulp.task('database.test.clean', function(done){
 
 //Start testing database server
 gulp.task('database.test.start', function(done){
-	const container = docker.getContainer(config.name + '_db_test')
+	const container = docker.getContainer(name + '_db_test')
 	container.inspect(function(err, info){
 		if (info){
-			
+
 			//Start container
 			container.start(function(err, data){
 				if (err){ throw err }
 				setTimeout(done, 1000)
 			})
-			
+
 		}else{
-			
+
 			//Prepare volume bindings
 			const binds = [
-				config.name + '_data_test' + ':/data/db',
-				config.name + '_config_test' + ':/data/configdb'
+				name + '_data_test' + ':/data/db',
+				name + '_config_test' + ':/data/configdb'
 			]
-			
+
 			//Prepare platform specific bindings
 			if (process.platform === 'win32'){
 				binds.push('//' + process.cwd().replace(/\\/g, '/').replace(':', '/') + '/certs' + ':/data/certs')
 			}else{
 				binds.push(process.cwd() + '/certs' + ':/data/certs')
 			}
-			
+
 			//Prepare container
 			docker.createContainer({
 				Hostname: config.database.repl.nodes[0].hostname,
 				Image: 'mongo',
 				Cmd: cmd,
-				name: config.name + '_db_test',
+				name: name + '_db_test',
 				Volumes: {
 					'/data/certs': {}
 				},
@@ -244,7 +245,7 @@ gulp.task('database.test.start', function(done){
 				}
 			}, function(err, container) {
 				if (err){ throw err }
-				
+
 				//Start container
 				container.start(function(err, stream){
 					if (err){ throw err }
