@@ -384,14 +384,8 @@ gulp.task('client.build.compile', function(done){
 		//Compile webpack and watch if developing
 		if (process.env.MODE === 'watch' && !libs){
 
-			//Create webpack compiler
-			const compiler = webpack(setup)
-			compiler.plugin('done', function(stats){
-				callback(null, stats)
-			})
-
 			//Initial compilation then start dev server
-			compiler.run(function(){
+			webpack(setup).run(function(){
 
 				//Dev server options
 				const options = {
@@ -401,19 +395,31 @@ gulp.task('client.build.compile', function(done){
 							cert: fs.readFileSync(path.resolve('./certs', config.https.ssl.cert)) || ''
 					},
 					inline: true,
-					host: config.http.url,
+					host: config.https.url,
+					port: config.https.port.dev,
 					contentBase: path.resolve("./builds/client"),
 					historyApiFallback: {
 					  rewrites: [{ from: /^(?!\/api).*/, to: '/index.html' }]
 					},
 					proxy: {
-						'/api': 'http://' + config.http.url + ':' + config.http.port.external
+						'/api': {
+							target: 'https://' + config.https.url + ':' + config.https.port.external,
+							secure: false
+						}
 					}
 				}
 
-				//Create and listen https webpack dev server
+				//Attach developer endpoints
 				WebpackDevServer.addDevServerEntrypoints(setup, options)
-				const server = new WebpackDevServer(compiler, options);
+
+				//Create webpack compiler
+				const compiler = webpack(setup)
+				compiler.plugin('done', function(stats){
+					callback(null, stats)
+				})
+
+				//Add developer endpoints and start server
+				const server = new WebpackDevServer(compiler, options)
 				server.listen(config.https.port.dev, config.https.hostname, function(){
 
 					//Create and listen http server
