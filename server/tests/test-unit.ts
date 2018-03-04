@@ -4,8 +4,8 @@ import * as minimatch from 'minimatch'
 
 //Includes
 const config = require('config')
-import { shutdown } from 'server/main'
-import { database, log } from 'server/app'
+import { app } from 'server/main'
+import { log } from 'server/app'
 import { collections } from './collection-list'
 
 //Load collections management
@@ -13,8 +13,8 @@ import './'
 
 //Wait for database connection
 beforeAll(done => {
-	database.once('open', done)
-	database.once('error', done)
+	app.mongo.connection.once('open', done)
+	app.mongo.connection.once('error', done)
 })
 
 //Populate all collections with default test data
@@ -43,7 +43,7 @@ beforeEach(done => {
 
 //Shutdown when tests finished
 afterAll(done => {
-	shutdown(done)
+	app.destroy(done)
 })
 
 //Find all test files
@@ -77,7 +77,5 @@ if (process.env.hasOwnProperty('TEST_PLAN')){
 
 //Handle windows watch shutdown
 if (process.platform === 'win32'){
-	rl.createInterface({ input: process.stdin, output: process.stdout }).on('SIGINT', () => { shutdown() })
+	rl.createInterface({ input: process.stdin, output: process.stdout }).on('SIGINT', () => { app.destroy() })
 }
-
-export { shutdown }

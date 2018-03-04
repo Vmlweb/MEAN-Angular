@@ -6,8 +6,8 @@ import { defineSupportCode } from 'cucumber'
 
 //Includes
 const config = require('config')
-import { shutdown } from 'server/main'
-import { database, log } from 'server/app'
+import { app } from 'server/main'
+import { log } from 'server/app'
 import { collections } from './collection-list'
 
 //Load collections management
@@ -18,8 +18,8 @@ defineSupportCode(({ registerHandler }) => {
 
 	//Wait for database connection
 	registerHandler('BeforeFeatures', (features, done) => {
-		database.once('open', done)
-		database.once('error', done)
+		app.mongo.connection.once('open', done)
+		app.mongo.connection.once('error', done)
 	})
 
 	//Populate all collections with default test data
@@ -48,7 +48,7 @@ defineSupportCode(({ registerHandler }) => {
 
 	//Shutdown when tests finished
 	registerHandler('AfterFeatures', (features, done) => {
-		shutdown(done)
+		app.destroy(done)
 	})
 
 })
@@ -59,7 +59,7 @@ context.keys().forEach(context)
 
 //Handle windows watch shutdown
 if (process.platform === 'win32'){
-	rl.createInterface({ input: process.stdin, output: process.stdout }).on('SIGINT', () => { shutdown() })
+	rl.createInterface({ input: process.stdin, output: process.stdout }).on('SIGINT', () => { app.destroy() })
 }
 
 //Write coverage to file before exit
@@ -67,5 +67,3 @@ process.on('exit', () => {
 	const coverage = JSON.stringify(global['__coverage__'])
 	fs.writeFileSync('./logs/tests/server/feature/coverage.json', coverage)
 })
-
-export { shutdown }

@@ -18,7 +18,7 @@ const childProcess = require('child_process')
 const config = require('../../config.js')
 const build = require('./build.js')
 
-/*! Tasks 
+/*! Tasks
 - server.test.unit
 - server.test.unit.execute
 - server.test.unit.coverage
@@ -39,17 +39,17 @@ gulp.task('server.test.unit', gulp.series(
 
 //Execute tests and collect coverage
 gulp.task('server.test.unit.execute', function(done){
-	
+
 	//Clear node require cache
 	decache(path.resolve('builds/server/main.js'))
-	
+
 	//Check whether build is invalid
 	if (!build.valid){
 		beep(2)
 		done()
 		return
 	}
-	
+
 	//Execute jasmine tests
 	let fail = false
 	gulp.src('builds/server/main.js')
@@ -67,7 +67,7 @@ gulp.task('server.test.unit.execute', function(done){
 		.on('error', function(err){
 			fail = true
 			this.emit('end')
-	    })
+    })
 		.pipe(istanbul.writeReports({
 			coverageVariable: '__coverage__',
 			reporters: [ 'json' ],
@@ -81,10 +81,10 @@ gulp.task('server.test.unit.execute', function(done){
 		.on('end', function(){
 			beep(fail ? 2 : 1)
 			done()
-	    })
+    })
 })
 
-//Remap and log coverage reports 
+//Remap and log coverage reports
 gulp.task('server.test.unit.coverage', function(){
 	return gulp.src('logs/tests/server/unit/coverage.json')
 		.pipe(remap({

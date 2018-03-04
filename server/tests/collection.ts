@@ -2,7 +2,8 @@
 import { Model } from 'mongoose'
 
 //Includes
-import { log, database } from 'server/app'
+import { app } from 'server/main'
+import { log } from 'server/app'
 
 export class Collection{
 
@@ -38,7 +39,7 @@ export class Collection{
 
 		//Drop collection contents silently
 		try{
-			await database.db.dropCollection(this.name)
+			await app.mongo.connection.db.dropCollection(this.name)
 		}catch(err){}
 
 		log.info('Clearing and populating ' + this.name + ' with test data')

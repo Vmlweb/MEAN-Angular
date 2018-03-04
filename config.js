@@ -14,7 +14,7 @@ module.exports = {
 		hostname: '::',
 		url: '127.0.0.1',
 		port: {
-			internal: 80,
+			internal: 58000,
 			external: 58000,
 			dev: 58001
 		}
@@ -25,7 +25,7 @@ module.exports = {
 		hostname: '::',
 		url: '127.0.0.1',
 		port: {
-			internal: 443,
+			internal: 58002,
 			external: 58002,
 			dev: 58003
 		},

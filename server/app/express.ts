@@ -26,26 +26,26 @@ export class Express{
 	constructor(){
 
 		//Attach request logger
-		const app = express()
-		app.enable('trust proxy')
-		app.use(morgan(config.logs.format, { stream: {
+		this.app = express()
+		this.app.enable('trust proxy')
+		this.app.use(morgan(config.logs.format, { stream: {
 			write: (message) => { log.verbose(message.replace(/^\s+|\s+$/g, '')) }
 		}}))
 
 		log.info('Express initialized')
 
 		//Attach express middleware
-		app.use(bodyParser.json())
-		app.use(bodyParser.urlencoded({ extended: true }))
-		app.use(sanitize({ replaceWith: '_' }))
-		app.use(helmet())
-		app.use(compression())
+		this.app.use(bodyParser.json())
+		this.app.use(bodyParser.urlencoded({ extended: true }))
+		this.app.use(sanitize({ replaceWith: '_' }))
+		this.app.use(helmet())
+		this.app.use(compression())
 
 		log.info('Express middleware attached')
 
 		//Frontend
-		app.use(express.static('./client'))
-		app.get(/^(?!\/api).*/, (req, res) => {
+		this.app.use(express.static('./client'))
+		this.app.get(/^(?!\/api).*/, (req, res) => {
 			res.sendFile(path.resolve('./client/index.html'))
 		})
 
@@ -53,7 +53,7 @@ export class Express{
 
 		//Backend
 		import('server/api').then(api => {
-			app.use('/api', api.router)
+			this.app.use('/api', api.router)
 			log.info('Mounted REST API backend')
 		})
 
@@ -61,7 +61,7 @@ export class Express{
 		if (config.http.hostname.length > 0){
 
 			//Create server and listen
-			this.http = http.createServer(app).listen(config.http.port.internal, config.http.hostname, () => {
+			this.http = http.createServer(this.app).listen(config.http.port.internal, config.http.hostname, () => {
 				log.info('HTTP listening at ' + config.http.hostname + ':' + config.http.port.internal)
 
 				//Keep connections list up to date
@@ -87,7 +87,7 @@ export class Express{
 			this.https = https.createServer({
 				key: fs.readFileSync(path.join('./certs', config.https.ssl.key)) || '',
 				cert: fs.readFileSync(path.join('./certs', config.https.ssl.cert)) || ''
-			}, app).listen(config.https.port.internal, config.https.hostname, () => {
+			}, this.app).listen(config.https.port.internal, config.https.hostname, () => {
 				log.info('HTTPS listening at ' + config.https.hostname + ':' + config.https.port.internal)
 
 				//Keep connections list up to date
