@@ -111,8 +111,6 @@ You can start the development server which will rebuild any source file changes 
 gulp
 ```
 
-Then access your website on `http://127.0.0.1:58000` or `https://127.0.0.1:58001`.
-
 Use `control + c` to stop and exit the development server.
 
 Use the following to reset the development server database.

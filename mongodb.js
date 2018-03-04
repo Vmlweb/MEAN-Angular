@@ -7,10 +7,10 @@ if (@@DATABASE_REPL_ENABLED){
 		'version': 1,
 		'members': [{
 			'_id': 1,
-			'host': '@@DATABASE_REPL_NODES_HOSTNAME:@@DATABASE_REPL_NODES_PORT' 
+			'host': '@@DATABASE_REPL_NODES_HOSTNAME:@@DATABASE_REPL_NODES_PORT'
 		}]
 	});
-	
+
 	//Wait for replica set to finish instantiating
 	while (!rs.isMaster().ismaster){
 		sleep(500);

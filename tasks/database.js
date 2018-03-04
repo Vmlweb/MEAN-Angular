@@ -22,7 +22,7 @@ const name = config.name.replace(' ', '_').toLowerCase()
 */
 
 //Prepare command
-const cmd = ['mongod', '--auth']
+const cmd = ['mongod', '--auth', '--bind_ip_all']
 
 //Prepare replica parameters
 if (config.database.repl.enabled){

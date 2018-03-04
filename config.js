@@ -57,7 +57,7 @@ module.exports = {
 			read: 'nearest',
 			key: 'repl.key',
 			nodes: [{
-				hostname: 'localhost',
+				hostname: '192.168.0.69',
 				port: 58004
 			}]
 		}
