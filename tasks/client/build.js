@@ -404,7 +404,7 @@ gulp.task('client.build.compile', function(done){
 					},
 					proxy: {
 						'/api': {
-							target: 'https://' + config.https.url + ':' + config.https.port.external,
+							target: 'http://' + config.http.url + ':' + config.http.port.external,
 							secure: false
 						}
 					}
@@ -430,7 +430,7 @@ gulp.task('client.build.compile', function(done){
 						const checkTimer = setInterval(function(){
 
 							//Check whether test server is live
-							request('http://' + config.https.url + ':' + config.https.port.external, function(err, response, body){
+							request('http://' + config.http.url + ':' + config.http.port.external, function(err, response, body){
 								if (!err){
 
 									//Stop timer
