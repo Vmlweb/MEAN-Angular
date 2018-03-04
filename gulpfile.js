@@ -9,9 +9,6 @@ const docker = require('dockerode')(config.docker)
 const name = config.name.replace(' ', '_').toLowerCase()
 gulp.registry(reference())
 
-//Self Signed Certificates
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
-
 //! Tasks
 require('./tasks/app.js')
 require('./tasks/build.js')
