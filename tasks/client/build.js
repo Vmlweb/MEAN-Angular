@@ -396,7 +396,10 @@ gulp.task('client.build.compile', function(done){
 				//Dev server options
 				const options = {
 					hot: true,
-					https: true,
+					https: {
+							key: fs.readFileSync(path.resolve('./certs', config.https.ssl.key)) || '',
+							cert: fs.readFileSync(path.resolve('./certs', config.https.ssl.cert)) || ''
+					},
 					inline: true,
 					host: config.http.url,
 					contentBase: path.resolve("./builds/client"),
