@@ -440,7 +440,9 @@ gulp.task('client.build.compile', function(done){
 									console.log('Start development HTTPS server on https://' + config.https.url + ':' + config.https.port.dev)
 
 									//Open default browser with dev server
-									OpenURL.open('http://' + config.http.url + ':' + config.http.port.dev)
+									try{
+										OpenURL.open('http://' + config.http.url + ':' + config.http.port.dev)
+									}catch(err){}
 								}
 							})
 
