@@ -45,9 +45,9 @@ module.exports = {
 		},
 		ssl: {
 			enabled: true,
-			key: 'mongodb.key',
-			cert: 'mongodb.cert',
-			pem: 'mongodb.pem',
+			key: 'mongo.key',
+			cert: 'mongo.cert',
+			pem: 'mongo.pem',
 			ca: '',
 			validate: false
 		},
@@ -83,22 +83,15 @@ module.exports = {
 		}
 	},
 
-	//! Certificates
-	certs: {
-		path: '/opt/mean/certs',
-		details: {
-			hostname: '127.0.0.1',
-			organisation: 'Vmlweb Ltd',
-			country: 'GB',
-			state: 'Kent',
-			city: 'London'
-		}
-	},
-
 	//! Logs
 	logs: {
 		path: '/opt/mean/logs',
 		format: ':remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] :referrer :user-agent'
+	},
+
+	//! Certs
+	certs: {
+		path: '/opt/mean/certs'
 	}
 
 }
