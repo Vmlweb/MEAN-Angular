@@ -55,7 +55,7 @@ Then install the project dependancies and setup the development environment.
 
 ```bash
 npm install
-sudo gulp setup
+gulp setup
 ```
 
 Make sure to set a unique project name in `config.js` as it will stop docker containers from clashing.
