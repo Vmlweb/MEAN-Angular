@@ -12,22 +12,32 @@ export class Mongo{
 	connection: mongoose.Connection
 
 	constructor(){
+		let uri: string
+		let host: string
 
 		//Use ES6 for mongoose promise
 		(mongoose as any).Promise = Promise
 
 		//Prepare connection string
 		const auth = config.database.auth.username + ':' + config.database.auth.password
-		const nodes = config.database.repl.nodes.map(node => node.hostname + ':' + node.port)
 
 		//Prepare connection parameters
 		const params = ['ssl=' + config.database.ssl.enabled]
 		if (config.database.repl.enabled){
 			params.push('replicaSet=' + config.database.repl.name)
+
+			//Create reply connection uri
+			host = config.database.repl.nodes.map(node => node.hostname + ':' + node.port).join(',')
+			uri = 'mongodb://' + auth + '@' + host + '/' + config.database.auth.database + '?' + params.join('&')
+
+		}else{
+
+			//Create standalone connection uri
+			host = config.database.standalone.hostname + ':' + config.database.standalone.port
+			uri = 'mongodb://' + auth + '@' + host + '/' + config.database.auth.database + '?' + params.join('&')
 		}
 
-		//Specify connection info
-		const uri = 'mongodb://' + auth + '@' + nodes.join(',') + '/' + config.database.auth.database + '?' + params.join('&')
+		//Specify ssl info
 		const options = {
 			sslValidate: config.database.ssl.validate,
 			sslKey: config.database.ssl.validate ? fs.readFileSync(path.join('./certs', config.database.ssl.key)) : undefined,
@@ -45,10 +55,10 @@ export class Mongo{
 		//Listen for connection changes
 		this.connection = mongoose.connection
 		this.connection.on('error', (error) => {
-			log.error('Error connecting to database at ' + nodes.join(','), error.message)
+			log.error('Error connecting to database at ' + host, error.message)
 		})
 		this.connection.once('open', () => {
-			log.info('Connected ' + (config.database.ssl.enabled ? 'securely ' : '' ) + 'to database at ' + nodes.join(','))
+			log.info('Connected ' + (config.database.ssl.enabled ? 'securely ' : '' ) + 'to database at ' + host)
 		})
 		this.connection.on('close', () => {
 			log.info('Database connection closed')

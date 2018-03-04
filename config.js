@@ -51,15 +51,16 @@ module.exports = {
 			ca: '',
 			validate: false
 		},
+		standalone: {
+			hostname: '172.17.0.1',
+			port: 58031
+		},
 		repl: {
 			enabled: false,
 			name: 'rs0',
 			read: 'nearest',
 			key: 'repl.key',
-			nodes: [{
-				hostname: '192.168.0.69',
-				port: 58031
-			}]
+			nodes: []
 		}
 	},
 

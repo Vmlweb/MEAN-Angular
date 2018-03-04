@@ -49,9 +49,7 @@ cd MEAN-Angular
 
 ## Installation
 
-First add your local IP address to `config.js` under `database.repl.nodes.hostname` for the database.
-
-Then install the project dependancies and setup the development environment.
+First install the project dependancies and setup the development environment.
 
 ```bash
 npm install
@@ -116,7 +114,7 @@ Use `control + c` to stop and exit the development server.
 Use the following to reset the development server database.
 
 ```bash
-sudo gulp reset
+gulp reset
 ```
 
 The development server stores its logs in the local directory.

@@ -21,12 +21,16 @@ const name = config.name.replace(' ', '_').toLowerCase()
 - database.test.start
 */
 
+//Config
+const standalone = config.database.standalone
+const repl = config.database.repl
+
 //Prepare command
 const cmd = ['mongod', '--auth', '--bind_ip_all']
 
 //Prepare replica parameters
-if (config.database.repl.enabled){
-	cmd.push('--keyFile', '/data/certs/' + config.database.repl.key, '--replSet', config.database.repl.name)
+if (repl.enabled){
+	cmd.push('--keyFile', '/data/certs/' + repl.key, '--replSet', repl.name)
 }
 
 //Prepare ssl parameters
@@ -87,7 +91,6 @@ gulp.task('database.start', function(done){
 
 			//Prepare container
 			docker.createContainer({
-				Hostname: config.database.repl.nodes[0].hostname,
 				Image: 'mongo',
 				Cmd: cmd,
 				name: name + '_db',
@@ -98,7 +101,9 @@ gulp.task('database.start', function(done){
 					Privileged: true,
 					Binds: binds,
 					PortBindings: {
-						['27017/tcp']: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
+						['27017/tcp']: [{
+							HostPort: repl.enabled ? repl.nodes[0].port.toString() : standalone.port.toString()
+						}]
 					}
 				}
 			}, function(err, container){
@@ -229,7 +234,6 @@ gulp.task('database.test.start', function(done){
 
 			//Prepare container
 			docker.createContainer({
-				Hostname: config.database.repl.nodes[0].hostname,
 				Image: 'mongo',
 				Cmd: cmd,
 				name: name + '_db_test',
@@ -240,7 +244,7 @@ gulp.task('database.test.start', function(done){
 					Privileged: true,
 					Binds: binds,
 					PortBindings: {
-						['27017/tcp']: [{ HostPort: config.database.repl.nodes[0].port.toString()}]
+						['27017/tcp']: [{ HostPort: repl.nodes[0].port.toString()}]
 					}
 				}
 			}, function(err, container) {

@@ -18,6 +18,10 @@ const name = config.name.replace(' ', '_').toLowerCase()
 - build.config.docker
 */
 
+//Config
+const standalone = config.database.standalone
+const repl = config.database.repl
+
 //Remove all build files
 gulp.task('build.clean', function(){
 	return del('builds/**/*')
@@ -46,10 +50,10 @@ gulp.task('build.config.mongodb', function(){
 	//Copy and replace mongodb config
 	return gulp.src('mongodb.js')
 		.pipe(replace('@@DATABASE_ADMIN_PASSWORD', password))
-		.pipe(replace('@@DATABASE_REPL_ENABLED', config.database.repl.enabled || process.env.NODE_ENV === 'production'))
-		.pipe(replace('@@DATABASE_REPL_NAME', config.database.repl.name))
-		.pipe(replace('@@DATABASE_REPL_NODES_HOSTNAME', config.database.repl.nodes[0].hostname))
-		.pipe(replace('@@DATABASE_REPL_NODES_PORT', config.database.repl.nodes[0].port))
+		.pipe(replace('@@DATABASE_REPL_ENABLED', repl.enabled || process.env.NODE_ENV === 'production'))
+		.pipe(replace('@@DATABASE_REPL_NAME', repl.name))
+		.pipe(replace('@@DATABASE_REPL_NODES_HOSTNAME', repl.enabled ? repl.nodes[0].hostname : ''))
+		.pipe(replace('@@DATABASE_REPL_NODES_PORT', repl.enabled ? repl.nodes[0].port : ''))
 		.pipe(replace('@@DATABASE_AUTH_USERNAME', config.database.auth.username))
 		.pipe(replace('@@DATABASE_AUTH_PASSWORD', config.database.auth.password))
 		.pipe(replace('@@DATABASE_AUTH_DATABASE', config.database.auth.database))
@@ -119,10 +123,10 @@ gulp.task('build.config.docker', function(){
 		.pipe(replace('@@LOGS_PATH', config.logs.path))
 		.pipe(replace('@@CERTS_PATH', config.certs.path))
 		.pipe(replace('@@DATABASE_PATH', config.database.path))
-		.pipe(replace('@@DATABASE_REPL_ENABLED', config.database.repl.enabled || process.env.NODE_ENV === 'production'))
-		.pipe(replace('@@DATABASE_REPL_NAME', config.database.repl.name))
-		.pipe(replace('@@DATABASE_REPL_NODES_PORT', config.database.repl.nodes[0].port))
-		.pipe(replace('@@DATABASE_REPL_KEY', config.database.repl.key))
+		.pipe(replace('@@DATABASE_REPL_ENABLED', repl.enabled || process.env.NODE_ENV === 'production'))
+		.pipe(replace('@@DATABASE_REPL_NAME', repl.name))
+		.pipe(replace('@@DATABASE_REPL_NODES_PORT', repl.enabled ? repl.nodes[0].port : ''))
+		.pipe(replace('@@DATABASE_REPL_KEY', repl.key))
 		.pipe(replace('@@HTTP_PORT_INTERNAL', config.http.port.internal))
 		.pipe(replace('@@HTTPS_PORT_INTERNAL', config.https.port.internal))
 		.pipe(replace('@@HTTP_PORT_EXTERNAL', config.http.port.external))
