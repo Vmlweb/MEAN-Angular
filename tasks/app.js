@@ -82,6 +82,7 @@ gulp.task('app.start', function(done){
 				binds.push(prefix + '/logs' + ':/data/logs')
 				binds.push(prefix + '/node_modules' + ':/data/node_modules')
 				binds.push(prefix + '/config.js' + ':/data/config.js')
+				binds.push(prefix + '/tasks/reload.js' + ':/data/reload.js')
 			}else{
 				binds.push(process.cwd() + '/builds/server' + ':/data/server')
 				binds.push(process.cwd() + '/builds/client' + ':/data/client')
@@ -89,13 +90,14 @@ gulp.task('app.start', function(done){
 				binds.push(process.cwd() + '/logs' + ':/data/logs')
 				binds.push(process.cwd() + '/node_modules' + ':/data/node_modules')
 				binds.push(process.cwd() + '/config.js' + ':/data/config.js')
+				binds.push(process.cwd() + '/tasks/reload.js' + ':/data/reload.js')
 			}
 
 			//Prepare container
 			docker.createContainer({
 				Image: 'node:alpine',
 				WorkingDir: '/data',
-				Cmd: [ 'node', 'node_modules/nodemon/bin/nodemon', '-q', '-w', 'server/', 'server/main.js' ],
+				Cmd: [ 'node', 'reload.js' ],
 				name: name,
 				Tty: false,
 				ExposedPorts: internalPorts,

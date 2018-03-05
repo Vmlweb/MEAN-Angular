@@ -59,7 +59,7 @@ export class App{
 			}else if (process.env.NODE_ENV === 'development'){
 				process.kill(process.pid, 'SIGUSR2')
 			}else{
-				process.exit(0)
+				process.exit()
 			}
 		})
 	}
