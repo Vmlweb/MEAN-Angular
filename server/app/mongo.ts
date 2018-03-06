@@ -16,7 +16,7 @@ export class Mongo{
 		let host: string
 
 		//Use ES6 for mongoose promise
-		(mongoose as any).Promise = Promise
+		(mongoose as any).Promise = global.Promise
 
 		//Prepare connection string
 		const auth = config.database.auth.username + ':' + config.database.auth.password
@@ -26,16 +26,26 @@ export class Mongo{
 		if (config.database.repl.enabled){
 			params.push('replicaSet=' + config.database.repl.name)
 
-			//Create reply connection uri
-			host = config.database.repl.nodes.map(node => node.hostname + ':' + node.port).join(',')
-			uri = 'mongodb://' + auth + '@' + host + '/' + config.database.auth.database + '?' + params.join('&')
+			//Decide hostname
+			if (process.env.NODE_ENV === 'testing'){
+				host = 'localhost:' + config.database.standalone.port
+				host = config.database.repl.nodes.map(node => 'localhost:' + node.port).join(',')
+			}else{
+				host = config.database.repl.nodes.map(node => node.hostname + ':' + node.port).join(',')
+			}
 
 		}else{
 
-			//Create standalone connection uri
-			host = config.database.standalone.hostname + ':' + config.database.standalone.port
-			uri = 'mongodb://' + auth + '@' + host + '/' + config.database.auth.database + '?' + params.join('&')
+			//Decide hostname
+			if (process.env.NODE_ENV === 'testing'){
+				host = 'localhost:' + config.database.standalone.port
+			}else{
+				host = config.database.standalone.hostname + ':' + config.database.standalone.port
+			}
 		}
+
+		//Create standalone connection uri
+		uri = 'mongodb://' + auth + '@' + host + '/' + config.database.auth.database + '?' + params.join('&')
 
 		//Specify ssl info
 		const options = {

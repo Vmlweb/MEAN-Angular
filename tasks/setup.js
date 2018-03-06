@@ -52,7 +52,7 @@ gulp.task('certs.mongo', function(done){
 	fs.writeFileSync(path.resolve('./certs', config.database.repl.key), key)
 
 	//Generate certificates and write to file
-	const perms = signature.generate()
+	const perms = signature.generate([{ name: 'commonName', value: config.database.repl.enabled ? config.database.repl.nodes[0].hostname : config.database.standalone.hostname }])
 	fs.writeFileSync(path.resolve('./certs', config.database.ssl.cert), perms.cert)
 	fs.writeFileSync(path.resolve('./certs', config.database.ssl.key), perms.private)
 

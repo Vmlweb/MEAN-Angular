@@ -91,6 +91,7 @@ gulp.task('database.start', function(done){
 
 			//Prepare container
 			docker.createContainer({
+				Hostname: repl.enabled ? repl.nodes[0].hostname : standalone.hostname,
 				Image: 'mongo',
 				Cmd: cmd,
 				name: name + '_db',
@@ -150,7 +151,7 @@ gulp.task('database.setup', function(done){
 				if (err){ throw err }
 
 				//Stream output to console
-		        container.modem.demuxStream(stream, process.stdout, process.stderr)
+        container.modem.demuxStream(stream, process.stdout, process.stderr)
 
 				//Stream file into container mongo cli
 				setTimeout(function(){
@@ -234,6 +235,7 @@ gulp.task('database.test.start', function(done){
 
 			//Prepare container
 			docker.createContainer({
+				Hostname: repl.enabled ? repl.nodes[0].hostname : standalone.hostname,
 				Image: 'mongo',
 				Cmd: cmd,
 				name: name + '_db_test',
@@ -244,7 +246,7 @@ gulp.task('database.test.start', function(done){
 					Privileged: true,
 					Binds: binds,
 					PortBindings: {
-						['27017/tcp']: [{ HostPort: repl.nodes[0].port.toString()}]
+						['27017/tcp']: [{ HostPort: repl.enabled ? repl.nodes[0].port.toString() : standalone.port.toString()}]
 					}
 				}
 			}, function(err, container) {
