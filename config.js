@@ -23,7 +23,7 @@ module.exports = {
 	//! HTTPS
 	https: {
 		bind: '::',
-		hostnane: 'localhost',
+		hostname: 'localhost',
 		port: {
 			internal: 58021,
 			external: 58022,

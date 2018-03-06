@@ -37,7 +37,7 @@ gulp.task('certs', gulp.series(
 gulp.task('certs.https', function(done){
 
 	//Generate certificates and write to file
-	const perms = signature.generate([{ name: 'commonName', value: config.https.hostname }])
+	const perms = signature.generate()
 	fs.writeFileSync(path.resolve('./certs', config.https.ssl.cert), perms.cert)
 	fs.writeFileSync(path.resolve('./certs', config.https.ssl.key), perms.private)
 
@@ -52,7 +52,7 @@ gulp.task('certs.mongo', function(done){
 	fs.writeFileSync(path.resolve('./certs', config.database.repl.key), key)
 
 	//Generate certificates and write to file
-	const perms = signature.generate([{ name: 'commonName', value: config.database.repl.enabled ? config.database.repl.nodes[0].hostname : config.database.standalone.hostname }])
+	const perms = signature.generate()
 	fs.writeFileSync(path.resolve('./certs', config.database.ssl.cert), perms.cert)
 	fs.writeFileSync(path.resolve('./certs', config.database.ssl.key), perms.private)
 
