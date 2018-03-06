@@ -12,7 +12,6 @@ const name = config.name.replace(' ', '_').toLowerCase()
 - app.clean
 - app.start
 - app.stop
-- app.restart
 */
 
 //Remove app log files

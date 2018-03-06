@@ -186,6 +186,7 @@ gulp.task('client.build.compile', function(done){
 			},
 			output: {
 				path: path.resolve('./builds/client'),
+				chunkFilename: '[name].js',
 				filename: '[name].js'
 			},
 			resolve: {
