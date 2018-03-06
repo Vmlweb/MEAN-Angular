@@ -14,6 +14,8 @@ const config = require('../config.js')
 const docker = require('dockerode')(config.docker)
 
 /*! Tasks
+- dirs
+
 - certs
 - certs.https
 - certs.mongo
@@ -24,6 +26,15 @@ const docker = require('dockerode')(config.docker)
 - install.nodejs
 - install.mongodb
 */
+
+//! Dirs
+gulp.task('dirs', function(done){
+	try{ fs.mkdirSync(path.resolve('./certs')) }catch(err){}
+	try{ fs.mkdirSync(path.resolve('./logs')) }catch(err){}
+	try{ fs.mkdirSync(path.resolve('./builds')) }catch(err){}
+	try{ fs.mkdirSync(path.resolve('./dist')) }catch(err){}
+	done()
+})
 
 //! Certs
 gulp.task('certs', gulp.series(

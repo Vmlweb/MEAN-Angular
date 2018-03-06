@@ -38,6 +38,7 @@ gulp.task('default', gulp.series('dev'))
 gulp.task('setup', gulp.series(
 	'stop',
 	'clean',
+	'dirs',
 	'install',
 	'certs',
 	'reset',

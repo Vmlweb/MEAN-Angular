@@ -59,6 +59,7 @@ gulp.task('server.build', function(done){
 		},
 		output: {
 			path: path.resolve('./builds/server'),
+			chunkFilename: '[name].js',
 			filename: '[name].js'
 		},
 		resolve: {
