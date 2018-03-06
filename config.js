@@ -12,7 +12,7 @@ module.exports = {
 	//! HTTP
 	http: {
 		bind: '::',
-		hostname: 'localhost',
+		hostname: '127.0.0.1',
 		port: {
 			internal: 58011,
 			external: 58012,
@@ -23,7 +23,7 @@ module.exports = {
 	//! HTTPS
 	https: {
 		bind: '::',
-		hostname: 'localhost',
+		hostname: '127.0.0.1',
 		port: {
 			internal: 58021,
 			external: 58022,
