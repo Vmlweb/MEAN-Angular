@@ -141,7 +141,7 @@ gulp.task('client.build.compile', function(done){
 					'process.env.TEST': JSON.stringify(process.env.TEST),
 					'process.env.TEST_PLAN': JSON.stringify(process.env.TEST_PLAN),
 					'process.env.MODE': JSON.stringify(process.env.MODE),
-					'process.env.URL': JSON.stringify(process.env.NODE_ENV === 'testing' ? ('http://' + config.http.url + ':' + config.http.port.internal) : '')
+					'process.env.URL': JSON.stringify(process.env.NODE_ENV === 'testing' ? ('http://' + config.http.hostname + ':' + config.http.port.internal) : '')
 				}),
 				new WebpackHTML({
 					title: config.name,
@@ -396,7 +396,7 @@ gulp.task('client.build.compile', function(done){
 							cert: fs.readFileSync(path.resolve('./certs', config.https.ssl.cert)) || ''
 					},
 					inline: true,
-					host: config.https.url,
+					host: config.https.hostname,
 					port: config.https.port.dev,
 					contentBase: path.resolve("./builds/client"),
 					historyApiFallback: {
@@ -404,7 +404,7 @@ gulp.task('client.build.compile', function(done){
 					},
 					proxy: {
 						'/api': {
-							target: 'http://' + config.http.url + ':' + config.http.port.external,
+							target: 'http://' + config.http.hostname + ':' + config.http.port.external,
 							secure: false
 						}
 					}
@@ -421,24 +421,24 @@ gulp.task('client.build.compile', function(done){
 
 				//Add developer endpoints and start server
 				const server = new WebpackDevServer(compiler, options)
-				server.listen(config.https.port.dev, config.https.hostname, function(){
+				server.listen(config.https.port.dev, config.https.bind, function(){
 
 					//Create and listen http server
-					http.createServer(server.app).listen(config.http.port.dev, config.http.hostname, function(){
+					http.createServer(server.app).listen(config.http.port.dev, config.http.bind, function(){
 
 						//Repeated test to check whether api server is running
 						const checkTimer = setInterval(function(){
 
 							//Check whether test server is live
-							request('http://' + config.http.url + ':' + config.http.port.external, function(err, response, body){
+							request('http://' + config.http.hostname + ':' + config.http.port.external, function(err, response, body){
 								if (!err){
 
 									//Stop timer
 									clearInterval(checkTimer)
 
 									//Log dev server urls
-									console.log('Start development HTTP server on http://' + config.http.url + ':' + config.http.port.dev)
-									console.log('Start development HTTPS server on https://' + config.https.url + ':' + config.https.port.dev)
+									console.log('Start development HTTP server on http://' + config.http.hostname + ':' + config.http.port.dev)
+									console.log('Start development HTTPS server on https://' + config.https.hostname + ':' + config.https.port.dev)
 
 									//Check whether browser exists
 									let command
@@ -456,7 +456,7 @@ gulp.task('client.build.compile', function(done){
 
 									//Open default browser with dev server
 									if (command && commandExists(command)){
-										OpenURL.open('http://' + config.http.url + ':' + config.http.port.dev)
+										OpenURL.open('http://' + config.http.hostname + ':' + config.http.port.dev)
 									}
 								}
 							})

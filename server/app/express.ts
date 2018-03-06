@@ -58,11 +58,11 @@ export class Express{
 		})
 
 		//Check whether http hotname was given
-		if (config.http.hostname.length > 0){
+		if (config.http.bind.length > 0){
 
 			//Create server and listen
-			this.http = http.createServer(this.app).listen(config.http.port.internal, config.http.hostname, () => {
-				log.info('HTTP listening at ' + config.http.hostname + ':' + config.http.port.internal)
+			this.http = http.createServer(this.app).listen(config.http.port.internal, config.http.bind, () => {
+				log.info('HTTP listening at ' + config.http.bind + ':' + config.http.port.internal)
 
 				//Keep connections list up to date
 				this.http.on('connection', (con) => {
@@ -81,14 +81,14 @@ export class Express{
 		}
 
 		//Check whether https hotname was given
-		if (config.https.hostname.length > 0 && config.https.ssl.key.length > 0 && config.https.ssl.cert.length > 0){
+		if (config.https.bind.length > 0 && config.https.ssl.key.length > 0 && config.https.ssl.cert.length > 0){
 
 			//Create server and listen
 			this.https = https.createServer({
 				key: fs.readFileSync(path.join('./certs', config.https.ssl.key)) || '',
 				cert: fs.readFileSync(path.join('./certs', config.https.ssl.cert)) || ''
-			}, this.app).listen(config.https.port.internal, config.https.hostname, () => {
-				log.info('HTTPS listening at ' + config.https.hostname + ':' + config.https.port.internal)
+			}, this.app).listen(config.https.port.internal, config.https.bind, () => {
+				log.info('HTTPS listening at ' + config.https.bind + ':' + config.https.port.internal)
 
 				//Keep connections list up to date
 				this.https.on('connection', (con) => {

@@ -37,7 +37,7 @@ gulp.task('certs', gulp.series(
 gulp.task('certs.https', function(done){
 
 	//Generate certificates and write to file
-	const perms = signature.generate([{ name: 'commonName', value: config.https.url }])
+	const perms = signature.generate([{ name: 'commonName', value: config.https.hostname }])
 	fs.writeFileSync(path.resolve('./certs', config.https.ssl.cert), perms.cert)
 	fs.writeFileSync(path.resolve('./certs', config.https.ssl.key), perms.private)
 

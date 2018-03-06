@@ -49,7 +49,7 @@ gulp.task('server.build', function(done){
 				'process.env.TEST': JSON.stringify(process.env.TEST),
 				'process.env.TEST_PLAN': JSON.stringify(process.env.TEST_PLAN),
 				'process.env.MODE': JSON.stringify(process.env.MODE),
-				'process.env.URL': JSON.stringify('http://' + config.http.url + ':' + (process.env.NODE_ENV === 'testing' ? config.http.port.internal : config.http.port.external))
+				'process.env.URL': JSON.stringify('http://' + config.http.hostname + ':' + (process.env.NODE_ENV === 'testing' ? config.http.port.internal : config.http.port.external))
 			}),
 			new CheckerPlugin()//,
 			//new webpack.optimize.ModuleConcatenationPlugin()
