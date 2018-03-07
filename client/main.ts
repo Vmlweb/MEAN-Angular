@@ -15,4 +15,10 @@ if (process.env.ENV === 'production') {
 }
 
 //Bootstrap
-platformBrowserDynamic().bootstrapModule(AppModule)
+platformBrowserDynamic().bootstrapModule(AppModule).then(module => {
+	module.onDestroy(() => {
+
+		//HMR fix
+		document.body.insertBefore(document.createElement('app'), document.body.firstChild)
+	})
+})
